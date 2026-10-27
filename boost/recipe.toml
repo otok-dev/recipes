@@ -1,0 +1,302 @@
+# The otok recipe of Boost (docs/PLAN.md decision 36): the headers as one product, the compiled
+# libraries the project selects as products of their own (recipe-toml.md 11.1).
+[recipe]
+api = 1
+library = "boost"
+name = "boost"
+version = "1.92.0"
+revision = 1
+license = "BSL-1.0"
+license-files = ["LICENSE_1_0.txt"]
+homepage = "https://www.boost.org"
+documentation = "https://www.boost.org/doc/libs/1_92_0/"
+description = "Boost C++ libraries: the headers, and the compiled libraries a project selects."
+keywords = ["boost", "cpp"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://archives.boost.io/release/1.92.0/source/boost_1_92_0.tar.bz2"
+mirrors = ["https://sourceforge.net/projects/boost/files/boost/1.92.0/boost_1_92_0.tar.bz2"]
+sha256 = "5c1d40cb8e19adbf740a4ec2da35b3e58f3f5804b1dce44deb53df72193cbc6c"
+# Boost.Context has no assembly for arm64_32 (watchOS): the arm64 one with 32-bit pointers
+patches = ["patches/0001-context-arm64_32.patch"]
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim", "native"]
+
+[options.libraries]
+type = "list"
+values = ["atomic", "charconv", "chrono", "cobalt", "container", "context", "contract", "coroutine", "date_time", "exception", "fiber", "filesystem", "graph", "iostreams", "json", "locale", "log", "math", "nowide", "process", "program_options", "random", "regex", "serialization", "stacktrace", "test", "thread", "timer", "type_erasure", "url", "wave"]
+default = []
+additive = true
+doc = "The compiled libraries to build (b2 --with-<library>); each becomes a product. Without any, Boost is its headers."
+
+[options.icu]
+type = "bool"
+default = false
+doc = "ICU (the icu4c recipe) as the backend of Boost.Locale and for the Unicode support of Boost.Regex (boost/regex/icu.hpp). The products of Boost then hold ICU's libraries, which a static link takes only as far as it uses them."
+
+[dependencies.icu4c]
+version = ">= 70"
+default-recipe = "apotocki/icu4c"
+when = { option = "icu" }
+
+[[product]]
+name = "Boost"
+libraries = []
+link = { libraries = ["c++"] }
+apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }
+
+[[product]]
+name = "BoostAtomic"
+libraries = ["atomic"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "atomic" }
+
+[[product]]
+name = "BoostCharconv"
+libraries = ["charconv"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "charconv" }
+
+[[product]]
+name = "BoostChrono"
+libraries = ["chrono"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "chrono" }
+apple = { privacy-manifest = "privacy/boot.xcprivacy" }
+
+[[product]]
+name = "BoostCobalt"
+libraries = ["cobalt", "cobalt_io", "container", "context", "date_time", "exception"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "cobalt" }
+apple = { privacy-manifest = "privacy/timestamps.xcprivacy" }
+
+[[product]]
+name = "BoostContainer"
+libraries = ["container"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "container" }
+
+[[product]]
+name = "BoostContext"
+libraries = ["context"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "context" }
+
+[[product]]
+name = "BoostContract"
+libraries = ["contract", "atomic", "chrono", "container", "date_time", "exception", "thread"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "contract" }
+apple = { privacy-manifest = "privacy/boot.xcprivacy" }
+
+[[product]]
+name = "BoostCoroutine"
+libraries = ["coroutine", "context", "exception"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "coroutine" }
+
+[[product]]
+name = "BoostDateTime"
+libraries = ["date_time", "container", "exception"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "date_time" }
+
+[[product]]
+name = "BoostException"
+libraries = ["exception"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "exception" }
+
+[[product]]
+name = "BoostFiber"
+libraries = ["fiber", "context", "exception", "filesystem"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "fiber" }
+apple = { privacy-manifest = "privacy/timestamps-disk.xcprivacy" }
+
+[[product]]
+name = "BoostFilesystem"
+libraries = ["filesystem"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "filesystem" }
+apple = { privacy-manifest = "privacy/timestamps-disk.xcprivacy" }
+
+[[product]]
+name = "BoostGraph"
+libraries = ["graph", "atomic", "chrono", "container", "date_time", "exception", "math_c99", "math_c99f", "math_c99l", "math_tr1", "math_tr1f", "math_tr1l", "random", "serialization", "thread", "wserialization"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "graph" }
+apple = { privacy-manifest = "privacy/boot.xcprivacy" }
+
+[[product]]
+name = "BoostIostreams"
+libraries = ["iostreams", "random"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "iostreams" }
+apple = { privacy-manifest = "privacy/timestamps.xcprivacy" }
+
+[[product]]
+name = "BoostJson"
+libraries = ["json", "container"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "json" }
+
+[[product]]
+name = "BoostLocale"
+libraries = ["locale", "atomic", "charconv", "chrono", "container", "date_time", "exception", "thread"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "locale" }
+apple = { privacy-manifest = "privacy/boot.xcprivacy" }
+
+[[product]]
+name = "BoostLog"
+libraries = ["log", "log_setup", "atomic", "chrono", "container", "date_time", "exception", "filesystem", "serialization", "thread", "wserialization"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "log" }
+apple = { privacy-manifest = "privacy/all.xcprivacy" }
+
+[[product]]
+name = "BoostMath"
+libraries = ["math_c99", "math_c99f", "math_c99l", "math_tr1", "math_tr1f", "math_tr1l", "container", "random"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "math" }
+
+[[product]]
+name = "BoostNowide"
+libraries = ["nowide"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "nowide" }
+
+[[product]]
+name = "BoostProcess"
+libraries = ["process", "container", "context", "date_time", "exception", "filesystem"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "process" }
+apple = { privacy-manifest = "privacy/timestamps-disk.xcprivacy" }
+
+[[product]]
+name = "BoostProgramOptions"
+libraries = ["program_options", "container"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "program_options" }
+
+[[product]]
+name = "BoostRandom"
+libraries = ["random"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "random" }
+
+[[product]]
+name = "BoostRegex"
+libraries = ["regex"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "regex" }
+
+[[product]]
+name = "BoostSerialization"
+libraries = ["serialization", "wserialization", "atomic", "chrono", "container", "date_time", "exception", "thread"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "serialization" }
+apple = { privacy-manifest = "privacy/boot.xcprivacy" }
+
+[[product]]
+name = "BoostStacktraceBasic"
+libraries = ["stacktrace_basic"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "stacktrace" }
+
+[[product]]
+name = "BoostStacktraceNoop"
+libraries = ["stacktrace_noop"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "stacktrace" }
+
+[[product]]
+name = "BoostUnitTestFramework"
+libraries = ["unit_test_framework", "exception"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "test" }
+apple = { privacy-manifest = "privacy/boot.xcprivacy" }
+
+[[product]]
+name = "BoostPrgExecMonitor"
+libraries = ["prg_exec_monitor"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "test" }
+
+[[product]]
+name = "BoostTestExecMonitor"
+libraries = ["test_exec_monitor", "exception"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "test" }
+apple = { privacy-manifest = "privacy/boot.xcprivacy" }
+
+[[product]]
+name = "BoostThread"
+libraries = ["thread", "atomic", "chrono", "container", "date_time", "exception"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "thread" }
+apple = { privacy-manifest = "privacy/boot.xcprivacy" }
+
+[[product]]
+name = "BoostTimer"
+libraries = ["timer"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "timer" }
+
+[[product]]
+name = "BoostTypeErasure"
+libraries = ["type_erasure", "atomic", "chrono", "container", "date_time", "exception", "thread"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "type_erasure" }
+apple = { privacy-manifest = "privacy/boot.xcprivacy" }
+
+[[product]]
+name = "BoostUrl"
+libraries = ["url"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "url" }
+
+[[product]]
+name = "BoostWave"
+libraries = ["wave", "atomic", "chrono", "container", "date_time", "exception", "filesystem", "serialization", "thread", "wserialization"]
+headers = false
+depends = ["Boost"]
+when = { option = "libraries", has = "wave" }
+apple = { privacy-manifest = "privacy/all.xcprivacy" }

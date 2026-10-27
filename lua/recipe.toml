@@ -1,0 +1,31 @@
+# The otok recipe of Lua (https://github.com/apotocki/otok): the library for every Apple platform and the
+# native target, from the release archive; static or dynamic on the native target.
+[recipe]
+api = 1
+library = "lua"
+name = "lua"
+version = "5.5.1"
+revision = 3
+license = "MIT"
+# the release archive has no license file: LICENSE is the notice at the end of src/lua.h
+license-files = [{ recipe = "LICENSE" }]
+homepage = "https://www.lua.org"
+description = "Lua, the embeddable scripting language, as a library."
+keywords = ["lua", "scripting"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://www.lua.org/ftp/lua-5.5.1.tar.gz"
+sha256 = "1c4b4068d67061f2a2231ad2b5422e77acea1487ea9890f6320af614f4373dce"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim", "native"]
+
+[toolchains]
+cmake = ">= 3.20"
+ninja = ">= 1.10"
+
+[[product]]
+name = "Lua"
+libraries = ["lua"]
+apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }

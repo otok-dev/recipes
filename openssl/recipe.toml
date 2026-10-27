@@ -1,0 +1,43 @@
+# The otok recipe of OpenSSL (https://github.com/apotocki/otok): libssl and libcrypto for every
+# Apple platform, from the release tag.
+[recipe]
+api = 1
+library = "openssl"
+name = "openssl"
+version = "4.1.0"
+revision = 2
+license = "Apache-2.0"
+license-files = ["LICENSE.txt"]
+homepage = "https://www.openssl.org"
+description = "OpenSSL (libssl, libcrypto), built from source."
+keywords = ["tls", "crypto"]
+
+[source]
+git = "https://github.com/openssl/openssl"
+commit = "2f4e3a5fec05394068cfa7379890ab552483a8a6"
+tag = "openssl-4.1.0"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+
+[vars]
+# the OS part of the Configure targets of Configurations/60-otok.conf
+openssl_os = { macosx = "macos", catalyst = "macos", ios = "ios", iossim = "ios", tvos = "tvos", tvossim = "tvos", watchos = "watchos", watchossim = "watchos", xros = "xros", xrossim = "xros" }
+# fork() is unavailable: libapps, which build_libs builds too, leaves out its HTTP server
+no_fork = { tvos = true, tvossim = true, watchos = true, watchossim = true, default = false }
+
+[options.no-deprecated]
+type = "bool"
+default = false
+doc = "Configure with no-deprecated: removes the deprecated APIs."
+
+[[product]]
+name = "OpenSSL"
+libraries = ["ssl", "crypto"]
+headers = "crypto"
+defines = [{ define = "OPENSSL_NO_DEPRECATED", when = { option = "no-deprecated" } }]
+apple = { module = "COpenSSL", privacy-manifest = "PrivacyInfo.xcprivacy" }
+
+[toolchains]
+make = ">= 3.81"
+perl = ">= 5.30"
