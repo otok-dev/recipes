@@ -3,19 +3,21 @@ api = 1
 library = "updates"
 name = "updates"
 version = "2.0.2"
-revision = 1
+revision = 2
 license = "MIT"
 license-files = ["LICENSE"]
 description = "Checks the App Store for a newer version of the app and prompts the user to update."
 homepage = "https://github.com/rwbutler/Updates"
 keywords = ["app-store", "updates", "swift"]
 
-# Unmaintained upstream: the App Store lookup goes over http://, which App Transport Security blocks.
+# Unmaintained upstream: the App Store lookup goes over http://, which App Transport Security blocks (0001);
+# Package.swift leaves out the UI (UpdatesUI, checkForUpdates without an OS version), which CocoaPods
+# had, because the package also builds for macOS: 0002 takes it in behind canImport(UIKit).
 [source]
 git = "https://github.com/rwbutler/Updates"
 commit = "388bc6369ca5b83a41b77743d8a62902b6ff7ef3"
 tag = "2.0.2"
-patches = ["patches/0001-itunes-https.patch"]
+patches = ["patches/0001-itunes-https.patch", "patches/0002-ui-for-uikit.patch"]
 
 [platforms]
 supported = ["ios", "iossim", "macosx", "catalyst"]
