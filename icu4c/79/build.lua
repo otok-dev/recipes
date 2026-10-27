@@ -20,9 +20,16 @@ end
 
 local common = { "--disable-extras", "--disable-tests", "--disable-samples", "--disable-dyload" }
 
+-- with a filter: ICU's Python build tool builds the data as it says
+local function data_env(slice, filter)
+    if not filter then return {} end
+    return { ICU_DATA_FILTER_FILE = filter, PYTHON = slice.toolchains.python }
+end
+
 function build_tools(slice, options, deps)
-    -- the tools only: the prebuilt data serves them whatever the slices build
-    otok.autotools{ configure = configure(slice, false), args = common, cwd = slice.build, targets = { "all" } }
+    -- the tools, built with the data the slices have: the prebuilt data is not fetched with a filter
+    local filter = options["data-filter"]
+    otok.autotools{ configure = configure(slice, filter), args = common, cwd = slice.build, targets = { "all" }, env = data_env(slice, filter) }
     -- what a cross build reads from the build tree it is given: the tools and their settings
     otok.copy(slice.build .. "/bin", slice.prefix .. "/bin")
     for _, f in ipairs{ "icucross.mk", "icucross.inc" } do
@@ -63,11 +70,7 @@ function build(slice, options, deps)
     local args = { "--with-cross-build=" .. slice.tools.prefix, "--disable-tools", "--with-data-packaging=" .. packaging }
     for _, a in ipairs(common) do args[#args + 1] = a end
     if options["no-renaming"] then args[#args + 1] = "--disable-renaming" end
-    local env = {}
-    if filter then
-        env.ICU_DATA_FILTER_FILE = filter
-        env.PYTHON = slice.toolchains.python
-    end
+    local env = data_env(slice, filter)
     otok.autotools{ configure = configure(slice, filter), args = args, cwd = slice.build, env = env }
     -- without tools ICU builds the data only when cross-compiling, which a slice for the build machine
     -- is not: it would install the stub; the data's Makefile takes the tools of --with-cross-build
@@ -85,7 +88,7 @@ function build(slice, options, deps)
     local module = { "module CICU {" }
     -- the defines of the product (recipe.toml), which otok writes beside the module map
     if options["no-renaming"] then module[#module + 1] = '    header "otok_defines.h"' end
-    for _, h in ipairs{ "uversion", "utypes", "uchar", "ustring", "uloc", "ucol", "ubrk", "unorm2", "ucnv", "ucasemap",
+    for _, h in ipairs{ "uversion", "utypes", "putil", "uclean", "uchar", "ustring", "uloc", "ucol", "ubrk", "unorm2", "ucnv", "ucasemap",
             "utrans", "udat", "unum", "ucal", "uregex", "uidna", "uspoof", "ustdio" } do
         module[#module + 1] = '    header "../unicode/' .. h .. '.h"'
     end

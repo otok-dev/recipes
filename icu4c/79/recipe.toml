@@ -7,7 +7,7 @@ api = 1
 library = "icu4c"
 name = "icu4c"
 version = "79.1"
-revision = 2
+revision = 3
 license = "Unicode-3.0"
 license-files = ["LICENSE"]
 homepage = "https://icu.unicode.org"
@@ -20,11 +20,12 @@ linkage = ["static", "dynamic"]
 url = "https://github.com/unicode-org/icu/releases/download/release-79.1/icu4c-79.1-sources.tgz"
 sha256 = "06fa63ecb521048f8082f12ad988f6b678d90cbd88aafce24cbc94902b191d99"
 
-# the prebuilt little-endian data, which the build packages without Python
+# the prebuilt little-endian data, which the build packages without Python, unless the data is filtered
 [[resource]]
 name = "data"
 url = "https://github.com/unicode-org/icu/releases/download/release-79.1/icu4c-79.1-data-bin-l.zip"
 sha256 = "72489fb316a60ae1c1da205866edd01b17e8fbf8354ad0615e6cc60f74e08811"
+when = { not = { option = "data-filter" } }
 
 # the sources of the data, which ICU's Python build tool builds as a filter chooses
 [[resource]]
