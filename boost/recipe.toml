@@ -45,7 +45,7 @@ when = { option = "icu" }
 name = "Boost"
 libraries = []
 link = { libraries = ["c++"] }
-apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }
+apple = { privacy-manifest = "none" }
 
 [[product]]
 name = "BoostAtomic"

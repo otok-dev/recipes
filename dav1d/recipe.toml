@@ -28,4 +28,4 @@ nasm = ">= 2.14"  # the assembly of x86_64
 [[product]]
 name = "Dav1d"
 libraries = ["dav1d"]
-apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }
+apple = { privacy-manifest = "none" }

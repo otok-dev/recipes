@@ -28,4 +28,4 @@ ninja = ">= 1.10"
 [[product]]
 name = "Lua"
 libraries = ["lua"]
-apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }
+apple = { privacy-manifest = "none" }

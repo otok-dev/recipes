@@ -32,4 +32,4 @@ ninja = ">= 1.10"
 name = "LibSSH2"
 libraries = ["ssh2"]
 link = { libraries = ["z"] }
-apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }
+apple = { privacy-manifest = "none" }
