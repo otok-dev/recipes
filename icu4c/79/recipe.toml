@@ -1,12 +1,13 @@
 # The otok recipe of ICU4C (https://github.com/apotocki/otok): libicuuc, libicui18n, libicuio and the
-# ICU data for every Apple platform, from the release archive with the prebuilt data; static or
-# dynamic on the native target (not Windows yet: ICU builds there with its MSBuild solution).
+# ICU data for every Apple platform, from the release archive with the prebuilt data, or with the data
+# built from its sources by the project's filter; the data in libicudata, as a file of its own or not at
+# all; static or dynamic on the native target (not Windows yet: ICU builds there with its MSBuild solution).
 [recipe]
 api = 1
 library = "icu4c"
 name = "icu4c"
 version = "79.1"
-revision = 1
+revision = 2
 license = "Unicode-3.0"
 license-files = ["LICENSE"]
 homepage = "https://icu.unicode.org"
@@ -25,6 +26,13 @@ name = "data"
 url = "https://github.com/unicode-org/icu/releases/download/release-79.1/icu4c-79.1-data-bin-l.zip"
 sha256 = "72489fb316a60ae1c1da205866edd01b17e8fbf8354ad0615e6cc60f74e08811"
 
+# the sources of the data, which ICU's Python build tool builds as a filter chooses
+[[resource]]
+name = "data_sources"
+url = "https://github.com/unicode-org/icu/releases/download/release-79.1/icu4c-79.1-data.zip"
+sha256 = "b3a430009bb5fab77b1a4b98fab85cc8f887e26d4e4166121724298ae14d7224"
+when = { option = "data-filter" }
+
 [platforms]
 supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim", "native"]
 
@@ -33,8 +41,19 @@ type = "bool"
 default = false
 doc = "No version suffixes on the C entry points (u_strlen, not u_strlen_79), so that Swift, which sees no function-like macros, can call ICU directly. Two such ICUs in one process collide. On iOS and the other Apple platforms but macOS the names are those of the private API of the system libicucore, and App Store review rejects an app whose executable still has them as symbols (ITMS-90338): strip it, or use this option outside the App Store."
 
+[options.data]
+type = "enum"
+values = ["static", "file", "none"]
+default = "static"
+doc = "Where the ICU data is. static: in libicudata, linked into the product. file: in icudt79l.dat, which otok delivers in data/ of the output, and libicudata is a stub; the application gives ICU the file before its first use, with u_setDataDirectory (the directory holding icudt79l.dat) or udata_setCommonData (its contents in memory). none: the stub only, and no file; the application brings the data itself."
+
+[options.data-filter]
+type = "file"
+doc = "A data filter of ICU's data build tool (JSON, https://unicode-org.github.io/icu/userguide/icu_data/buildtool.html): the data is built from its sources with what the filter keeps, for data = static or file. Needs Python 3."
+
 [toolchains]
 make = ">= 3.81"
+python = { version = ">= 3.9", when = { option = "data-filter" } }
 
 [[product]]
 name = "ICU"

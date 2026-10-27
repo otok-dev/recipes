@@ -36,3 +36,8 @@ changes or goes.
 [deps.updates]
 recipe = { git = "https://github.com/otok-dev/recipes", rev = "<commit>", path = "updates/2.0" }
 ```
+
+## License
+
+The recipes and build scripts of this repository are dedicated to the public domain under [CC0 1.0](LICENSE).
+A patch is under the license of the library it changes, as are the libraries the recipes build.

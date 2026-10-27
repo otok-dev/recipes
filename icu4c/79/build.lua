@@ -2,19 +2,27 @@
 -- pkgdata, genccode, …) package the data of every slice (--with-cross-build), which therefore builds
 -- no tools of its own.
 
-local function configure(slice)
+-- `filtered`: the data built from its sources with the project's filter, else the prebuilt data
+local function configure(slice, filtered)
     if slice.triple:find("windows") then
         error("ICU builds on Windows with its MSBuild solution, which this recipe does not support yet")
     end
-    -- the prebuilt data instead of the data sources, which the release archive leaves out
-    otok.copy(slice.resources.data .. "/icudt79l.dat", slice.source .. "/source/data/in/icudt79l.dat")
+    if filtered then
+        -- the data sources, which the release archive leaves out; without data/in/icudt79l.dat
+        -- configure has the data built by ICU's Python build tool
+        otok.remove(slice.source .. "/source/data")
+        otok.copy(slice.resources.data_sources, slice.source .. "/source/data")
+    else
+        otok.copy(slice.resources.data .. "/icudt79l.dat", slice.source .. "/source/data/in/icudt79l.dat")
+    end
     return slice.source .. "/source/configure"
 end
 
 local common = { "--disable-extras", "--disable-tests", "--disable-samples", "--disable-dyload" }
 
 function build_tools(slice, options, deps)
-    otok.autotools{ configure = configure(slice), args = common, cwd = slice.build, targets = { "all" } }
+    -- the tools only: the prebuilt data serves them whatever the slices build
+    otok.autotools{ configure = configure(slice, false), args = common, cwd = slice.build, targets = { "all" } }
     -- what a cross build reads from the build tree it is given: the tools and their settings
     otok.copy(slice.build .. "/bin", slice.prefix .. "/bin")
     for _, f in ipairs{ "icucross.mk", "icucross.inc" } do
@@ -46,14 +54,24 @@ end
 
 function build(slice, options, deps)
     local dynamic = slice.linkage == "dynamic"
-    local args = { "--with-cross-build=" .. slice.tools.prefix, "--disable-tools",
-        "--with-data-packaging=" .. (dynamic and "library" or "static") }
+    local filter = options["data-filter"]
+    if filter and options.data == "none" then
+        error("data-filter needs data = \"static\" or \"file\": with \"none\" there is no data to filter")
+    end
+    -- static and library: the data in libicudata; archive: icudt79l.dat, and the stub libicudata
+    local packaging = options.data ~= "static" and "archive" or dynamic and "library" or "static"
+    local args = { "--with-cross-build=" .. slice.tools.prefix, "--disable-tools", "--with-data-packaging=" .. packaging }
     for _, a in ipairs(common) do args[#args + 1] = a end
     if options["no-renaming"] then args[#args + 1] = "--disable-renaming" end
-    otok.autotools{ configure = configure(slice), args = args, cwd = slice.build }
+    local env = {}
+    if filter then
+        env.ICU_DATA_FILTER_FILE = filter
+        env.PYTHON = slice.toolchains.python
+    end
+    otok.autotools{ configure = configure(slice, filter), args = args, cwd = slice.build, env = env }
     -- without tools ICU builds the data only when cross-compiling, which a slice for the build machine
     -- is not: it would install the stub; the data's Makefile takes the tools of --with-cross-build
-    otok.make{ "install", cwd = slice.build .. "/data" }
+    otok.make{ "install", cwd = slice.build .. "/data", env = env }
 
     local p = slice.prefix
     local libraries = {}
@@ -73,5 +91,9 @@ function build(slice, options, deps)
     end
     module[#module + 1] = "    export *\n}\n"
     otok.write(p .. "/module.modulemap", table.concat(module, "\n"))
-    return { libraries = libraries, headers = p .. "/include", module_map = p .. "/module.modulemap" }
+    local data = nil
+    if options.data == "file" then
+        data = { ["icudt79l.dat"] = p .. "/share/icu/79.1/icudt79l.dat" }
+    end
+    return { libraries = libraries, headers = p .. "/include", module_map = p .. "/module.modulemap", data = data }
 end
