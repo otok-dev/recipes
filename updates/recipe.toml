@@ -1,0 +1,27 @@
+[recipe]
+api = 1
+library = "updates"
+name = "updates"
+version = "2.0.2"
+revision = 1
+license = "MIT"
+license-files = ["LICENSE"]
+description = "Checks the App Store for a newer version of the app and prompts the user to update."
+homepage = "https://github.com/rwbutler/Updates"
+keywords = ["app-store", "updates", "swift"]
+
+# Unmaintained upstream: the App Store lookup goes over http://, which App Transport Security blocks.
+[source]
+git = "https://github.com/rwbutler/Updates"
+commit = "388bc6369ca5b83a41b77743d8a62902b6ff7ef3"
+tag = "2.0.2"
+patches = ["patches/0001-itunes-https.patch"]
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst"]
+
+[apple]
+swift-package = "."
+
+[[product]]
+name = "Updates"

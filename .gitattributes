@@ -1,0 +1,2 @@
+# Recipes and patches keep LF on every host: a patch with CRLF does not apply to an LF source.
+* text=auto eol=lf
