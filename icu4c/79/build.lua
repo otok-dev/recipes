@@ -2,11 +2,12 @@
 -- pkgdata, genccode, …) package the data of every slice (--with-cross-build), which therefore builds
 -- no tools of its own.
 
+local function windows(slice)
+    return slice.triple:find("windows") ~= nil
+end
+
 -- `filtered`: the data built from its sources with the project's filter, else the prebuilt data
 local function configure(slice, filtered)
-    if slice.triple:find("windows") then
-        error("ICU builds on Windows with its MSBuild solution, which this recipe does not support yet")
-    end
     if filtered then
         -- the data sources, which the release archive leaves out; without data/in/icudt79l.dat
         -- configure has the data built by ICU's Python build tool
@@ -29,7 +30,29 @@ end
 function build_tools(slice, options, deps)
     -- the tools, built with the data the slices have: the prebuilt data is not fetched with a filter
     local filter = options["data-filter"]
-    otok.autotools{ configure = configure(slice, filter), args = common, cwd = slice.build, targets = { "all" }, env = data_env(slice, filter) }
+    local args = { table.unpack(common) }
+    if windows(slice) then
+        -- MSVC through MSYS2 (runConfigureICU MSYS/MSVC): ICU knows it as a mingw host with a compiler other than gcc
+        args[#args + 1] = "--build=x86_64-pc-mingw64"
+        args[#args + 1] = "--host=x86_64-pc-mingw64"
+    end
+    local env = data_env(slice, filter)
+    if windows(slice) then
+        -- by name, from the PATH of Visual Studio's environment: autoconf cannot run a compiler whose path has spaces
+        env.CC = "cl"
+        env.CXX = "cl"
+        env.AR = false
+        env.RANLIB = false
+        -- MSVC's options with '-': MSYS2 takes /O2 for a path and turns it into C:/…/O2 for native programs
+        for _, name in ipairs{ "CFLAGS", "CXXFLAGS" } do
+            local flags = {}
+            for _, f in ipairs(name == "CFLAGS" and slice.toolchain.cflags or slice.toolchain.cxxflags) do flags[#flags + 1] = (f:gsub("^/", "-")) end
+            env[name] = table.concat(flags, " ")
+        end
+        -- ICU needs C++17, which it asks for gcc and clang only
+        env.CXXFLAGS = env.CXXFLAGS .. " -std:c++20"
+    end
+    otok.autotools{ configure = configure(slice, filter), args = args, cwd = slice.build, targets = { "all" }, env = env }
     -- what a cross build reads from the build tree it is given: the tools and their settings
     otok.copy(slice.build .. "/bin", slice.prefix .. "/bin")
     for _, f in ipairs{ "icucross.mk", "icucross.inc" } do
@@ -61,6 +84,14 @@ end
 
 function build(slice, options, deps)
     local dynamic = slice.linkage == "dynamic"
+    if windows(slice) then
+        -- its tools build here (build_tools), for the slices of other targets
+        error("ICU builds no libraries for Windows yet: on Windows this recipe builds only its tools, for Android")
+    end
+    if dynamic and slice.os == "android" then
+        -- its makefiles name shared objects with versions (libicuuc.so.79), which Android does not load
+        error("ICU builds static libraries only for Android: its shared objects carry versions in their names, which Android does not load")
+    end
     local filter = options["data-filter"]
     if filter and options.data == "none" then
         error("data-filter needs data = \"static\" or \"file\": with \"none\" there is no data to filter")

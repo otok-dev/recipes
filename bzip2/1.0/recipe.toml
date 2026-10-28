@@ -1,0 +1,30 @@
+# The otok recipe of bzip2 (https://github.com/apotocki/otok): libbz2 for Android, every Apple platform and the
+# native target, from the release archive; static or dynamic on Android and the native target.
+[recipe]
+api = 1
+library = "bzip2"
+name = "bzip2"
+version = "1.0.8"
+revision = 1
+license = "bzip2-1.0.6"
+license-files = ["LICENSE"]
+homepage = "https://sourceware.org/bzip2/"
+description = "libbz2, the bzip2 compression library."
+keywords = ["compression", "bzip2"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz"
+sha256 = "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269"
+
+[platforms]
+supported = ["android", "ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim", "native"]
+
+[toolchains]
+cmake = ">= 3.20"
+ninja = ">= 1.10"
+
+[[product]]
+name = "BZip2"
+libraries = ["bz2"]
+apple = { privacy-manifest = "none" }

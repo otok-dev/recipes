@@ -1,19 +1,21 @@
 # The otok recipe of ICU4C (https://github.com/apotocki/otok): libicuuc, libicui18n, libicuio and the
-# ICU data for every Apple platform, from the release archive with the prebuilt data, or with the data
+# ICU data for Android and every Apple platform, from the release archive with the prebuilt data, or with the data
 # built from its sources by the project's filter; the data in libicudata, as a file of its own or not at
-# all; static or dynamic on the native target (not Windows yet: ICU builds there with its MSBuild solution).
+# all; static or dynamic on the native target (not Windows yet: ICU builds there with its MSBuild solution), static on
+# Android. On a Windows build machine its tools are built with MSVC under MSYS2, whose make it needs (tool-paths).
 [recipe]
 api = 1
 library = "icu4c"
 name = "icu4c"
 version = "79.1"
-revision = 3
+revision = 4
 license = "Unicode-3.0"
 license-files = ["LICENSE"]
 homepage = "https://icu.unicode.org"
 description = "ICU, the International Components for Unicode (libicuuc, libicui18n, libicuio, the data)."
 keywords = ["unicode", "i18n", "icu"]
 linkage = ["static", "dynamic"]
+cxx-standard = ">= 17"
 
 # the sources of the release carry no data sources, only the data the build itself needs
 [source]
@@ -35,7 +37,7 @@ sha256 = "b3a430009bb5fab77b1a4b98fab85cc8f887e26d4e4166121724298ae14d7224"
 when = { option = "data-filter" }
 
 [platforms]
-supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim", "native"]
+supported = ["android", "ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim", "native"]
 
 [options.no-renaming]
 type = "bool"

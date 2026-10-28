@@ -52,7 +52,11 @@ end
 function build(slice, options, deps)
     local selected = options.libraries
     if #selected > 0 then
-        local args = { "cxxstd=20" }
+        -- the project's C++ standard, else 20
+        local args = { "cxxstd=" .. (slice.cxx_standard or 20) }
+        -- b2 names libraries by toolset and version on a Windows build machine (--layout=versioned), whatever the
+        -- target: the plain names (libboost_json.a) for every target but Windows, whose auto-linking asks for the others
+        if not windows(slice) then args[#args + 1] = "--layout=system" end
         for _, l in ipairs(selected) do
             if l == "process" and no_processes[slice.platform] then
                 error("Boost.Process needs fork and exec, which " .. slice.platform .. " does not have: select it only for macosx and native")

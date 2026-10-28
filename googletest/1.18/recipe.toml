@@ -1,0 +1,49 @@
+# The otok recipe of GoogleTest (https://github.com/apotocki/otok): gtest and gmock with their main libraries,
+# static, for the native tests of Android apps and for the native target, from the release tag.
+[recipe]
+api = 1
+library = "googletest"
+name = "googletest"
+version = "1.18.0"
+revision = 1
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+homepage = "https://github.com/google/googletest"
+description = "GoogleTest and GoogleMock, Google's C++ test framework."
+keywords = ["testing", "gtest", "gmock"]
+linkage = ["static"]
+cxx-standard = ">= 17"
+
+[source]
+git = "https://github.com/google/googletest"
+commit = "063de7e9578f82b369302001269680b4b1553359"
+tag = "v1.18.0"
+
+[platforms]
+supported = ["android", "native"]
+
+[toolchains]
+cmake = ">= 3.20"
+ninja = ">= 1.10"
+
+[[product]]
+name = "GTest"
+libraries = ["gtest"]
+
+[[product]]
+name = "GTestMain"
+libraries = ["gtest_main"]
+headers = false
+depends = ["GTest"]
+
+[[product]]
+name = "GMock"
+libraries = ["gmock"]
+headers = false
+depends = ["GTest"]
+
+[[product]]
+name = "GMockMain"
+libraries = ["gmock_main"]
+headers = false
+depends = ["GMock"]
