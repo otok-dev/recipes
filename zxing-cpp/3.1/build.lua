@@ -1,7 +1,7 @@
 -- The CMake project of the reader (with `writers`, the writer too): libZXing.a, libZXing.so or libZXing.dylib
--- (ZXing.lib, ZXing.dll with MSVC) and include/ZXing/, on Apple with the module map of the C API; or, with `jni`, libzxingcpp_android.so, the reader of the
--- Android wrapper (with `writers`, the recipe's writer too) from android/CMakeLists.txt of the recipe, which has no
--- install rules: the library is copied into the prefix.
+-- (ZXing.lib, ZXing.dll with MSVC) and include/ZXing/, on Apple with the module map of the C API; or, with `jni`, as
+-- the library ZXing, libzxingcpp_android.so, the reader of the Android wrapper (with `writers`, the recipe's writer
+-- too) from android/CMakeLists.txt of the recipe, which has no install rules: the library is copied into the prefix.
 function build(slice, options, deps)
     if options.jni then
         if slice.os ~= "android" then
@@ -31,9 +31,11 @@ function build(slice, options, deps)
             otok.copy(slice.recipe .. "/android/BarcodeWriter.kt", p .. "/share/BarcodeWriter.kt")
             data["BarcodeWriter.kt"] = p .. "/share/BarcodeWriter.kt"
         end
+        -- the library ZXing of the product, under the name Java loads; Java calls it: no headers
+        otok.mkdir(p .. "/include")
         return {
-            libraries = { zxingcpp_android = p .. "/lib/libzxingcpp_android.so" },
-            headers = {},  -- Java calls it: no headers
+            libraries = { ZXing = p .. "/lib/libzxingcpp_android.so" },
+            headers = p .. "/include",
             data = data,
         }
     end

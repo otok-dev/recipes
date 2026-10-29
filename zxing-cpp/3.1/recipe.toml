@@ -1,14 +1,14 @@
 # The otok recipe of zxing-cpp (https://github.com/apotocki/otok): the barcode reader library, with `writers`
 # also the writer of its new backend, the bundled libzint (the submodule zint/), for Android, Apple and the native target;
 # on Apple with the Swift API of this recipe (wrappers/ZXingSwift: BarcodeReader, BarcodeWriter) over zxing-cpp's C API.
-# With `jni`, the JNI library of zxing-cpp's Android wrapper instead, for an app that uses zxingcpp.BarcodeReader
-# without the wrapper's AAR, and with `writers` zxingcpp.BarcodeWriter of this recipe (android/) too.
+# With `jni`, on Android, the library is the JNI library of zxing-cpp's Android wrapper instead, for an app that uses
+# zxingcpp.BarcodeReader without the wrapper's AAR, and with `writers` zxingcpp.BarcodeWriter of this recipe (android/) too.
 [recipe]
 api = 1
 library = "zxing-cpp"
 name = "zxing-cpp"
 version = "3.1.1"
-revision = 1
+revision = 2
 # the reader carries libzueci (core/src/libzueci), the writer libzint (zint/backend), both BSD-3-Clause; the source has
 # neither text: zint/LICENSE only says which part of zint is BSD, the text is in the headers of its files. The code of
 # android/ and wrappers/ is this recipe's own, CC0-1.0.
@@ -33,7 +33,7 @@ supported = ["android", "ios", "iossim", "macosx", "catalyst", "tvos", "tvossim"
 [options.jni]
 type = "bool"
 default = false
-doc = "Android: libzxingcpp_android.so, the JNI library of zxing-cpp's Android wrapper (wrappers/android), with the reader inside, instead of the ZXing library; data/ of the output has the wrapper's BarcodeReader.kt, the class of zxingcpp.BarcodeReader that loads it, for the app's sources (with the ProGuard rule -keep class zxingcpp.** { *; }: the library makes the class's results through JNI). With writers, also the recipe's writer (android/ZXingCppWriter.cpp) and BarcodeWriter.kt, zxingcpp.BarcodeWriter. Needs linkage = \"dynamic\"."
+doc = "Android: libzxingcpp_android.so, the JNI library of zxing-cpp's Android wrapper (wrappers/android), with the reader inside, as the library ZXing of the product ZXing, without headers; data/ of the output has the wrapper's BarcodeReader.kt, the class of zxingcpp.BarcodeReader that loads it, for the app's sources (with the ProGuard rule -keep class zxingcpp.** { *; }: the library makes the class's results through JNI). With writers, also the recipe's writer (android/ZXingCppWriter.cpp) and BarcodeWriter.kt, zxingcpp.BarcodeWriter. Needs linkage = \"dynamic\"."
 
 [options.writers]
 type = "bool"
@@ -48,15 +48,5 @@ ninja = ">= 1.10"
 name = "ZXing"
 libraries = ["ZXing"]
 link = { libraries = ["c++"] }
-when = { not = { option = "jni" } }
 # Swift sees the C API only (module_map of build.lua): the other headers are C++
 apple = { module = "CZXing", wrappers = ["ZXingSwift"], privacy-manifest = "PrivacyInfo.xcprivacy" }
-
-[[product]]
-name = "ZXingAndroid"
-libraries = ["zxingcpp_android"]
-headers = false
-when = { option = "jni" }
-# jni is for Android only (build.lua), but `when` cannot say so and publishing asks every product for a manifest: that
-# of ZXing, whose code this library carries
-apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }
