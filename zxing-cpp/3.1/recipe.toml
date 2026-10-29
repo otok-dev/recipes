@@ -57,3 +57,6 @@ name = "ZXingAndroid"
 libraries = ["zxingcpp_android"]
 headers = false
 when = { option = "jni" }
+# jni is for Android only (build.lua), but `when` cannot say so and publishing asks every product for a manifest: that
+# of ZXing, whose code this library carries
+apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }
