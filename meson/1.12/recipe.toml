@@ -1,0 +1,27 @@
+# The otok recipe of Meson (https://github.com/apotocki/otok): the meson program for the builds of other recipes, which
+# name it as their toolchain (`meson = { default-recipe = "apotocki/meson" }`). Meson is Python: the program is meson.py,
+# run by the Python of the python recipe (docs/PLAN.md decision 70 of otok); the builds that use it bring their ninja.
+[recipe]
+api = 1
+library = "meson"
+name = "meson"
+version = "1.12.1"
+revision = 1
+license = "Apache-2.0"
+license-files = ["COPYING"]
+homepage = "https://mesonbuild.com"
+description = "Meson, the build system: meson.py and its mesonbuild package, run by Python."
+keywords = ["build", "tool"]
+
+[tool]
+programs = ["meson"]
+
+[source]
+url = "https://github.com/mesonbuild/meson/releases/download/1.12.1/meson-1.12.1.tar.gz"
+sha256 = "ab0a6ca09f8ef70c564c8241fb5a23957886a0b53fb58412b5e07eaf07dba743"
+
+[platforms]
+supported = ["native"]
+
+[toolchains]
+python = { version = ">= 3.10", default-recipe = "apotocki/python" }
