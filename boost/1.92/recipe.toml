@@ -5,7 +5,7 @@ api = 1
 library = "boost"
 name = "boost"
 version = "1.92.0"
-revision = 4
+revision = 5
 license = "BSL-1.0"
 license-files = ["LICENSE_1_0.txt"]
 homepage = "https://www.boost.org"
@@ -24,7 +24,12 @@ sha256 = "5c1d40cb8e19adbf740a4ec2da35b3e58f3f5804b1dce44deb53df72193cbc6c"
 patches = ["patches/0001-context-arm64_32.patch", "patches/0002-context-abi-of-the-request.patch", "patches/0003-msvc-rc-includes.patch"]
 
 [platforms]
-supported = ["android", "ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim", "native"]
+supported = ["android", "ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim", "native", "windows"]
+
+# the windows target builds with Boost's CMake (build.lua)
+[toolchains]
+cmake = { version = ">= 3.20", when = { os = ["windows"] } }
+ninja = { version = ">= 1.10", when = { os = ["windows"] } }
 
 [options.libraries]
 type = "list"
