@@ -1,0 +1,30 @@
+# The otok recipe of GN (https://github.com/apotocki/otok): the gn program for the builds of other recipes, which name it
+# as their toolchain (`gn = { default-recipe = "apotocki/gn" }`). GN has no releases; its version is the commit position
+# (`git describe --match initial-commit`), which `gn --version` prints. 2175 is the GN Skia pins (bin/fetch-gn).
+[recipe]
+api = 1
+library = "gn"
+name = "gn"
+version = "2175"
+revision = 1
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+homepage = "https://gn.googlesource.com/gn"
+description = "GN, the meta-build system that generates Ninja build files (Chromium, Skia)."
+keywords = ["build", "tool"]
+
+[tool]
+programs = ["gn"]
+
+[source]
+git = "https://gn.googlesource.com/gn"
+commit = "b2afae122eeb6ce09c52d63f67dc53fc517dbdc8"
+# escape.h without <string>, which Visual Studio 2026 no longer includes through <string_view>
+patches = ["patches/0001-escape-include-string.patch"]
+
+[platforms]
+supported = ["native"]
+
+[toolchains]
+python = ">= 3.6"
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }

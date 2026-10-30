@@ -1,0 +1,28 @@
+# The otok recipe of Ninja (https://github.com/apotocki/otok): the ninja program for the builds of other recipes, which
+# name it as their toolchain (`ninja = { default-recipe = "apotocki/ninja" }`). Bootstrapped by its configure.py with the
+# machine's compiler, so it needs no ninja or CMake of its own.
+[recipe]
+api = 1
+library = "ninja"
+name = "ninja"
+version = "1.13.2"
+revision = 1
+license = "Apache-2.0"
+license-files = ["COPYING"]
+homepage = "https://ninja-build.org"
+description = "Ninja, a small build system with a focus on speed."
+keywords = ["build", "tool"]
+
+[tool]
+programs = ["ninja"]
+
+[source]
+git = "https://github.com/ninja-build/ninja"
+commit = "3441b633c2fe2c494e958780ba0f4227b1327634"
+tag = "v1.13.2"
+
+[platforms]
+supported = ["native"]
+
+[toolchains]
+python = ">= 3.6"
