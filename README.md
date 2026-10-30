@@ -37,6 +37,20 @@ changes or goes.
 recipe = { git = "https://github.com/otok-dev/recipes", rev = "<commit>", path = "updates/2.0" }
 ```
 
+## MSYS2 packages
+
+The make recipe brings, on Windows, an MSYS2 tree of pinned packages: make and the shell and tools its rules
+and configure scripts run. They are resources of the recipe, written by `tools/msys2-packages.py` (Python 3.14)
+from the packages the recipe names and what they depend on, as the database of the MSYS2 repository gives them:
+
+```sh
+python tools/msys2-packages.py make/4.4/recipe.toml
+```
+
+It rewrites the lines between `# BEGIN MSYS2 packages: <packages>` and `# END MSYS2 packages` with today's
+packages, checked against the SHA-256 of the database. The repository keeps older packages for a while, not
+forever: a recipe whose packages are gone is pinned anew, with a new revision.
+
 ## License
 
 The recipes and build scripts of this repository are dedicated to the public domain under [CC0 1.0](LICENSE).

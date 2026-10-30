@@ -21,9 +21,9 @@ end
 
 local common = { "--disable-extras", "--disable-tests", "--disable-samples", "--disable-dyload" }
 
--- with a filter: ICU's Python build tool builds the data as it says
+-- the Python configure runs; with a filter, ICU's Python build tool builds the data as it says
 local function data_env(slice, filter)
-    if not filter then return {} end
+    if not filter then return { PYTHON = slice.toolchains.python } end
     return { ICU_DATA_FILTER_FILE = filter, PYTHON = slice.toolchains.python }
 end
 

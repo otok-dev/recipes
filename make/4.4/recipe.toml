@@ -1,0 +1,138 @@
+# The otok recipe of GNU Make (https://github.com/apotocki/otok): the make program for the builds of other recipes, which
+# name it as their toolchain (`make = { default-recipe = "apotocki/make" }`). On Windows the make of MSYS2 with the
+# programs its rules and configure scripts run (bash as sh, coreutils, sed, grep, gawk, diffutils, findutils), one MSYS2
+# tree of pinned packages, as vcpkg brings it; otok.autotools runs configure through the sh beside make. Elsewhere
+# built from the source archive by its build.sh, so it needs no make: a make with the jobserver of make 4.4 on macOS
+# too, whose own is 3.81.
+[recipe]
+api = 1
+library = "make"
+name = "make"
+version = "4.4.1"
+revision = 1
+license = "GPL-3.0-or-later"
+license-files = ["COPYING"]
+homepage = "https://www.gnu.org/software/make/"
+description = "GNU Make: MSYS2's with the shell and tools of its rules on Windows, built from source elsewhere."
+keywords = ["build", "tool"]
+
+[tool]
+programs = ["make"]
+
+[source]
+url = "https://ftp.gnu.org/gnu/make/make-4.4.1.tar.gz"
+sha256 = "dd16fb1d67bfab79a72f5e8390735c49e3e8e70b4945a15ab1f81ddb78658fb3"
+mirrors = ["https://ftpmirror.gnu.org/gnu/make/make-4.4.1.tar.gz"]
+
+[platforms]
+supported = ["native"]
+
+# Written by tools/msys2-packages.py of this repository from the packages named on the next line and what they need.
+# BEGIN MSYS2 packages: make bash coreutils sed grep gawk diffutils findutils
+# bash 5.3.20-2, coreutils 8.32-5, diffutils 3.12-1, findutils 4.11.0-2, gawk 5.4.1-1, gcc-libs 16.2.0-1, gmp 6.3.0-2,
+# grep 1~3.0-7, libiconv 1.19-1, libintl 0.22.5-1, libpcre 8.45-5, libreadline 8.3.006-1, make 4.4.1-3, mpfr 4.2.2-1,
+# msys2-runtime 3.6.11-4, ncurses 6.6-2, sed 4.9-1
+
+[[resource]]
+name = "msys2_bash"
+url = "https://repo.msys2.org/msys/x86_64/bash-5.3.20-2-x86_64.pkg.tar.zst"
+sha256 = "0951e809c552dd7dd2835df1b2d590822187f14e717d809e942e4eb677d0adfd"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_coreutils"
+url = "https://repo.msys2.org/msys/x86_64/coreutils-8.32-5-x86_64.pkg.tar.zst"
+sha256 = "62dfee1c39fd15f99c39802b35e82643bc14fffc16d6c76d4001caa385ec77e3"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_diffutils"
+url = "https://repo.msys2.org/msys/x86_64/diffutils-3.12-1-x86_64.pkg.tar.zst"
+sha256 = "7902c8ce3d4dd69a0f5e98dc9d5c83c17b23314ba486169db57ef6e2835ce3b6"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_findutils"
+url = "https://repo.msys2.org/msys/x86_64/findutils-4.11.0-2-x86_64.pkg.tar.zst"
+sha256 = "f19d3c6b1b073d4c5759ae83f5639d11a5f0227b772f7d86d600db573d9d5d32"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_gawk"
+url = "https://repo.msys2.org/msys/x86_64/gawk-5.4.1-1-x86_64.pkg.tar.zst"
+sha256 = "4b1322cb6c83d61fde5100e229e3cabc5b7d01fc0d0d8bc311edc08df91916be"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_gcc_libs"
+url = "https://repo.msys2.org/msys/x86_64/gcc-libs-16.2.0-1-x86_64.pkg.tar.zst"
+sha256 = "50e1bbbb1b4186ba1ed8c08cdbb5c0a8c2343e4b5747bace24273e26fb148471"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_gmp"
+url = "https://repo.msys2.org/msys/x86_64/gmp-6.3.0-2-x86_64.pkg.tar.zst"
+sha256 = "f84536138e618d47a1df2da83916cfebbd449f159ffad52f994a71060a41cf34"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_grep"
+url = "https://repo.msys2.org/msys/x86_64/grep-1~3.0-7-x86_64.pkg.tar.zst"
+sha256 = "2909b3bbef8d33d66980339fb7bd2d3d9145bae0f04191e6671df39868aea427"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_libiconv"
+url = "https://repo.msys2.org/msys/x86_64/libiconv-1.19-1-x86_64.pkg.tar.zst"
+sha256 = "0fa55ea2a6ccf97cf8c58b24b2615815e15e16e6e4e888091c263c2c83c5313d"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_libintl"
+url = "https://repo.msys2.org/msys/x86_64/libintl-0.22.5-1-x86_64.pkg.tar.zst"
+sha256 = "336d66b9d95cf9c1804958f8e260762a3e83bf158ed5981f783bc772a31073cf"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_libpcre"
+url = "https://repo.msys2.org/msys/x86_64/libpcre-8.45-5-x86_64.pkg.tar.zst"
+sha256 = "b4dc2eb7795cbacaa683101d720fa67f536262497a1d89934a58f5dab8d17d17"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_libreadline"
+url = "https://repo.msys2.org/msys/x86_64/libreadline-8.3.006-1-x86_64.pkg.tar.zst"
+sha256 = "29e25c50bf6cd7a5e6f2253af76f54fe3c1a915313c7c18e98bedaa665c6adea"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_make"
+url = "https://repo.msys2.org/msys/x86_64/make-4.4.1-3-x86_64.pkg.tar.zst"
+sha256 = "af0bdba17f06fe037f0194069adaa31a8fe45f1a11381501896aea1fae37bd5d"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_mpfr"
+url = "https://repo.msys2.org/msys/x86_64/mpfr-4.2.2-1-x86_64.pkg.tar.zst"
+sha256 = "8f1b6c17c53e00494a488e03dfdf8fc742027ed03a5bd7b1b3a6a33f595a7498"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_msys2_runtime"
+url = "https://repo.msys2.org/msys/x86_64/msys2-runtime-3.6.11-4-x86_64.pkg.tar.zst"
+sha256 = "7b1c4b625483ceff9a87f2dfcf3659704dc3da655a0ad414ecb7d9175e7d3ba0"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_ncurses"
+url = "https://repo.msys2.org/msys/x86_64/ncurses-6.6-2-x86_64.pkg.tar.zst"
+sha256 = "828c92f09b17f00d3b49362fcfa4affa58e5e50e238f290ea36eb7a690da3acb"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_sed"
+url = "https://repo.msys2.org/msys/x86_64/sed-4.9-1-x86_64.pkg.tar.zst"
+sha256 = "3748af28f69e946ec5a42e6670c9bbf6da7352dc93baaa537f69e99c5483b9fc"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+# END MSYS2 packages

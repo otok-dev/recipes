@@ -1,14 +1,14 @@
 # The otok recipe of Python (https://github.com/apotocki/otok): the python program for the build scripts of other
 # recipes, which name it as their toolchain (`python = { default-recipe = "apotocki/python" }`). Prebuilt interpreters of
 # the build machine (a resource per machine, fetched on that machine only): on Windows the embeddable package of
-# python.org, elsewhere the install_only builds of python-build-standalone, of the same version. Neither has pip's
-# packages: the standard library only. The source archive carries the license.
+# python.org laid out as an installation (Lib/, no ._pth), elsewhere the install_only builds of python-build-standalone,
+# of the same version. Neither has pip's packages: the standard library only. The source archive carries the license.
 [recipe]
 api = 1
 library = "python"
 name = "python"
 version = "3.14.10"
-revision = 1
+revision = 2
 license = "PSF-2.0"
 license-files = ["LICENSE"]
 homepage = "https://www.python.org"
