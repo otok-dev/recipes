@@ -26,5 +26,5 @@ patches = ["patches/0001-escape-include-string.patch"]
 supported = ["native"]
 
 [toolchains]
-python = ">= 3.6"
+python = { version = ">= 3.6", default-recipe = "apotocki/python" }
 ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }

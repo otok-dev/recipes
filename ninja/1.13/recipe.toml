@@ -25,4 +25,4 @@ tag = "v1.13.2"
 supported = ["native"]
 
 [toolchains]
-python = ">= 3.6"
+python = { version = ">= 3.6", default-recipe = "apotocki/python" }

@@ -1,0 +1,62 @@
+# The otok recipe of Python (https://github.com/apotocki/otok): the python program for the build scripts of other
+# recipes, which name it as their toolchain (`python = { default-recipe = "apotocki/python" }`). Prebuilt interpreters of
+# the build machine (a resource per machine, fetched on that machine only): on Windows the embeddable package of
+# python.org, elsewhere the install_only builds of python-build-standalone, of the same version. Neither has pip's
+# packages: the standard library only. The source archive carries the license.
+[recipe]
+api = 1
+library = "python"
+name = "python"
+version = "3.14.10"
+revision = 1
+license = "PSF-2.0"
+license-files = ["LICENSE"]
+homepage = "https://www.python.org"
+description = "Python, the interpreter, prebuilt for the build machine: python.org's embeddable package on Windows."
+keywords = ["python", "interpreter", "tool"]
+
+[tool]
+programs = ["python"]
+
+[source]
+url = "https://www.python.org/ftp/python/3.14.10/Python-3.14.10.tar.xz"
+sha256 = "de414a57119abef52784d8993e341d53aed635fc2b05c2607d9f98a2c5b72032"
+
+[[resource]]
+name = "windows_x86_64"
+url = "https://www.python.org/ftp/python/3.14.10/python-3.14.10-embed-amd64.zip"
+sha256 = "90905e64a840557d8c1bc4f5b74db3d7ee85e3ffb217611cac1c7813acea4159"
+when = { host = ["windows-x86_64"] }
+
+[[resource]]
+name = "windows_arm64"
+url = "https://www.python.org/ftp/python/3.14.10/python-3.14.10-embed-arm64.zip"
+sha256 = "bbe116bb1248820359cbf25127ac5c7794ea161869d83686cfbc9a45203ff836"
+when = { host = ["windows-arm64"] }
+
+[[resource]]
+name = "macos_arm64"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.14.10%2B20261026-aarch64-apple-darwin-install_only.tar.gz"
+sha256 = "30a18bcb9ab75e485b4bf4e5d783dde165571e7e42c56dff47a2d2c5345183a4"
+when = { host = ["macos-arm64"] }
+
+[[resource]]
+name = "macos_x86_64"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.14.10%2B20261026-x86_64-apple-darwin-install_only.tar.gz"
+sha256 = "01cedae5d4a66ac570e13cb35fa570d0e79ba8e9affd4518a5d85b6c2b98ff10"
+when = { host = ["macos-x86_64"] }
+
+[[resource]]
+name = "linux_x86_64"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.14.10%2B20261026-x86_64-unknown-linux-gnu-install_only.tar.gz"
+sha256 = "1b38024924eb7f4cf0cab45d7b871d1f1991354190fccd2625ac7529a43786e2"
+when = { host = ["linux-x86_64"] }
+
+[[resource]]
+name = "linux_arm64"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.14.10%2B20261026-aarch64-unknown-linux-gnu-install_only.tar.gz"
+sha256 = "dcc31ce7b9ddbbffac160da7fff0cc069054f43eca52382a7d0eebf94e985b88"
+when = { host = ["linux-arm64"] }
+
+[platforms]
+supported = ["native"]
