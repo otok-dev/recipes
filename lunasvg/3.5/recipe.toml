@@ -1,0 +1,35 @@
+# The otok recipe of LunaSVG (https://github.com/apotocki/otok): liblunasvg for the native target, from the
+# release tag, with PlutoVG of its own recipe instead of the copy in its tree; static or dynamic.
+[recipe]
+api = 1
+library = "lunasvg"
+name = "lunasvg"
+version = "3.5.0"
+revision = 1
+license = "MIT"
+license-files = ["LICENSE"]
+homepage = "https://github.com/sammycage/lunasvg"
+description = "LunaSVG, an SVG rendering library in C++."
+keywords = ["svg", "graphics", "rendering"]
+linkage = ["static", "dynamic"]
+cxx-standard = ">= 17"
+
+[source]
+git = "https://github.com/sammycage/lunasvg"
+commit = "83c58df8103dc7dca423dfd824992af94d49bed6"
+tag = "v3.5.0"
+
+[platforms]
+supported = ["native"]
+
+[dependencies.plutovg]
+version = ">= 1.3"
+default-recipe = "apotocki/plutovg"
+
+[toolchains]
+cmake = ">= 3.20"
+ninja = ">= 1.10"
+
+[[product]]
+name = "LunaSVG"
+libraries = ["lunasvg"]

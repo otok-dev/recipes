@@ -1,0 +1,34 @@
+# The otok recipe of libpng (https://github.com/apotocki/otok): libpng16 for the native target, from the release tag,
+# with zlib of its own recipe; static or dynamic.
+[recipe]
+api = 1
+library = "libpng"
+name = "libpng"
+version = "1.6.47"
+revision = 1
+license = "libpng-2.0"
+license-files = ["LICENSE"]
+homepage = "http://www.libpng.org/pub/png/libpng.html"
+description = "libpng, the reference library for PNG images."
+keywords = ["png", "image"]
+linkage = ["static", "dynamic"]
+
+[source]
+git = "https://github.com/pnggroup/libpng"
+commit = "872555f4ba910252783af1507f9e7fe1653be252"
+tag = "v1.6.47"
+
+[platforms]
+supported = ["native"]
+
+[dependencies.zlib]
+version = ">= 1.2"
+default-recipe = "apotocki/zlib"
+
+[toolchains]
+cmake = ">= 3.20"
+ninja = ">= 1.10"
+
+[[product]]
+name = "PNG"
+libraries = ["png16"]

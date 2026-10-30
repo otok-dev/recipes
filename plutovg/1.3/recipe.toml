@@ -1,0 +1,30 @@
+# The otok recipe of PlutoVG (https://github.com/apotocki/otok): libplutovg for the native target, from the
+# release tag; static or dynamic.
+[recipe]
+api = 1
+library = "plutovg"
+name = "plutovg"
+version = "1.3.3"
+revision = 1
+license = "MIT"
+license-files = ["LICENSE"]
+homepage = "https://github.com/sammycage/plutovg"
+description = "PlutoVG, a tiny 2D vector graphics library in C."
+keywords = ["graphics", "vector", "2d"]
+linkage = ["static", "dynamic"]
+
+[source]
+git = "https://github.com/sammycage/plutovg"
+commit = "bbd91f0d06a71491691b36330f29dffa4af87ccf"
+tag = "v1.3.3"
+
+[platforms]
+supported = ["native"]
+
+[toolchains]
+cmake = ">= 3.20"
+ninja = ">= 1.10"
+
+[[product]]
+name = "PlutoVG"
+libraries = ["plutovg"]

@@ -1,0 +1,20 @@
+The Type 42 driver activates the size it created only when FT_New_Size created it: on an error ttsize is
+uninitialized, and FT_Activate_Size got it anyway.
+
+diff --git a/src/type42/t42objs.c b/src/type42/t42objs.c
+index 7010ba8..406586e 100644
+--- a/src/type42/t42objs.c
++++ b/src/type42/t42objs.c
+@@ -510,9 +510,10 @@
+ 
+     error = FT_New_Size( t42face->ttf_face, &ttsize );
+     if ( !error )
++    {
+       t42size->ttsize = ttsize;
+-
+-    FT_Activate_Size( ttsize );
++      FT_Activate_Size( ttsize );
++    }
+ 
+     return error;
+   }
