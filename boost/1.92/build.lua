@@ -94,6 +94,9 @@ function build(slice, options, deps)
             args[#args + 1] = "--with-" .. l
         end
         if no_alt_stack[slice.platform] then args[#args + 1] = "define=BOOST_TEST_DISABLE_ALT_STACK" end
+        -- where WinDbg is, b2 builds stacktrace_windbg instead of stacktrace_basic: the product BoostStacktraceBasic holds it
+        -- on every target, as Boost's CMake builds it
+        if windows(slice) then args[#args + 1] = "boost.stacktrace.basic=on" end
         -- ICU only when asked for: b2 would take any ICU it finds (has_icu), so it is turned off otherwise
         if deps.icu4c then
             args[#args + 1] = "-sICU_PATH=" .. deps.icu4c.prefix
