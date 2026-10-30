@@ -1,14 +1,14 @@
 # The otok recipe of ICU4C (https://github.com/apotocki/otok): libicuuc, libicui18n, libicuio and the
 # ICU data for Android and every Apple platform, from the release archive with the prebuilt data, or with the data
 # built from its sources by the project's filter; the data in libicudata, as a file of its own or not at
-# all; static or dynamic on the native target (not Windows yet: ICU builds there with its MSBuild solution), static on
-# Android. On a Windows build machine its tools are built with MSVC under MSYS2, whose make it needs (tool-paths).
+# all; static or dynamic on the native target, static on Android. On a Windows
+# build machine it is built with MSVC under MSYS2, whose make it needs (tool-paths).
 [recipe]
 api = 1
 library = "icu4c"
 name = "icu4c"
 version = "79.1"
-revision = 4
+revision = 5
 license = "Unicode-3.0"
 license-files = ["LICENSE"]
 homepage = "https://icu.unicode.org"
