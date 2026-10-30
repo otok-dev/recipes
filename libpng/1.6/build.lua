@@ -26,7 +26,12 @@ end
 
 function build(slice, options, deps)
     local static = slice.linkage == "static"
-    otok.cmake{ defines = { PNG_SHARED = not static, PNG_STATIC = static, PNG_TESTS = false, PNG_TOOLS = false, PNG_FRAMEWORK = false } }
+    -- FindZLIB knows the static library of MSVC's zlib (zs.lib) only when told to look for one. For Windows libpng
+    -- generates no libpng.pc and libpng-config, but installs them unless the build machine is Windows (CMAKE_HOST_WIN32):
+    -- not those files, nor the manual pages (this recipe writes the .pc)
+    local windows = slice.triple:find("windows") ~= nil
+    otok.cmake{ defines = { PNG_SHARED = not static, PNG_STATIC = static, PNG_TESTS = false, PNG_TOOLS = false, PNG_FRAMEWORK = false,
+        ZLIB_USE_STATIC_LIBS = deps.zlib.linkage == "static", SKIP_INSTALL_FILES = windows } }
     local p = slice.prefix
     local dll = otok.glob("bin/libpng16*.dll", p)[1]
     if dll then

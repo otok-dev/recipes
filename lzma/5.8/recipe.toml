@@ -5,7 +5,7 @@ api = 1
 library = "lzma"
 name = "lzma"
 version = "5.8.4"
-revision = 2
+revision = 3
 license = "0BSD"
 # COPYING tells which license applies to which part; liblzma is 0BSD
 license-files = ["COPYING", "COPYING.0BSD"]
@@ -20,7 +20,7 @@ commit = "d3e650e63c110e830fd5391e7f8b45df0b91d3da"
 tag = "v5.8.4"
 
 [platforms]
-supported = ["android", "ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim", "native"]
+supported = ["android", "ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim", "native", "windows"]
 
 [toolchains]
 cmake = ">= 3.20"

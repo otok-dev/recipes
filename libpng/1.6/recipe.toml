@@ -5,7 +5,7 @@ api = 1
 library = "libpng"
 name = "libpng"
 version = "1.6.47"
-revision = 1
+revision = 2
 license = "libpng-2.0"
 license-files = ["LICENSE"]
 homepage = "http://www.libpng.org/pub/png/libpng.html"
@@ -19,7 +19,7 @@ commit = "872555f4ba910252783af1507f9e7fe1653be252"
 tag = "v1.6.47"
 
 [platforms]
-supported = ["native"]
+supported = ["native", "windows"]
 
 [dependencies.zlib]
 version = ">= 1.2"

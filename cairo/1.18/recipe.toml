@@ -7,7 +7,7 @@ api = 1
 library = "cairo"
 name = "cairo"
 version = "1.18.4"
-revision = 2
+revision = 3
 license = "LGPL-2.1-only OR MPL-1.1"
 license-files = ["COPYING", "COPYING-LGPL-2.1", "COPYING-MPL-1.1"]
 homepage = "https://www.cairographics.org"
@@ -27,7 +27,7 @@ commit = "e934468cdf8b488a72639ab7e2accabe5cd3e4b1"
 when = { option = "d2d" }
 
 [platforms]
-supported = ["native"]
+supported = ["native", "windows"]
 
 [options.d2d]
 type = "bool"

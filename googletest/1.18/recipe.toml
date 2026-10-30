@@ -5,7 +5,7 @@ api = 1
 library = "googletest"
 name = "googletest"
 version = "1.18.0"
-revision = 1
+revision = 2
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
 homepage = "https://github.com/google/googletest"
@@ -20,7 +20,7 @@ commit = "063de7e9578f82b369302001269680b4b1553359"
 tag = "v1.18.0"
 
 [platforms]
-supported = ["android", "native"]
+supported = ["android", "native", "windows"]
 
 [toolchains]
 cmake = ">= 3.20"

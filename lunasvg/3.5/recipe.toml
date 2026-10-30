@@ -5,7 +5,7 @@ api = 1
 library = "lunasvg"
 name = "lunasvg"
 version = "3.5.0"
-revision = 1
+revision = 2
 license = "MIT"
 license-files = ["LICENSE"]
 homepage = "https://github.com/sammycage/lunasvg"
@@ -20,7 +20,7 @@ commit = "83c58df8103dc7dca423dfd824992af94d49bed6"
 tag = "v3.5.0"
 
 [platforms]
-supported = ["native"]
+supported = ["native", "windows"]
 
 [dependencies.plutovg]
 version = ">= 1.3"

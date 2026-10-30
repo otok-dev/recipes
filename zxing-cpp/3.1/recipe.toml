@@ -8,7 +8,7 @@ api = 1
 library = "zxing-cpp"
 name = "zxing-cpp"
 version = "3.1.1"
-revision = 2
+revision = 3
 # the reader carries libzueci (core/src/libzueci), the writer libzint (zint/backend), both BSD-3-Clause; the source has
 # neither text: zint/LICENSE only says which part of zint is BSD, the text is in the headers of its files. The code of
 # android/ and wrappers/ is this recipe's own, CC0-1.0.
@@ -28,7 +28,7 @@ tag = "v3.1.1"
 submodules = true
 
 [platforms]
-supported = ["android", "ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim", "native"]
+supported = ["android", "ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim", "native", "windows"]
 
 [options.jni]
 type = "bool"

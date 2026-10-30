@@ -5,7 +5,7 @@ api = 1
 library = "freetype"
 name = "freetype"
 version = "2.13.3"
-revision = 1
+revision = 2
 license = "FTL OR GPL-2.0-or-later"
 license-files = ["LICENSE.TXT", "docs/FTL.TXT", "docs/GPLv2.TXT"]
 homepage = "https://freetype.org"
@@ -20,7 +20,7 @@ tag = "VER-2-13-3"
 patches = ["patches/0001-t42-activate-created-size.patch"]
 
 [platforms]
-supported = ["native"]
+supported = ["native", "windows"]
 
 [toolchains]
 cmake = ">= 3.20"

@@ -6,7 +6,7 @@ api = 1
 library = "pixman"
 name = "pixman"
 version = "0.44.2"
-revision = 2
+revision = 3
 license = "MIT"
 license-files = ["COPYING"]
 homepage = "https://pixman.org"
@@ -21,7 +21,7 @@ tag = "pixman-0.44.2"
 patches = ["patches/0001-reset-static-data.patch"]
 
 [platforms]
-supported = ["native"]
+supported = ["native", "windows"]
 
 [toolchains]
 meson = { version = ">= 1.3", default-recipe = "apotocki/meson" }
