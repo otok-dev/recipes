@@ -1,0 +1,29 @@
+# The otok recipe of pkgconf (https://github.com/apotocki/otok): the pkg-config program for the builds of other recipes,
+# which name it as their toolchain (`pkg-config = { default-recipe = "apotocki/pkgconf" }`), so the library is
+# pkg-config. Built with Meson and Ninja of their recipes; it searches only the paths it is given (PKG_CONFIG_PATH,
+# meson's pkg_config_path), none of the machine's.
+[recipe]
+api = 1
+library = "pkg-config"
+name = "pkgconf"
+version = "3.0.10"
+revision = 1
+license = "ISC"
+license-files = ["COPYING"]
+homepage = "https://github.com/pkgconf/pkgconf"
+description = "pkgconf, the pkg-config program: compiler and linker flags of libraries from their .pc files."
+keywords = ["build", "tool"]
+
+[tool]
+programs = ["pkg-config"]
+
+[source]
+url = "https://distfiles.ariadne.space/pkgconf/pkgconf-3.0.10.tar.xz"
+sha256 = "9371b2f6372da574d4c6dc96fe9b1463037bcf6afcb6671c1555afde7b17e2de"
+
+[platforms]
+supported = ["native"]
+
+[toolchains]
+meson = { version = ">= 0.47", default-recipe = "apotocki/meson" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
