@@ -1,0 +1,16 @@
+-- PlutoVG's CMake project without its examples. What it installs: libplutovg.a, or libplutovg.so with
+-- its links; the header in include/plutovg/.
+function build(slice, options, deps)
+    otok.cmake{ defines = { PLUTOVG_BUILD_EXAMPLES = false } }
+    local p = slice.prefix
+    -- a static library is told by PLUTOVG_BUILD_STATIC, which its CMake config gives its consumers: the
+    -- header says so itself, as the others have no config
+    if slice.linkage == "static" then
+        local header = p .. "/include/plutovg/plutovg.h"
+        local text, n = otok.read(header):gsub("defined%(PLUTOVG_BUILD_STATIC%)", "1")
+        assert(n > 0, "plutovg.h no longer tests PLUTOVG_BUILD_STATIC")
+        otok.write(header, text)
+    end
+    local lib = otok.glob(slice.linkage == "static" and "lib/libplutovg.a" or "lib/libplutovg.so", p)[1]
+    return { libraries = { plutovg = lib }, headers = p .. "/include" }
+end

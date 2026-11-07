@@ -1,0 +1,19 @@
+Boost.Context keeps the abi of the build request. Its default_abi rule, a <conditional> of the library's
+requirements, which win over the request, chose ms whenever b2 ran on Windows, before looking at the target:
+an Android build there got <abi>ms with <binary-format>elf, found no assembly for it, and libboost_context.a
+lacked jump_fcontext, make_fcontext and ontop_fcontext. Where the request names no abi, the rule is unchanged.
+
+diff --git a/libs/context/boost-context-features.jam b/libs/context/boost-context-features.jam
+index 01daf2d..20755b8 100644
+--- a/libs/context/boost-context-features.jam
++++ b/libs/context/boost-context-features.jam
+@@ -53,6 +53,9 @@ feature.set-default binary-format : elf ;
+ 
+ rule default_abi ( properties * )
+ {
++    # an abi of the build request stays: on a Windows host the rule chose ms even for the ELF of Android
++    if [ property.select <abi> : $(properties) ] { return ; }
++
+     local tmp = sysv ;
+     local arch = [ property.select <architecture> : $(properties) ] ;
+ 

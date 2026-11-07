@@ -1,0 +1,32 @@
+# The otok recipe of LZ4 (https://github.com/apotocki/otok): liblz4 for every Apple platform, from the release tag;
+# static.
+[recipe]
+api = 1
+library = "lz4"
+name = "lz4"
+version = "1.11.0"
+revision = 1
+license = "BSD-2-Clause"
+license-files = ["lib/LICENSE"]
+homepage = "https://lz4.org"
+description = "LZ4, an extremely fast lossless compression library."
+keywords = ["compression", "lz4"]
+linkage = ["static"]
+
+[source]
+git = "https://github.com/lz4/lz4"
+commit = "c72c7c0ec132ad2ce2fe9fad7b0c728d9faee2fc"
+tag = "v1.11.0"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+build-on = ["macos/xcode"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "LZ4"
+libraries = ["lz4"]
+apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }

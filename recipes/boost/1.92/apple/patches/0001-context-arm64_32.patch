@@ -1,0 +1,369 @@
+Boost.Context for arm64_32 (watchOS): the arm64 Mach-O assembly with 32-bit pointers. arm64_32 passes
+and returns transfer_t, two 32-bit pointers, packed in X0 (as clang does for any such struct), and
+pointers arrive in W registers; the context switch itself is the arm64 one. The 32-bit ARM Mach-O
+assembly it replaces in the Jamfile was for armv7 and armv7k, which Xcode no longer builds for.
+
+diff --git a/libs/context/build/Jamfile.v2 b/libs/context/build/Jamfile.v2
+index 3b04ce9..21908bc 100644
+--- a/libs/context/build/Jamfile.v2
++++ b/libs/context/build/Jamfile.v2
+@@ -88,11 +88,11 @@ alias asm_sources
+      <toolset>qcc
+    ;
+ 
+-# ARM/AAPCS/MACH-O
++# ARM/AAPCS/MACH-O: arm64_32 (watchOS), the only 32-bit ARM of Apple that Xcode still builds for
+ alias asm_sources
+-   : asm/make_arm_aapcs_macho_gas.S
+-     asm/jump_arm_aapcs_macho_gas.S
+-     asm/ontop_arm_aapcs_macho_gas.S
++   : asm/make_arm64_32_aapcs_macho_gas.S
++     asm/jump_arm64_32_aapcs_macho_gas.S
++     asm/ontop_arm64_32_aapcs_macho_gas.S
+    : <abi>aapcs
+      <address-model>32
+      <architecture>arm
+@@ -101,9 +101,9 @@ alias asm_sources
+    ;
+ 
+ alias asm_sources
+-   : asm/make_arm_aapcs_macho_gas.S
+-     asm/jump_arm_aapcs_macho_gas.S
+-     asm/ontop_arm_aapcs_macho_gas.S
++   : asm/make_arm64_32_aapcs_macho_gas.S
++     asm/jump_arm64_32_aapcs_macho_gas.S
++     asm/ontop_arm64_32_aapcs_macho_gas.S
+    : <abi>aapcs
+      <address-model>32
+      <architecture>arm
+diff --git a/libs/context/src/asm/jump_arm64_32_aapcs_macho_gas.S b/libs/context/src/asm/jump_arm64_32_aapcs_macho_gas.S
+new file mode 100644
+index 0000000..ffcb482
+--- /dev/null
++++ b/libs/context/src/asm/jump_arm64_32_aapcs_macho_gas.S
+@@ -0,0 +1,112 @@
++/*
++         Copyright Edward Nevill + Oliver Kowalke 2015
++   Distributed under the Boost Software License, Version 1.0.
++      (See accompanying file LICENSE_1_0.txt or copy at
++          http://www.boost.org/LICENSE_1_0.txt)
++*/
++/*******************************************************
++ *                                                     *
++ *  -------------------------------------------------  *
++ *  |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  *
++ *  -------------------------------------------------  *
++ *  | 0x0 | 0x4 | 0x8 | 0xc | 0x10| 0x14| 0x18| 0x1c|  *
++ *  -------------------------------------------------  *
++ *  |    d8     |    d9     |    d10    |    d11    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  8  |  9  |  10 |  11 |  12 |  13 |  14 |  15 |  *
++ *  -------------------------------------------------  *
++ *  | 0x20| 0x24| 0x28| 0x2c| 0x30| 0x34| 0x38| 0x3c|  *
++ *  -------------------------------------------------  *
++ *  |    d12    |    d13    |    d14    |    d15    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  16 |  17 |  18 |  19 |  20 |  21 |  22 |  23 |  *
++ *  -------------------------------------------------  *
++ *  | 0x40| 0x44| 0x48| 0x4c| 0x50| 0x54| 0x58| 0x5c|  *
++ *  -------------------------------------------------  *
++ *  |    x19    |    x20    |    x21    |    x22    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  24 |  25 |  26 |  27 |  28 |  29 |  30 |  31 |  *
++ *  -------------------------------------------------  *
++ *  | 0x60| 0x64| 0x68| 0x6c| 0x70| 0x74| 0x78| 0x7c|  *
++ *  -------------------------------------------------  *
++ *  |    x23    |    x24    |    x25    |    x26    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  32 |  33 |  34 |  35 |  36 |  37 |  38 |  39 |  *
++ *  -------------------------------------------------  *
++ *  | 0x80| 0x84| 0x88| 0x8c| 0x90| 0x94| 0x98| 0x9c|  *
++ *  -------------------------------------------------  *
++ *  |    x27    |    x28    |    FP     |     LR    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  40 |  41 |  42 | 43  |           |           |  *
++ *  -------------------------------------------------  *
++ *  | 0xa0| 0xa4| 0xa8| 0xac|           |           |  *
++ *  -------------------------------------------------  *
++ *  |     PC    |   align   |           |           |  *
++ *  -------------------------------------------------  *
++ *                                                     *
++ *******************************************************/
++
++.text
++.private_extern _jump_fcontext
++.globl _jump_fcontext
++.balign 16
++_jump_fcontext:
++    ; arm64_32: the AArch64 code of arm64 with 32-bit pointers; FCTX arrives in w0, DATA in w1
++    ; prepare stack for GP + FPU
++    sub  sp, sp, #0xb0
++
++    ; save d8 - d15
++    stp  d8,  d9,  [sp, #0x00]
++    stp  d10, d11, [sp, #0x10]
++    stp  d12, d13, [sp, #0x20]
++    stp  d14, d15, [sp, #0x30]
++
++    ; save x19-x30
++    stp  x19, x20, [sp, #0x40]
++    stp  x21, x22, [sp, #0x50]
++    stp  x23, x24, [sp, #0x60]
++    stp  x25, x26, [sp, #0x70]
++    stp  x27, x28, [sp, #0x80]
++    stp  fp,  lr,  [sp, #0x90]
++
++    ; save LR as PC
++    str  lr, [sp, #0xa0]
++
++    ; store RSP (pointing to context-data) in X0
++    mov  x4, sp
++
++    ; restore RSP (pointing to context-data) from W0, zero-extended
++    mov  w0, w0
++    mov  sp, x0
++
++    ; load d8 - d15
++    ldp  d8,  d9,  [sp, #0x00]
++    ldp  d10, d11, [sp, #0x10]
++    ldp  d12, d13, [sp, #0x20]
++    ldp  d14, d15, [sp, #0x30]
++
++    ; load x19-x30
++    ldp  x19, x20, [sp, #0x40]
++    ldp  x21, x22, [sp, #0x50]
++    ldp  x23, x24, [sp, #0x60]
++    ldp  x25, x26, [sp, #0x70]
++    ldp  x27, x28, [sp, #0x80]
++    ldp  fp,  lr,  [sp, #0x90]
++
++    ; return transfer_t from jump, and pass it as first arg in context function:
++    ; arm64_32 passes the 8-byte struct in X0, FCTX in the low half, DATA in the high one
++    mov  w0, w4
++    orr  x0, x0, x1, lsl #32
++
++    ; load pc
++    ldr  x4, [sp, #0xa0]
++
++    ; restore stack from GP + FPU
++    add  sp, sp, #0xb0
++
++    ret x4
+diff --git a/libs/context/src/asm/make_arm64_32_aapcs_macho_gas.S b/libs/context/src/asm/make_arm64_32_aapcs_macho_gas.S
+new file mode 100644
+index 0000000..53b1691
+--- /dev/null
++++ b/libs/context/src/asm/make_arm64_32_aapcs_macho_gas.S
+@@ -0,0 +1,88 @@
++/*
++            Copyright Edward Nevill + Oliver Kowalke 2015
++   Distributed under the Boost Software License, Version 1.0.
++      (See accompanying file LICENSE_1_0.txt or copy at
++          http://www.boost.org/LICENSE_1_0.txt)
++*/
++/*******************************************************
++ *                                                     *
++ *  -------------------------------------------------  *
++ *  |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  *
++ *  -------------------------------------------------  *
++ *  | 0x0 | 0x4 | 0x8 | 0xc | 0x10| 0x14| 0x18| 0x1c|  *
++ *  -------------------------------------------------  *
++ *  |    d8     |    d9     |    d10    |    d11    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  8  |  9  |  10 |  11 |  12 |  13 |  14 |  15 |  *
++ *  -------------------------------------------------  *
++ *  | 0x20| 0x24| 0x28| 0x2c| 0x30| 0x34| 0x38| 0x3c|  *
++ *  -------------------------------------------------  *
++ *  |    d12    |    d13    |    d14    |    d15    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  16 |  17 |  18 |  19 |  20 |  21 |  22 |  23 |  *
++ *  -------------------------------------------------  *
++ *  | 0x40| 0x44| 0x48| 0x4c| 0x50| 0x54| 0x58| 0x5c|  *
++ *  -------------------------------------------------  *
++ *  |    x19    |    x20    |    x21    |    x22    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  24 |  25 |  26 |  27 |  28 |  29 |  30 |  31 |  *
++ *  -------------------------------------------------  *
++ *  | 0x60| 0x64| 0x68| 0x6c| 0x70| 0x74| 0x78| 0x7c|  *
++ *  -------------------------------------------------  *
++ *  |    x23    |    x24    |    x25    |    x26    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  32 |  33 |  34 |  35 |  36 |  37 |  38 |  39 |  *
++ *  -------------------------------------------------  *
++ *  | 0x80| 0x84| 0x88| 0x8c| 0x90| 0x94| 0x98| 0x9c|  *
++ *  -------------------------------------------------  *
++ *  |    x27    |    x28    |    FP     |     LR    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  40 |  41 |  42 | 43  |           |           |  *
++ *  -------------------------------------------------  *
++ *  | 0xa0| 0xa4| 0xa8| 0xac|           |           |  *
++ *  -------------------------------------------------  *
++ *  |     PC    |   align   |           |           |  *
++ *  -------------------------------------------------  *
++ *                                                     *
++ *******************************************************/
++
++.text
++.private_extern _make_fcontext
++.globl _make_fcontext
++.balign 16
++
++_make_fcontext:
++    ; arm64_32: 32-bit pointers arrive in w0 (stack) and w2 (context-function), zero-extended here
++    mov  w0, w0
++    mov  w2, w2
++
++    ; shift address in x0 (allocated stack) to lower 16 byte boundary
++    and x0, x0, ~0xF
++
++    ; reserve space for context-data on context-stack
++    sub  x0, x0, #0xb0
++
++    ; third arg of make_fcontext() == address of context-function
++    ; store address as a PC to jump in
++    str  x2, [x0, #0xa0]
++
++    adr  x1, finish
++
++    ; save address of finish as return-address for context-function
++    ; will be entered after context-function returns (LR register)
++    str  x1, [x0, #0x98]
++
++    ret  lr ; return pointer to context-data (x0)
++
++finish:
++    ; exit code is zero
++    mov  x0, #0
++    ; exit application
++    bl  __exit
++
++
+diff --git a/libs/context/src/asm/ontop_arm64_32_aapcs_macho_gas.S b/libs/context/src/asm/ontop_arm64_32_aapcs_macho_gas.S
+new file mode 100644
+index 0000000..998cd3f
+--- /dev/null
++++ b/libs/context/src/asm/ontop_arm64_32_aapcs_macho_gas.S
+@@ -0,0 +1,113 @@
++/*
++       Copyright Edward Nevill + Oliver Kowalke 2015
++   Distributed under the Boost Software License, Version 1.0.
++      (See accompanying file LICENSE_1_0.txt or copy at
++          http://www.boost.org/LICENSE_1_0.txt)
++*/
++/*******************************************************
++ *                                                     *
++ *  -------------------------------------------------  *
++ *  |  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  *
++ *  -------------------------------------------------  *
++ *  | 0x0 | 0x4 | 0x8 | 0xc | 0x10| 0x14| 0x18| 0x1c|  *
++ *  -------------------------------------------------  *
++ *  |    d8     |    d9     |    d10    |    d11    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  8  |  9  |  10 |  11 |  12 |  13 |  14 |  15 |  *
++ *  -------------------------------------------------  *
++ *  | 0x20| 0x24| 0x28| 0x2c| 0x30| 0x34| 0x38| 0x3c|  *
++ *  -------------------------------------------------  *
++ *  |    d12    |    d13    |    d14    |    d15    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  16 |  17 |  18 |  19 |  20 |  21 |  22 |  23 |  *
++ *  -------------------------------------------------  *
++ *  | 0x40| 0x44| 0x48| 0x4c| 0x50| 0x54| 0x58| 0x5c|  *
++ *  -------------------------------------------------  *
++ *  |    x19    |    x20    |    x21    |    x22    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  24 |  25 |  26 |  27 |  28 |  29 |  30 |  31 |  *
++ *  -------------------------------------------------  *
++ *  | 0x60| 0x64| 0x68| 0x6c| 0x70| 0x74| 0x78| 0x7c|  *
++ *  -------------------------------------------------  *
++ *  |    x23    |    x24    |    x25    |    x26    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  32 |  33 |  34 |  35 |  36 |  37 |  38 |  39 |  *
++ *  -------------------------------------------------  *
++ *  | 0x80| 0x84| 0x88| 0x8c| 0x90| 0x94| 0x98| 0x9c|  *
++ *  -------------------------------------------------  *
++ *  |    x27    |    x28    |    FP     |     LR    |  *
++ *  -------------------------------------------------  *
++ *  -------------------------------------------------  *
++ *  |  40 |  41 |  42 | 43  |           |           |  *
++ *  -------------------------------------------------  *
++ *  | 0xa0| 0xa4| 0xa8| 0xac|           |           |  *
++ *  -------------------------------------------------  *
++ *  |     PC    |   align   |           |           |  *
++ *  -------------------------------------------------  *
++ *                                                     *
++ *******************************************************/
++
++.text
++.private_extern _ontop_fcontext
++.global _ontop_fcontext
++.balign 16
++_ontop_fcontext:
++    ; arm64_32: the AArch64 code of arm64 with 32-bit pointers; FCTX arrives in w0, DATA in w1, the
++    ; ontop-function in w2
++    mov  w2, w2
++    ; prepare stack for GP + FPU
++    sub  sp, sp, #0xb0
++
++    ; save d8 - d15
++    stp  d8,  d9,  [sp, #0x00]
++    stp  d10, d11, [sp, #0x10]
++    stp  d12, d13, [sp, #0x20]
++    stp  d14, d15, [sp, #0x30]
++
++    ; save x19-x30
++    stp  x19, x20, [sp, #0x40]
++    stp  x21, x22, [sp, #0x50]
++    stp  x23, x24, [sp, #0x60]
++    stp  x25, x26, [sp, #0x70]
++    stp  x27, x28, [sp, #0x80]
++    stp  x29, x30, [sp, #0x90]
++
++    ; save LR as PC
++    str  x30, [sp, #0xa0]
++
++    ; store RSP (pointing to context-data) in X5
++    mov  x4, sp
++
++    ; restore RSP (pointing to context-data) from W0, zero-extended
++    mov  w0, w0
++    mov  sp, x0
++
++    ; load d8 - d15
++    ldp  d8,  d9,  [sp, #0x00]
++    ldp  d10, d11, [sp, #0x10]
++    ldp  d12, d13, [sp, #0x20]
++    ldp  d14, d15, [sp, #0x30]
++
++    ; load x19-x30
++    ldp  x19, x20, [sp, #0x40]
++    ldp  x21, x22, [sp, #0x50]
++    ldp  x23, x24, [sp, #0x60]
++    ldp  x25, x26, [sp, #0x70]
++    ldp  x27, x28, [sp, #0x80]
++    ldp  x29, x30, [sp, #0x90]
++
++    ; pass transfer_t as first arg to the ontop-function, whose result returns from jump:
++    ; arm64_32 passes the 8-byte struct in X0, FCTX in the low half, DATA in the high one
++    mov  w0, w4
++    orr  x0, x0, x1, lsl #32
++
++    ; skip pc
++    ; restore stack from GP + FPU
++    add  sp, sp, #0xb0
++
++    ; jump to ontop-function
++    ret x2

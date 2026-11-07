@@ -1,0 +1,31 @@
+# The otok recipe of Lua (https://github.com/apotocki/otok): the library for Windows, from the release archive,
+# with MSVC or with clang-cl across from Linux; static or dynamic.
+[recipe]
+api = 1
+library = "lua"
+name = "lua"
+version = "5.5.1"
+revision = 1
+license = "MIT"
+# the release archive has no license file: LICENSE is the notice at the end of src/lua.h
+license-files = [{ recipe = "LICENSE" }]
+homepage = "https://www.lua.org"
+description = "Lua, the embeddable scripting language, as a library."
+keywords = ["lua", "scripting"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://www.lua.org/ftp/lua-5.5.1.tar.gz"
+sha256 = "1c4b4068d67061f2a2231ad2b5422e77acea1487ea9890f6320af614f4373dce"
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc", "linux/clang-cl"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "Lua"
+libraries = ["lua"]

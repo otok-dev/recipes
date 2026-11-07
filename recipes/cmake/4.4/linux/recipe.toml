@@ -1,0 +1,37 @@
+# The otok recipe of CMake (https://github.com/apotocki/otok): the cmake program for the builds of other recipes, which
+# name it as their toolchain (`cmake = { default-recipe = "apotocki/cmake" }`), on Linux: Kitware's release binaries of
+# the build machine (a resource per architecture, fetched on that machine only); the source archive carries the license.
+[recipe]
+api = 1
+library = "cmake"
+name = "cmake"
+version = "4.4.5"
+revision = 1
+license = "BSD-3-Clause"
+license-files = ["LICENSE.rst"]
+homepage = "https://cmake.org"
+description = "CMake, the cross-platform build system generator, as Kitware releases it."
+keywords = ["build", "tool"]
+
+[tool]
+programs = ["cmake", "ctest", "cpack"]
+
+[source]
+url = "https://github.com/Kitware/CMake/releases/download/v4.4.5/cmake-4.4.5.tar.gz"
+sha256 = "a0c54c88abb8078dd8eccadb717fc6bb194bf18e7d44c86309910288886e04e2"
+
+[[resource]]
+name = "linux_x86_64"
+url = "https://github.com/Kitware/CMake/releases/download/v4.4.5/cmake-4.4.5-linux-x86_64.tar.gz"
+sha256 = "ed85135c5a5135b45e50423cb406dea04ca3338da0b8ef3c9ede963559680be0"
+when = { host = ["linux-x86_64"] }
+
+[[resource]]
+name = "linux_arm64"
+url = "https://github.com/Kitware/CMake/releases/download/v4.4.5/cmake-4.4.5-linux-aarch64.tar.gz"
+sha256 = "301d5063ab259577c1b57ce5490b1aab9ea5c56dc4c822f73499553dab94925f"
+when = { host = ["linux-arm64"] }
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]

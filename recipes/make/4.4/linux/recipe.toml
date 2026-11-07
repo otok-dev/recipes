@@ -1,0 +1,26 @@
+# The otok recipe of GNU Make (https://github.com/apotocki/otok): the make program for the builds of other recipes, which
+# name it as their toolchain (`make = { default-recipe = "apotocki/make" }`), on Linux: built from the source archive
+# by its build.sh, so it needs no make.
+[recipe]
+api = 1
+library = "make"
+name = "make"
+version = "4.4.1"
+revision = 1
+license = "GPL-3.0-or-later"
+license-files = ["COPYING"]
+homepage = "https://www.gnu.org/software/make/"
+description = "GNU Make, built from source."
+keywords = ["build", "tool"]
+
+[tool]
+programs = ["make"]
+
+[source]
+url = "https://ftp.gnu.org/gnu/make/make-4.4.1.tar.gz"
+sha256 = "dd16fb1d67bfab79a72f5e8390735c49e3e8e70b4945a15ab1f81ddb78658fb3"
+mirrors = ["https://ftpmirror.gnu.org/gnu/make/make-4.4.1.tar.gz"]
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]

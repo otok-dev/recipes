@@ -1,0 +1,51 @@
+# The otok recipe of GoogleTest (https://github.com/apotocki/otok): gtest and gmock with their main libraries,
+# static, for Windows, with MSVC or with clang-cl across from Linux, from the release tag.
+[recipe]
+api = 1
+library = "googletest"
+name = "googletest"
+version = "1.18.0"
+revision = 1
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+homepage = "https://github.com/google/googletest"
+description = "GoogleTest and GoogleMock, Google's C++ test framework."
+keywords = ["testing", "gtest", "gmock"]
+linkage = ["static"]
+cxx-standard = ">= 17"
+
+[source]
+git = "https://github.com/google/googletest"
+commit = "063de7e9578f82b369302001269680b4b1553359"
+tag = "v1.18.0"
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc", "linux/clang-cl"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "GTest"
+libraries = ["gtest"]
+link = { runtime = "c++" }
+
+[[product]]
+name = "GTestMain"
+libraries = ["gtest_main"]
+headers = false
+depends = ["GTest"]
+
+[[product]]
+name = "GMock"
+libraries = ["gmock"]
+headers = false
+depends = ["GTest"]
+
+[[product]]
+name = "GMockMain"
+libraries = ["gmock_main"]
+headers = false
+depends = ["GMock"]

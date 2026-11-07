@@ -1,0 +1,19 @@
+The resource scripts of the msvc toolset get only the include paths in the build directory. mc writes Boost.Log's
+simple_event_log.rc there with what it includes; the include paths of every library of the modular tree (45 of them for
+Boost.Log) made rc's command longer than cmd takes (8191) when the tree is under a long path, such as a cache directory.
+
+diff --git a/tools/build/src/tools/msvc.jam b/tools/build/src/tools/msvc.jam
+index 5638aab..ad66008 100644
+--- a/tools/build/src/tools/msvc.jam
++++ b/tools/build/src/tools/msvc.jam
+@@ -881,6 +881,10 @@ actions compile.mc
+ rule compile.rc ( targets + : sources * : properties * )
+ {
+     set-setup-command $(targets) : $(properties) ;
++    # the scripts mc writes (Boost.Log) include only what it writes into the build directory: the include paths
++    # of every library of the modular tree made the command longer than cmd takes (8191) under a long path
++    local includes = [ on $(targets[1]) return $(INCLUDES) ] ;
++    INCLUDES on $(targets) = [ MATCH "^(.*bin\.v2.*)$" : $(includes) ] ;
+ }
+ 
+ actions compile.rc

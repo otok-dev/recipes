@@ -1,0 +1,38 @@
+# The otok recipe of Python (https://github.com/apotocki/otok): the python program for the build scripts of other
+# recipes, which name it as their toolchain (`python = { default-recipe = "apotocki/python" }`), on macOS: the
+# install_only build of python-build-standalone of the build machine (a resource per architecture, fetched on that
+# machine only). It has no pip packages: the standard library only. The source archive carries the license.
+[recipe]
+api = 1
+library = "python"
+name = "python"
+version = "3.14.10"
+revision = 1
+license = "PSF-2.0"
+license-files = ["LICENSE"]
+homepage = "https://www.python.org"
+description = "Python, the interpreter, prebuilt for the build machine."
+keywords = ["python", "interpreter", "tool"]
+
+[tool]
+programs = ["python"]
+
+[source]
+url = "https://www.python.org/ftp/python/3.14.10/Python-3.14.10.tar.xz"
+sha256 = "de414a57119abef52784d8993e341d53aed635fc2b05c2607d9f98a2c5b72032"
+
+[[resource]]
+name = "macos_arm64"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.14.10%2B20261026-aarch64-apple-darwin-install_only.tar.gz"
+sha256 = "30a18bcb9ab75e485b4bf4e5d783dde165571e7e42c56dff47a2d2c5345183a4"
+when = { host = ["macos-arm64"] }
+
+[[resource]]
+name = "macos_x86_64"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.14.10%2B20261026-x86_64-apple-darwin-install_only.tar.gz"
+sha256 = "01cedae5d4a66ac570e13cb35fa570d0e79ba8e9affd4518a5d85b6c2b98ff10"
+when = { host = ["macos-x86_64"] }
+
+[platforms]
+supported = ["macosx"]
+build-on = ["macos/xcode"]

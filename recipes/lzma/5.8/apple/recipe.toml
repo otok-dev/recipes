@@ -1,0 +1,33 @@
+# The otok recipe of liblzma from XZ Utils (https://github.com/apotocki/otok): the library alone for every Apple
+# platform, from the release tag; static.
+[recipe]
+api = 1
+library = "lzma"
+name = "lzma"
+version = "5.8.4"
+revision = 1
+license = "0BSD"
+# COPYING tells which license applies to which part; liblzma is 0BSD
+license-files = ["COPYING", "COPYING.0BSD"]
+homepage = "https://tukaani.org/xz/"
+description = "liblzma, the LZMA and XZ compression library of XZ Utils."
+keywords = ["compression", "lzma", "xz"]
+linkage = ["static"]
+
+[source]
+git = "https://github.com/tukaani-project/xz"
+commit = "d3e650e63c110e830fd5391e7f8b45df0b91d3da"
+tag = "v5.8.4"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+build-on = ["macos/xcode"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "LZMA"
+libraries = ["lzma"]
+apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }

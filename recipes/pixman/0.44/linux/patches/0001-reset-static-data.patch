@@ -1,0 +1,50 @@
+pixman_reset_static_data(): frees the implementations pixman chose for the CPU, which toolchains without
+__attribute__((destructor)) (MSVC) never free: for a leak checker at the end of a process, after
+cairo_debug_reset_static_data(), which calls it in the cairo recipe of this repository with the option d2d.
+
+diff --git a/pixman/pixman.c b/pixman/pixman.c
+index 26e5008..17b26e4 100644
+--- a/pixman/pixman.c
++++ b/pixman/pixman.c
+@@ -1013,6 +1013,27 @@ pixman_version_string (void)
+     return PIXMAN_VERSION_STRING;
+ }
+ 
++/**
++ * pixman_reset_static_data:
++ *
++ * Frees the implementations pixman chose for this CPU, for a leak checker at the end of a process: toolchains without
++ * __attribute__((destructor)), such as MSVC, never free them otherwise. Where pixman creates them on first use (no
++ * __attribute__((constructor))), a later use creates them again; elsewhere pixman must not be used after it.
++ **/
++PIXMAN_EXPORT void
++pixman_reset_static_data (void)
++{
++    pixman_implementation_t *imp = global_implementation;
++
++    global_implementation = NULL;
++    while (imp)
++    {
++	pixman_implementation_t *cur = imp;
++	imp = imp->fallback;
++	free (cur);
++    }
++}
++
+ /**
+  * pixman_format_supported_source:
+  * @format: A pixman_format_code_t format
+diff --git a/pixman/pixman.h b/pixman/pixman.h
+index d697b53..0b12bd7 100644
+--- a/pixman/pixman.h
++++ b/pixman/pixman.h
+@@ -788,6 +788,9 @@ int           pixman_version            (void);
+ PIXMAN_API
+ const char*   pixman_version_string     (void);
+ 
++PIXMAN_API
++void          pixman_reset_static_data  (void);
++
+ /*
+  * Images
+  */

@@ -1,0 +1,48 @@
+diff --git a/Package.swift b/Package.swift
+index 61986fb..2f1c9c2 100644
+--- a/Package.swift
++++ b/Package.swift
+@@ -18,7 +18,6 @@ let package = Package(
+             name: "Updates",
+             dependencies: [],
+             path: "Updates/Classes",
+-            exclude: ["UI"],
+             resources: [.copy("../../Example/Pods/Target Support Files/Updates/PrivacyInfo.xcprivacy")]
+         )
+     ]
+diff --git a/Updates/Classes/UI/Updates+UIDevice.swift b/Updates/Classes/UI/Updates+UIDevice.swift
+index 28466c2..f8ffbfd 100644
+--- a/Updates/Classes/UI/Updates+UIDevice.swift
++++ b/Updates/Classes/UI/Updates+UIDevice.swift
+@@ -5,6 +5,8 @@
+ //  Created by Ross Butler on 8/8/19.
+ //
+ 
++// UIKit only: the package also builds for macOS, which these files are not for (otok recipe patch)
++#if canImport(UIKit)
+ import Foundation
+ import UIKit
+ 
+@@ -15,3 +17,4 @@ public extension Updates {
+     }
+     
+ }
++#endif
+diff --git a/Updates/Classes/UI/UpdatesUI.swift b/Updates/Classes/UI/UpdatesUI.swift
+index f3f4ca7..446f4ae 100644
+--- a/Updates/Classes/UI/UpdatesUI.swift
++++ b/Updates/Classes/UI/UpdatesUI.swift
+@@ -5,6 +5,8 @@
+ //  Created by Ross Butler on 12/27/18.
+ //
+ 
++// UIKit only: the package also builds for macOS, which these files are not for (otok recipe patch)
++#if canImport(UIKit)
+ import Foundation
+ import StoreKit
+ import SafariServices
+@@ -248,3 +250,4 @@ private extension UpdatesUI {
+     }
+     
+ }
++#endif

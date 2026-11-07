@@ -1,0 +1,32 @@
+# The otok recipe of dav1d (https://github.com/apotocki/otok): VideoLAN's AV1 decoder, built with meson
+# (otok.meson), for every Apple platform; static.
+[recipe]
+api = 1
+library = "dav1d"
+name = "dav1d"
+version = "1.5.4"
+revision = 1
+license = "BSD-2-Clause"
+license-files = ["COPYING"]
+homepage = "https://code.videolan.org/videolan/dav1d"
+description = "dav1d, an AV1 decoder focused on speed and correctness."
+keywords = ["av1", "video", "decoder"]
+linkage = ["static"]
+
+[source]
+url = "https://downloads.videolan.org/pub/videolan/dav1d/1.5.4/dav1d-1.5.4.tar.xz"
+sha256 = "686616b7c69eb88d44459391ab25cac13b6647a3b288835c5784e71c1514a5c5"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+build-on = ["macos/xcode"]
+
+[toolchains]
+meson = { version = ">= 1.2", default-recipe = "apotocki/meson" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+nasm = { version = ">= 2.14", default-recipe = "apotocki/nasm" }  # the assembly of x86_64
+
+[[product]]
+name = "Dav1d"
+libraries = ["dav1d"]
+apple = { privacy-manifest = "none" }

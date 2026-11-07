@@ -1,0 +1,25 @@
+# The otok recipe of Perl (https://github.com/apotocki/otok): the perl interpreter for the builds of other recipes, which
+# name it as their toolchain (`perl = { default-recipe = "apotocki/perl" }`), on Windows: built from the release archive
+# with MSVC and the nmake makefile of win32/, a native perl as OpenSSL's VC- targets need (MSYS2's is a Unix one).
+[recipe]
+api = 1
+library = "perl"
+name = "perl"
+version = "5.44.0"
+revision = 1
+license = "Artistic-1.0-Perl OR GPL-1.0-or-later"
+license-files = ["Artistic", "Copying"]
+homepage = "https://www.perl.org"
+description = "Perl 5, built from source."
+keywords = ["perl", "interpreter", "tool"]
+
+[tool]
+programs = ["perl"]
+
+[source]
+url = "https://www.cpan.org/src/5.0/perl-5.44.0.tar.xz"
+sha256 = "505cf43912e9480495c344c70260452e32aa2a73c546a026b3f100053b23ce91"
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc"]

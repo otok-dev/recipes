@@ -1,0 +1,16 @@
+Boost.Serialization's Jamfile builds codecvt_null.cpp into both serialization and wserialization, which links
+serialization: two archives defining codecvt_null<wchar_t>, an overlap in one image (otok-toml.md 4.5). Boost's CMake
+builds it into serialization alone; so does b2 with this.
+
+diff --git a/libs/serialization/build/Jamfile.v2 b/libs/serialization/build/Jamfile.v2
+index 50fcce7..80cbb53 100644
+--- a/libs/serialization/build/Jamfile.v2
++++ b/libs/serialization/build/Jamfile.v2
+@@ -117,7 +117,6 @@ WSOURCES =
+     xml_woarchive
+     polymorphic_xml_wiarchive
+     polymorphic_xml_woarchive
+-    codecvt_null
+ ;
+ 
+ lib boost_serialization
