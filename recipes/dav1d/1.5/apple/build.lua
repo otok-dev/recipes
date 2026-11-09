@@ -8,5 +8,6 @@ function build(slice, options, deps)
         enable_asm = slice.arch ~= "arm64_32",
     } }
     local p = slice.prefix
-    return { libraries = { dav1d = p .. "/lib/libdav1d.a" }, headers = p .. "/include" }
+    local lib = otok.glob(slice.linkage == "static" and "lib/libdav1d.a" or "lib/libdav1d.dylib", p)[1]
+    return { libraries = { dav1d = lib }, headers = p .. "/include" }
 end

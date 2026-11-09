@@ -1,0 +1,57 @@
+# The otok recipe of FFmpeg (https://github.com/apotocki/otok): libavutil, libavcodec, libavformat, libavfilter,
+# libswscale and libswresample for Linux, LGPL only (no GPL or nonfree parts), with FFmpeg's own configure and make;
+# nothing found on the machine (--disable-autodetect), zlib and dav1d from their recipes; static or dynamic.
+[recipe]
+api = 1
+library = "ffmpeg"
+name = "ffmpeg"
+version = "9.0.2"
+revision = 1
+license = "LGPL-2.1-or-later"
+license-files = ["COPYING.LGPLv2.1", "LICENSE.md"]
+homepage = "https://ffmpeg.org"
+documentation = "https://ffmpeg.org/documentation.html"
+description = "FFmpeg's libraries (avutil, avcodec, avformat, avfilter, swscale, swresample) under the LGPL."
+keywords = ["video", "audio", "codec", "multimedia", "ffmpeg"]
+linkage = ["static", "dynamic"]
+c-standard = ">= 11"
+
+# The tag of the release in FFmpeg's mirror on GitHub (ffmpeg.org often fails to answer): its tree is that of the
+# release archive ffmpeg-9.0.2.tar.xz, signed by FFmpeg's release key FCF9 86EA 15E6 E293 A564 4F10 B432 2F04 D676 58D8,
+# without the file VERSION, which build.lua writes from RELEASE as the archive has it.
+[source]
+git = "https://github.com/FFmpeg/FFmpeg"
+commit = "946fcce07b6dcd0331c8cc609192aeff5e1924f8"
+tag = "n9.0.2"
+# libswscale compiles libavfilter's frame pool too: under names of its own, so that the static libraries do not both
+# define them
+patches = ["patches/0001-swscale-framepool-names.patch"]
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[options.dav1d]
+type = "bool"
+default = true
+doc = "AV1 decoding with dav1d (the decoder libdav1d), much faster than FFmpeg's own AV1 decoder."
+
+[deps.zlib]
+version = ">= 1.2"
+default-recipe = "apotocki/zlib"
+
+[deps.dav1d]
+version = ">= 1.0"
+default-recipe = "apotocki/dav1d"
+when = { option = "dav1d" }
+
+[toolchains]
+make = { version = ">= 3.81", default-recipe = "apotocki/make" }
+pkg-config = { version = ">= 1", default-recipe = "apotocki/pkgconf" }  # configure finds dav1d through it
+nasm = { version = ">= 2.13", default-recipe = "apotocki/nasm", when = { arch = ["x86_64"] } }  # the assembly of x86_64
+
+[[product]]
+name = "FFmpeg"
+libraries = ["avfilter", "avformat", "avcodec", "swscale", "swresample", "avutil"]
+headers = "avutil"
+link = { libraries = ["m", "atomic", "dl", "pthread"] }
