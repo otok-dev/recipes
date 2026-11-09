@@ -1,13 +1,14 @@
 # The otok recipe of GNU Make (https://github.com/apotocki/otok): the make program for the builds of other recipes, which
 # name it as their toolchain (`make = { default-recipe = "apotocki/make" }`), on Windows: the make of MSYS2 with the
-# programs its rules and configure scripts run (bash as sh, coreutils, sed, grep, gawk, diffutils, findutils), one MSYS2
-# tree of pinned packages, as vcpkg brings it; otok.autotools runs configure through the sh beside make.
+# programs its rules and configure scripts run (bash as sh, coreutils, sed, grep, gawk, diffutils, findutils, m4), and
+# binutils, whose GNU as assembles the GNU assembly of libraries built with MSVC (GMP); one MSYS2 tree of pinned
+# packages, as vcpkg brings it; otok.autotools runs configure through the sh beside make.
 [recipe]
 api = 1
 library = "make"
 name = "make"
 version = "4.4.1"
-revision = 1
+revision = 2
 license = "GPL-3.0-or-later"
 license-files = ["COPYING"]
 homepage = "https://www.gnu.org/software/make/"
@@ -15,7 +16,8 @@ description = "GNU Make, the make of MSYS2 with the shell and tools of its rules
 keywords = ["build", "tool"]
 
 [tool]
-programs = ["make"]
+# m4 and as for the recipes that need them, from this tree: its programs run with the msys-2.0.dll beside them
+programs = ["make", "m4", "as"]
 
 [source]
 url = "https://ftp.gnu.org/gnu/make/make-4.4.1.tar.gz"
@@ -27,21 +29,28 @@ supported = ["windows"]
 build-on = ["windows/msvc", "windows/clang-cl"]
 
 # Written by tools/msys2-packages.py of this repository from the packages named on the next line and what they need.
-# BEGIN MSYS2 packages: make bash coreutils sed grep gawk diffutils findutils
-# bash 5.3.20-2, coreutils 8.32-5, diffutils 3.12-1, findutils 4.11.0-2, gawk 5.4.1-1, gcc-libs 16.2.0-1, gmp 6.3.0-2,
-# grep 1~3.0-7, libiconv 1.19-1, libintl 0.22.5-1, libpcre 8.45-5, libreadline 8.3.006-1, make 4.4.1-3, mpfr 4.2.2-1,
-# msys2-runtime 3.6.11-4, ncurses 6.6-2, sed 4.9-1
+# BEGIN MSYS2 packages: make bash coreutils sed grep gawk diffutils findutils m4 binutils
+# bash 5.3.20-3, binutils 2.47-1, coreutils 9.0-1, diffutils 3.12-1, findutils 4.11.0-2, gawk 5.4.1-1, gcc-libs
+# 16.2.0-1, gmp 6.3.0-2, grep 1~3.0-7, libiconv 1.19-1, libintl 0.22.5-1, libpcre 8.45-5, libreadline 8.3.006-2, libzstd
+# 1.5.7-1, m4 1.4.21-1, make 4.4.1-3, mpfr 4.2.2-1, msys2-runtime 3.6.12-1, ncurses 6.6-2, sed 4.9-1, zlib 1.4-1, zstd
+# 1.5.7-1
 
 [[resource]]
 name = "msys2_bash"
-url = "https://repo.msys2.org/msys/x86_64/bash-5.3.20-2-x86_64.pkg.tar.zst"
-sha256 = "0951e809c552dd7dd2835df1b2d590822187f14e717d809e942e4eb677d0adfd"
+url = "https://repo.msys2.org/msys/x86_64/bash-5.3.20-3-x86_64.pkg.tar.zst"
+sha256 = "e7045fbbf82deb2551acd8386e1163236107c35952f0659bdbe4f5222269cd83"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_binutils"
+url = "https://repo.msys2.org/msys/x86_64/binutils-2.47-1-x86_64.pkg.tar.zst"
+sha256 = "b7ddaca6e8b63774cdb1f5ac2720963cd76f8f62ca7e2667b1b0f008ed7ecba2"
 when = { host = ["windows-x86_64", "windows-arm64"] }
 
 [[resource]]
 name = "msys2_coreutils"
-url = "https://repo.msys2.org/msys/x86_64/coreutils-8.32-5-x86_64.pkg.tar.zst"
-sha256 = "62dfee1c39fd15f99c39802b35e82643bc14fffc16d6c76d4001caa385ec77e3"
+url = "https://repo.msys2.org/msys/x86_64/coreutils-9.0-1-x86_64.pkg.tar.zst"
+sha256 = "5f7a90dcd42b9c01f254c87312e731344d84c46be495ac0432d674dab3ba2442"
 when = { host = ["windows-x86_64", "windows-arm64"] }
 
 [[resource]]
@@ -100,8 +109,20 @@ when = { host = ["windows-x86_64", "windows-arm64"] }
 
 [[resource]]
 name = "msys2_libreadline"
-url = "https://repo.msys2.org/msys/x86_64/libreadline-8.3.006-1-x86_64.pkg.tar.zst"
-sha256 = "29e25c50bf6cd7a5e6f2253af76f54fe3c1a915313c7c18e98bedaa665c6adea"
+url = "https://repo.msys2.org/msys/x86_64/libreadline-8.3.006-2-x86_64.pkg.tar.zst"
+sha256 = "e6c44cca4dcfd3821a4bcfca36bfef244af184e6963076bfcb15727001bfe8d2"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_libzstd"
+url = "https://repo.msys2.org/msys/x86_64/libzstd-1.5.7-1-x86_64.pkg.tar.zst"
+sha256 = "5e370b2e725a0a7e5ff58d84653c9a0cd5a10b9cfe930f2d949a28ad2a11c1f2"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_m4"
+url = "https://repo.msys2.org/msys/x86_64/m4-1.4.21-1-x86_64.pkg.tar.zst"
+sha256 = "b561e8871c7599502d9fae7196ee965b3fed3d7af09154eb8d2f5e4d9e5e5106"
 when = { host = ["windows-x86_64", "windows-arm64"] }
 
 [[resource]]
@@ -118,8 +139,8 @@ when = { host = ["windows-x86_64", "windows-arm64"] }
 
 [[resource]]
 name = "msys2_msys2_runtime"
-url = "https://repo.msys2.org/msys/x86_64/msys2-runtime-3.6.11-4-x86_64.pkg.tar.zst"
-sha256 = "7b1c4b625483ceff9a87f2dfcf3659704dc3da655a0ad414ecb7d9175e7d3ba0"
+url = "https://repo.msys2.org/msys/x86_64/msys2-runtime-3.6.12-1-x86_64.pkg.tar.zst"
+sha256 = "c0dbaa624e29be6d08cf5c65609dca6c749431109e4572bf446a3ca9b4c4fd7c"
 when = { host = ["windows-x86_64", "windows-arm64"] }
 
 [[resource]]
@@ -132,6 +153,18 @@ when = { host = ["windows-x86_64", "windows-arm64"] }
 name = "msys2_sed"
 url = "https://repo.msys2.org/msys/x86_64/sed-4.9-1-x86_64.pkg.tar.zst"
 sha256 = "3748af28f69e946ec5a42e6670c9bbf6da7352dc93baaa537f69e99c5483b9fc"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_zlib"
+url = "https://repo.msys2.org/msys/x86_64/zlib-1.4-1-x86_64.pkg.tar.zst"
+sha256 = "bafd3abf8b773ec28b6571d465a53a4e7afed4824cc1eec52f3bfbd6fa556ab9"
+when = { host = ["windows-x86_64", "windows-arm64"] }
+
+[[resource]]
+name = "msys2_zstd"
+url = "https://repo.msys2.org/msys/x86_64/zstd-1.5.7-1-x86_64.pkg.tar.zst"
+sha256 = "7b8ab77828c5a1efe53ebc53e3ea9d719bfbd609bf4c810eaa88d626188ed407"
 when = { host = ["windows-x86_64", "windows-arm64"] }
 
 # END MSYS2 packages

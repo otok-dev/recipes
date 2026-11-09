@@ -17,5 +17,6 @@ function build(slice, options, deps)
         otok.remove(p .. "/usr/share/" .. dir)
     end
     otok.write(p .. "/etc/fstab", fstab)
-    return { programs = { make = p .. "/usr/bin/make.exe" } }
+    local bin = p .. "/usr/bin/"
+    return { programs = { make = bin .. "make.exe", m4 = bin .. "m4.exe", as = bin .. "as.exe" } }
 end
