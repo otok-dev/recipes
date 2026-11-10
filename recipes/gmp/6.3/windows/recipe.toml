@@ -1,0 +1,47 @@
+# The otok recipe of GMP (https://github.com/apotocki/otok): libgmp and the C++ class interface libgmpxx for Windows on
+# x86_64, from the release archive, with GMP's configure and make under MSYS2 (the tree of the make recipe) and MSVC; its
+# assembly, as GMP builds it with MinGW, by GNU as of that tree; a fat binary, which chooses the code of the CPU it runs
+# on; static or dynamic.
+[recipe]
+api = 1
+library = "gmp"
+name = "gmp"
+version = "6.3.0"
+revision = 1
+license = "LGPL-3.0-or-later OR GPL-2.0-or-later"
+license-files = ["COPYING.LESSERv3", "COPYINGv3", "COPYINGv2"]
+homepage = "https://gmplib.org"
+documentation = "https://gmplib.org/manual/"
+description = "GMP, the GNU Multiple Precision Arithmetic Library: integers, rationals and floating-point numbers of any size."
+keywords = ["bignum", "arbitrary-precision", "math", "integer", "rational"]
+linkage = ["static", "dynamic"]
+
+# The archive of the release, signed by GMP's key 343C 2FF0 FBEE 5EC2 EDBE F399 F359 9FF8 28C6 7298 (gmp-6.3.0.tar.xz.sig)
+[source]
+url = "https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz"
+sha256 = "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898"
+mirrors = ["https://ftpmirror.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz", "https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz"]
+patches = ["patches/0001-msvc.patch"]
+
+[platforms]
+supported = ["windows"]
+# the assembly of arm64 is not yet assembled for Windows
+architectures = { windows = ["x86_64"] }
+build-on = ["windows/msvc"]
+
+[toolchains]
+make = { version = ">= 4.4.1", default-recipe = "apotocki/make" }
+# GMP's assembly is m4 macros for GNU as: both of the MSYS2 tree of the make recipe
+m4 = { default-recipe = "apotocki/make" }
+as = { default-recipe = "apotocki/make" }
+
+[[product]]
+name = "GMP"
+libraries = ["gmp"]
+
+[[product]]
+name = "GMPXX"
+libraries = ["gmpxx"]
+headers = false
+depends = ["GMP"]
+link = { runtime = "c++" }

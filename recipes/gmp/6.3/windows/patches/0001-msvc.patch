@@ -1,0 +1,125 @@
+GMP built with MSVC (cl) as a fat binary, static or as a DLL.
+
+- gmp-impl.h, mpn/x86_64/fat/sqr_basecase.c: the thresholds of a fat binary are variables, and the arrays the generic
+  code sizes by them are variable-length arrays, which MSVC has none of: they take the largest threshold of the CPUs,
+  which configure writes in fat.h (SQR_TOOM2_THRESHOLD_LIMIT, MUL_TOOM22_THRESHOLD_LIMIT).
+- gmp-impl.h: the functions of struct cpuvec_t are declared with __GMP_DECLSPEC, __declspec(dllexport) in a DLL,
+  which MSVC takes on no pointer of a struct.
+- gmp-h.in: the inline functions of gmp.h static with MSVC, whose C __inline functions are external definitions that
+  every object of a DLL would define again.
+- configure, configure.ac: no options of GNU ld for a DLL (--export-all-symbols, --output-def): libtool exports
+  the symbols MSVC's link is given in a .def file of its own.
+- gmp-h.in: no __GMP_CC and __GMP_CFLAGS, the compiler and the flags of the build, with its paths and its
+  configuration, which would make gmp.h differ from one build to the next.
+
+diff --git a/configure b/configure
+index 7910aa0..774a736 100644
+--- a/configure
++++ b/configure
+@@ -12183,9 +12183,7 @@ Use \"--disable-static --enable-shared\" to build just a DLL." "$LINENO" 5
+     # __isascii, but for some reason not the plain isascii.
+     #
+     if test "$enable_shared" = yes; then
+-      GMP_LDFLAGS="$GMP_LDFLAGS -no-undefined -Wl,--export-all-symbols"
+-      LIBGMP_LDFLAGS="$LIBGMP_LDFLAGS -Wl,--output-def,.libs/libgmp-3.dll.def"
+-      LIBGMPXX_LDFLAGS="$LIBGMP_LDFLAGS -Wl,--output-def,.libs/libgmpxx-3.dll.def"
++      GMP_LDFLAGS="$GMP_LDFLAGS -no-undefined"
+       LIBGMP_DLL=1
+     fi
+     ;;
+diff --git a/configure.ac b/configure.ac
+index 082077b..4f8efd5 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -2764,9 +2764,7 @@ Use "--disable-static --enable-shared" to build just a DLL.])
+     # __isascii, but for some reason not the plain isascii.
+     #
+     if test "$enable_shared" = yes; then
+-      GMP_LDFLAGS="$GMP_LDFLAGS -no-undefined -Wl,--export-all-symbols"
+-      LIBGMP_LDFLAGS="$LIBGMP_LDFLAGS -Wl,--output-def,.libs/libgmp-3.dll.def"
+-      LIBGMPXX_LDFLAGS="$LIBGMP_LDFLAGS -Wl,--output-def,.libs/libgmpxx-3.dll.def"
++      GMP_LDFLAGS="$GMP_LDFLAGS -no-undefined"
+       LIBGMP_DLL=1
+     fi
+     ;;
+diff --git a/gmp-h.in b/gmp-h.in
+index 8598e97..fa37296 100644
+--- a/gmp-h.in
++++ b/gmp-h.in
+@@ -402,7 +402,7 @@ typedef const __gmp_randstate_struct *gmp_randstate_srcptr;
+ 
+ /* Microsoft's C compiler accepts __inline */
+ #ifdef _MSC_VER
+-#define __GMP_EXTERN_INLINE  __inline
++#define __GMP_EXTERN_INLINE  static __inline
+ #endif
+ 
+ /* Recent enough Sun C compilers want "inline" */
+@@ -2330,10 +2330,6 @@ enum
+   GMP_ERROR_MPZ_OVERFLOW = 16
+ };
+ 
+-/* Define CC and CFLAGS which were used to build this version of GMP */
+-#define __GMP_CC "@CC@"
+-#define __GMP_CFLAGS "@CFLAGS@"
+-
+ /* Major version number is the value of __GNU_MP__ too, above. */
+ #define __GNU_MP_VERSION            6
+ #define __GNU_MP_VERSION_MINOR      3
+diff --git a/gmp-impl.h b/gmp-impl.h
+index 2615af7..31f9f1b 100644
+--- a/gmp-impl.h
++++ b/gmp-impl.h
+@@ -2208,6 +2208,12 @@ __GMP_DECLSPEC mp_limb_t gmp_primesieve (mp_ptr, mp_limb_t);
+ #ifndef SQRLO_BASECASE_THRESHOLD_LIMIT
+ #define SQRLO_BASECASE_THRESHOLD_LIMIT  SQRLO_BASECASE_THRESHOLD
+ #endif
++/* MSVC has no variable-length arrays, and the thresholds of a fat binary are variables: the arrays sized by the
++   limits take the largest of the CPUs, which configure writes in fat.h, SQRLO_DC_THRESHOLD_LIMIT as SQRLO_DC_THRESHOLD
++   follows from MUL_TOOM22_THRESHOLD (below).  */
++#if WANT_FAT_BINARY && defined (_MSC_VER) && ! defined (SQRLO_DC_THRESHOLD_LIMIT)
++#define SQRLO_DC_THRESHOLD_LIMIT  (2 * MUL_TOOM22_THRESHOLD_LIMIT)
++#endif
+ #ifndef SQRLO_DC_THRESHOLD_LIMIT
+ #define SQRLO_DC_THRESHOLD_LIMIT  SQRLO_DC_THRESHOLD
+ #endif
+@@ -4721,6 +4727,12 @@ __GMP_DECLSPEC int __gmp_doscan (const struct gmp_doscan_funs_t *, void *, const
+ /* NOTE: The function pointers in this struct are also in CPUVEC_FUNCS_LIST
+    in mpn/x86/x86-defs.m4 and mpn/x86_64/x86_64-defs.m4.  Be sure to update
+    those when changing here.  */
++/* The DECL_ macros declare functions, which a DLL exports: MSVC takes no __declspec on the pointers of the struct.  */
++#ifdef _MSC_VER
++#pragma push_macro ("__GMP_DECLSPEC")
++#undef  __GMP_DECLSPEC
++#define __GMP_DECLSPEC
++#endif
+ struct cpuvec_t {
+   DECL_add_n           ((*add_n));
+   DECL_addlsh1_n       ((*addlsh1_n));
+@@ -4765,6 +4777,9 @@ struct cpuvec_t {
+   mp_size_t            sqr_toom3_threshold;
+   mp_size_t            bmod_1_to_mod_1_threshold;
+ };
++#ifdef _MSC_VER
++#pragma pop_macro ("__GMP_DECLSPEC")
++#endif
+ __GMP_DECLSPEC extern struct cpuvec_t __gmpn_cpuvec;
+ __GMP_DECLSPEC extern int __gmpn_cpuvec_initialized;
+ #endif /* x86 fat binary */
+diff --git a/mpn/x86_64/fat/sqr_basecase.c b/mpn/x86_64/fat/sqr_basecase.c
+index d1c5dcd..1dadbd0 100644
+--- a/mpn/x86_64/fat/sqr_basecase.c
++++ b/mpn/x86_64/fat/sqr_basecase.c
+@@ -29,4 +29,12 @@ GNU Lesser General Public License along with the GNU MP Library.  If not,
+ see https://www.gnu.org/licenses/.  */
+ 
+ 
++/* The buffer of the generic code is sized by SQR_TOOM2_THRESHOLD, a variable in a fat binary, and MSVC has no
++   variable-length arrays: it takes the largest threshold of the CPUs, which configure writes in fat.h.  */
++#ifdef _MSC_VER
++#include "gmp-impl.h"
++#undef  SQR_TOOM2_THRESHOLD
++#define SQR_TOOM2_THRESHOLD  SQR_TOOM2_THRESHOLD_LIMIT
++#endif
++
+ #include "mpn/generic/sqr_basecase.c"
