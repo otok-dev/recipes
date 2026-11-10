@@ -52,6 +52,15 @@ function build(slice, options, deps)
         "--extra-cflags=" .. joined(t.cflags),
         "--extra-cxxflags=" .. joined(t.cxxflags),
         "--extra-ldflags=" .. joined(t.ldflags),
+        -- No program of the machine is built: its compiler would be needed, and Windows has none for the NDK. Host
+        -- programs are the tables of --enable-hardcoded-tables (off) and the generator of the AArch64 kernels of
+        -- swscale's unstable backends, which only SWS_UNSTABLE selects ("for testing and debugging purposes only")
+        "--disable-unstable",
+        -- the compiler of the machine, which configure checks (C11) all the same: the slice's, the same on every
+        -- machine, with no compiler of the machine in the build
+        "--host-cc=" .. t.cc,
+        "--host-cflags=" .. joined(t.cflags),
+        "--host-ldflags=" .. joined(t.ldflags),
     }
     if cpu[slice.arch] then args[#args + 1] = "--cpu=" .. cpu[slice.arch] end
     if slice.c_standard then args[#args + 1] = "--stdc=c" .. slice.c_standard end
