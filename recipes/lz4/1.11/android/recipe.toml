@@ -4,7 +4,7 @@
 api = 1
 library = "lz4"
 name = "lz4"
-version = "1.11.0"
+version = "1.11.1"
 revision = 1
 license = "BSD-2-Clause"
 license-files = ["lib/LICENSE"]
@@ -15,8 +15,8 @@ linkage = ["static", "dynamic"]
 
 [source]
 git = "https://github.com/lz4/lz4"
-commit = "c72c7c0ec132ad2ce2fe9fad7b0c728d9faee2fc"
-tag = "v1.11.0"
+commit = "aa4647fad575d01a874aaaadcdbe8e6a40e072f5"
+tag = "v1.11.1"
 
 [platforms]
 supported = ["android"]
