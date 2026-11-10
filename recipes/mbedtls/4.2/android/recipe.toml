@@ -1,0 +1,34 @@
+# The otok recipe of Mbed TLS (https://github.com/apotocki/otok): libmbedtls, libmbedx509 and libtfpsacrypto (the
+# PSA Cryptography API of TF-PSA-Crypto) for Android, from the release archive, with Mbed TLS's CMake and its default
+# configuration; static or dynamic.
+[recipe]
+api = 1
+library = "mbedtls"
+name = "mbedtls"
+version = "4.2.0"
+revision = 1
+license = "Apache-2.0 OR GPL-2.0-or-later"
+license-files = ["LICENSE"]
+homepage = "https://www.trustedfirmware.org/projects/mbed-tls/"
+documentation = "https://mbed-tls.readthedocs.io"
+description = "Mbed TLS, a small, portable implementation of TLS, DTLS, X.509 and the PSA Cryptography API."
+keywords = ["tls", "ssl", "x509", "crypto", "cryptography", "psa"]
+linkage = ["static", "dynamic"]
+
+# The archive of the release, with TF-PSA-Crypto and the framework the git tag has as submodules, and the files its
+# scripts generate; its SHA-256 is mbedtls-4.2.0-sha256sum.txt of the release.
+[source]
+url = "https://github.com/Mbed-TLS/mbedtls/releases/download/mbedtls-4.2.0/mbedtls-4.2.0.tar.bz2"
+sha256 = "2bed9d713b4668f76553b097e72b8aa30bc8f112a940d7ae228d524bbde6ffea"
+
+[platforms]
+supported = ["android"]
+build-on = ["*/ndk"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "MbedTLS"
+libraries = ["mbedtls", "mbedx509", "tfpsacrypto"]
