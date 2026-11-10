@@ -1,0 +1,33 @@
+# The otok recipe of libsodium (https://github.com/apotocki/otok): libsodium for Android, from the release archive, with
+# its own configure; static or dynamic.
+[recipe]
+api = 1
+library = "libsodium"
+name = "libsodium"
+version = "1.0.22"
+revision = 1
+license = "ISC"
+license-files = ["LICENSE"]
+homepage = "https://libsodium.org"
+documentation = "https://doc.libsodium.org"
+description = "Sodium, a modern, easy-to-use library for encryption, decryption, signatures, password hashing and more."
+keywords = ["crypto", "cryptography", "encryption", "signatures", "nacl"]
+linkage = ["static", "dynamic"]
+
+# The archive of the release, signed with minisign by libsodium's key RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3
+# (libsodium-1.0.22.tar.gz.minisig); the same file is an asset of the release on GitHub.
+[source]
+url = "https://download.libsodium.org/libsodium/releases/libsodium-1.0.22.tar.gz"
+sha256 = "adbdd8f16149e81ac6078a03aca6fc03b592b89ef7b5ed83841c086191be3349"
+mirrors = ["https://github.com/jedisct1/libsodium/releases/download/1.0.22-RELEASE/libsodium-1.0.22.tar.gz"]
+
+[platforms]
+supported = ["android"]
+build-on = ["*/ndk"]
+
+[toolchains]
+make = { version = ">= 3.81", default-recipe = "apotocki/make" }
+
+[[product]]
+name = "Sodium"
+libraries = ["sodium"]
