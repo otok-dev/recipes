@@ -1,0 +1,49 @@
+# The otok recipe of the CA certificates (https://github.com/apotocki/otok): the bundle of the root certificates Mozilla
+# trusts for TLS servers, for Linux, made from Mozilla's certdata.txt (the commit pinned below, the version is its date) by
+# curl's mk-ca-bundle.pl, as curl.se makes its cacert.pem. It is the same bundle, certificate for certificate; only the
+# comments of the file differ. The bundle is in libcacert (otok_cacert.h), for CURLOPT_CAINFO_BLOB and the like, or in
+# data/cacert.pem of the output, by the option `data`; static or dynamic.
+[recipe]
+api = 1
+library = "cacert"
+name = "cacert"
+version = "2026.10.21"
+revision = 1
+license = "MPL-2.0"
+license-files = [{ recipe = "LICENSE-MPL-2.0.txt" }]
+homepage = "https://wiki.mozilla.org/CA"
+description = "The root certificates of Mozilla's CA Certificate Program, as a PEM bundle."
+keywords = ["certificates", "ca", "tls"]
+linkage = ["static", "dynamic"]
+
+# only scripts/mk-ca-bundle.pl of curl's release is used, run by perl
+[source]
+url = "https://curl.se/download/curl-8.23.0.tar.xz"
+sha256 = "8dadd7d2536a314f982ad05a651b713f426bf7d02cc2c76cffb9796f2218e6c5"
+
+# certdata.txt of Mozilla's firefox repository (branch release) at the commit that last changed it, 2026-10-21
+[[resource]]
+name = "certdata"
+url = "https://raw.githubusercontent.com/mozilla-firefox/firefox/7ff62457dcf126523608e2f4b90d232d49d58185/security/nss/lib/ckfw/builtins/certdata.txt"
+sha256 = "3ec2b4d240dc12c747eaf450061db84af757c483bbda302f9e29ceb5d70be510"
+unpack = false
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[options.data]
+type = "enum"
+values = ["static", "file"]
+default = "static"
+doc = "Where the bundle is. static: in libcacert, which otok_cacert.h declares (otok_cacert_pem(), otok_cacert_pem_size()), linked into the product. file: in cacert.pem, which otok delivers in data/ of the output, and libcacert is a stub holding nothing; the application gives the file to its TLS library."
+
+[toolchains]
+perl = { version = ">= 5.30", default-recipe = "apotocki/perl" }
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "CACert"
+libraries = ["cacert"]
+
