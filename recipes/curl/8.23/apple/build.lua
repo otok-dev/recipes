@@ -8,7 +8,7 @@ function build(slice, options, deps)
         BUILD_CURL_EXE = false, BUILD_TESTING = false, BUILD_EXAMPLES = false, BUILD_LIBCURL_DOCS = false,
         BUILD_MISC_DOCS = false, ENABLE_CURL_MANUAL = false, BUILD_STATIC_LIBS = static,
         CURL_USE_PKGCONFIG = false, CURL_USE_CMAKECONFIG = false, CURL_ZLIB = "ON",
-        CURL_BROTLI = "OFF", CURL_ZSTD = "OFF", USE_NGHTTP2 = false, CURL_USE_LIBPSL = false, USE_LIBIDN2 = false,
+        CURL_BROTLI = "OFF", CURL_ZSTD = options.zstd and "ON" or "OFF", USE_NGHTTP2 = false, CURL_USE_LIBPSL = false, USE_LIBIDN2 = false,
         CURL_USE_LIBSSH = false, CURL_USE_GSSAPI = false, CURL_DISABLE_LDAP = true,
         CURL_USE_LIBSSH2 = options.ssh, CURL_ENABLE_SSL = tls ~= "none",
         CURL_USE_OPENSSL = tls == "openssl", CURL_USE_MBEDTLS = tls == "mbedtls",
@@ -35,6 +35,12 @@ function build(slice, options, deps)
         defines.LIBSSH2_INCLUDE_DIR = ssh.include
         defines.LIBSSH2_LIBRARY = ssh.libraries.ssh2
         defines.LIBSSH2_USE_STATIC_LIBS = ssh.linkage == "static"
+    end
+    if options.zstd then
+        local zstd = deps.zstd
+        defines.ZSTD_USE_STATIC_LIBS = zstd.linkage == "static"
+        defines.ZSTD_INCLUDE_DIR = zstd.include
+        defines.ZSTD_LIBRARY = zstd.libraries.zstd
     end
     otok.cmake{ defines = defines }
     local p = slice.prefix

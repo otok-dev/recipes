@@ -1,5 +1,5 @@
 # The otok recipe of curl (https://github.com/apotocki/otok): libcurl for Linux, from the release archive, with curl's
-# CMake and Mbed TLS (or no TLS) and zlib from their recipes; static or dynamic. No HTTP/2, HTTP/3, brotli, zstd, libpsl,
+# CMake and Mbed TLS (or no TLS) and zlib from their recipes; static or dynamic. Zstandard with the option `zstd`. No HTTP/2, HTTP/3, brotli, libpsl,
 # IDN, LDAP or libssh2. No CA bundle is built in or searched for: the program gives the certificates to libcurl.
 [recipe]
 api = 1
@@ -37,6 +37,17 @@ when = { option = "tls", is = "mbedtls" }
 [deps.zlib]
 version = ">= 1.2"
 default-recipe = "apotocki/zlib"
+
+[options.zstd]
+type = "bool"
+default = false
+additive = true
+doc = "Content-Encoding: zstd, with Zstandard."
+
+[deps.zstd]
+version = ">= 1.4"
+default-recipe = "apotocki/zstd"
+when = { option = "zstd" }
 
 [toolchains]
 cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }

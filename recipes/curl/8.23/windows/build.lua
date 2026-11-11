@@ -8,7 +8,7 @@ function build(slice, options, deps)
         BUILD_CURL_EXE = false, BUILD_TESTING = false, BUILD_EXAMPLES = false, BUILD_LIBCURL_DOCS = false,
         BUILD_MISC_DOCS = false, ENABLE_CURL_MANUAL = false, BUILD_STATIC_LIBS = true,
         CURL_USE_PKGCONFIG = false, CURL_USE_CMAKECONFIG = false,
-        CURL_BROTLI = "OFF", CURL_ZSTD = "OFF", USE_NGHTTP2 = false, CURL_USE_LIBPSL = false, USE_LIBIDN2 = false,
+        CURL_BROTLI = "OFF", CURL_ZSTD = options.zstd and "ON" or "OFF", USE_NGHTTP2 = false, CURL_USE_LIBPSL = false, USE_LIBIDN2 = false,
         USE_WIN32_IDN = false, USE_WIN32_LDAP = false, CURL_DISABLE_LDAP = true,
         CURL_USE_LIBSSH2 = false, CURL_USE_LIBSSH = false, CURL_USE_GSSAPI = false,
         CURL_ENABLE_SSL = tls ~= "none", CURL_USE_SCHANNEL = tls == "schannel",
@@ -31,6 +31,12 @@ function build(slice, options, deps)
         defines.MBEDTLS_LIBRARY = mbed.libraries.mbedtls
         defines.MBEDX509_LIBRARY = mbed.libraries.mbedx509
         defines.MBEDCRYPTO_LIBRARY = mbed.libraries.tfpsacrypto
+    end
+    if options.zstd then
+        local zstd = deps.zstd
+        defines.ZSTD_USE_STATIC_LIBS = zstd.linkage == "static"
+        defines.ZSTD_INCLUDE_DIR = zstd.include
+        defines.ZSTD_LIBRARY = zstd.libraries.zstd
     end
     otok.cmake{ defines = defines }
     local p = slice.prefix

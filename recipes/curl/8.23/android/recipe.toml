@@ -1,5 +1,5 @@
 # The otok recipe of curl (https://github.com/apotocki/otok): libcurl for Android, from the release archive, with curl's
-# CMake, Mbed TLS (or no TLS) and the NDK's zlib; static or dynamic. No HTTP/2, HTTP/3, brotli, zstd, libpsl, IDN, LDAP or
+# CMake, Mbed TLS (or no TLS) and the NDK's zlib; static or dynamic. Zstandard with the option `zstd`. No HTTP/2, HTTP/3, brotli, libpsl, IDN, LDAP or
 # libssh2. Certificates are looked for in the system's directory, /system/etc/security/cacerts.
 [recipe]
 api = 1
@@ -33,6 +33,17 @@ doc = "The TLS library: Mbed TLS (the consumer gives the certificates: CURLOPT_C
 version = ">= 4.0"
 default-recipe = "apotocki/mbedtls"
 when = { option = "tls", is = "mbedtls" }
+
+[options.zstd]
+type = "bool"
+default = false
+additive = true
+doc = "Content-Encoding: zstd, with Zstandard."
+
+[deps.zstd]
+version = ">= 1.4"
+default-recipe = "apotocki/zstd"
+when = { option = "zstd" }
 
 [toolchains]
 cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
