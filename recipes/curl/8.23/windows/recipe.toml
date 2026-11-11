@@ -1,0 +1,55 @@
+# The otok recipe of curl (https://github.com/apotocki/otok): libcurl for Windows, from the release archive, with curl's
+# CMake, static (consumers are built with CURL_STATICLIB, which the product defines). TLS by the option `tls`: Schannel (the
+# default, the system's certificates), OpenSSL, Mbed TLS or none. zlib from its recipe. No HTTP/2, HTTP/3, brotli, zstd,
+# libpsl, IDN, LDAP or libssh2.
+[recipe]
+api = 1
+library = "curl"
+name = "curl"
+version = "8.23.0"
+revision = 1
+license = "curl"
+license-files = ["COPYING"]
+homepage = "https://curl.se"
+documentation = "https://curl.se/libcurl/"
+description = "libcurl, the multiprotocol file transfer library."
+keywords = ["http", "https", "ftp", "network", "transfer", "url"]
+linkage = ["static"]
+
+[source]
+url = "https://curl.se/download/curl-8.23.0.tar.xz"
+sha256 = "8dadd7d2536a314f982ad05a651b713f426bf7d02cc2c76cffb9796f2218e6c5"
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc", "linux/clang-cl"]
+
+[options.tls]
+type = "enum"
+values = ["schannel", "openssl", "mbedtls", "none"]
+default = "schannel"
+doc = "The TLS library: Schannel (Windows' own, with the system's certificates), OpenSSL or Mbed TLS (the consumer gives the certificates: CURLOPT_CAINFO or CURLOPT_CAINFO_BLOB) or none (no HTTPS)."
+
+[deps.openssl]
+version = ">= 3.0"
+default-recipe = "apotocki/openssl"
+when = { option = "tls", is = "openssl" }
+
+[deps.mbedtls]
+version = ">= 4.0"
+default-recipe = "apotocki/mbedtls"
+when = { option = "tls", is = "mbedtls" }
+
+[deps.zlib]
+version = ">= 1.2"
+default-recipe = "apotocki/zlib"
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "CURL"
+libraries = ["curl"]
+defines = ["CURL_STATICLIB"]
+link = { libraries = ["ws2_32", "bcrypt", "advapi32", "crypt32", "secur32", "iphlpapi"] }

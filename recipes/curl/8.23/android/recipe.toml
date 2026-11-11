@@ -1,0 +1,44 @@
+# The otok recipe of curl (https://github.com/apotocki/otok): libcurl for Android, from the release archive, with curl's
+# CMake, Mbed TLS (or no TLS) and the NDK's zlib; static or dynamic. No HTTP/2, HTTP/3, brotli, zstd, libpsl, IDN, LDAP or
+# libssh2. Certificates are looked for in the system's directory, /system/etc/security/cacerts.
+[recipe]
+api = 1
+library = "curl"
+name = "curl"
+version = "8.23.0"
+revision = 1
+license = "curl"
+license-files = ["COPYING"]
+homepage = "https://curl.se"
+documentation = "https://curl.se/libcurl/"
+description = "libcurl, the multiprotocol file transfer library."
+keywords = ["http", "https", "ftp", "network", "transfer", "url"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://curl.se/download/curl-8.23.0.tar.xz"
+sha256 = "8dadd7d2536a314f982ad05a651b713f426bf7d02cc2c76cffb9796f2218e6c5"
+
+[platforms]
+supported = ["android"]
+build-on = ["*/ndk"]
+
+[options.tls]
+type = "enum"
+values = ["mbedtls", "none"]
+default = "mbedtls"
+doc = "The TLS library: Mbed TLS (the consumer gives the certificates: CURLOPT_CAINFO, CURLOPT_CAPATH or CURLOPT_CAINFO_BLOB) or none (no HTTPS)."
+
+[deps.mbedtls]
+version = ">= 4.0"
+default-recipe = "apotocki/mbedtls"
+when = { option = "tls", is = "mbedtls" }
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "CURL"
+libraries = ["curl"]
+link = { libraries = ["z"] }
