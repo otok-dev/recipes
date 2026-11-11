@@ -1,0 +1,43 @@
+# The otok recipe of libxml2 (https://github.com/apotocki/otok): libxml2 for Linux, from the release archive, with libxml2's CMake, the
+# library only (no xmllint, tests or Python); static or dynamic.
+[recipe]
+api = 1
+library = "libxml2"
+name = "libxml2"
+version = "2.15.4"
+revision = 1
+license = "MIT"
+license-files = ["Copyright"]
+homepage = "https://gitlab.gnome.org/GNOME/libxml2"
+documentation = "https://gitlab.gnome.org/GNOME/libxml2/-/wikis/home"
+description = "libxml2, the XML C parser and toolkit of GNOME."
+keywords = ["xml", "html", "xpath", "parser"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://download.gnome.org/sources/libxml2/2.15/libxml2-2.15.4.tar.xz"
+sha256 = "98087fd181d9070724f3fbc65c7377db03038eb92bd882374daff44940138821"
+
+[options.zlib]
+type = "bool"
+default = false
+additive = true
+doc = "Reading and writing gzip-compressed documents, with zlib."
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[deps.zlib]
+version = ">= 1.2"
+default-recipe = "apotocki/zlib"
+when = { option = "zlib" }
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "LibXml2"
+libraries = ["xml2"]
+link = { libraries = ["m", "pthread"] }

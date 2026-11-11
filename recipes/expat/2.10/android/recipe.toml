@@ -1,0 +1,31 @@
+# The otok recipe of Expat (https://github.com/apotocki/otok): libexpat for Android, from the release archive, with Expat's CMake, the
+# library only (no xmlwf, examples or tests); static or dynamic.
+[recipe]
+api = 1
+library = "expat"
+name = "expat"
+version = "2.10.0"
+revision = 1
+license = "MIT"
+license-files = ["COPYING"]
+homepage = "https://libexpat.github.io"
+documentation = "https://libexpat.github.io/doc/"
+description = "Expat, a stream-oriented XML parser library written in C."
+keywords = ["xml", "parser"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://github.com/libexpat/libexpat/releases/download/R_2_10_0/expat-2.10.0.tar.xz"
+sha256 = "c624ba2998fc65df1163a49641ff3f9ab73138b11641d92c86bee0fb01b1bc7f"
+
+[platforms]
+supported = ["android"]
+build-on = ["*/ndk"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "Expat"
+libraries = ["expat"]
