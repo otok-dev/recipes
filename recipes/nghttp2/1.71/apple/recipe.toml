@@ -1,0 +1,32 @@
+# The otok recipe of nghttp2 (https://github.com/apotocki/otok): libnghttp2, the HTTP/2 library, for every Apple platform, from the release
+# archive, with nghttp2's CMake, the library only (no applications, examples or tests); static or dynamic.
+[recipe]
+api = 1
+library = "nghttp2"
+name = "nghttp2"
+version = "1.71.0"
+revision = 1
+license = "MIT"
+license-files = ["COPYING"]
+homepage = "https://nghttp2.org"
+documentation = "https://nghttp2.org/documentation/"
+description = "nghttp2, an implementation of HTTP/2 and its header compression algorithm HPACK in C."
+keywords = ["http2", "hpack", "http"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://github.com/nghttp2/nghttp2/releases/download/v1.71.0/nghttp2-1.71.0.tar.xz"
+sha256 = "c0f55121d88650e4b9227aec28cebaf664d2417ca60fe70be0f8d38829f52116"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+build-on = ["macos/xcode"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "NGHTTP2"
+libraries = ["nghttp2"]
+apple = { privacy-manifest = "none" }
