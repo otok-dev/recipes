@@ -1,0 +1,41 @@
+--- a/meson.build
++++ b/meson.build
+@@ -3,7 +3,6 @@
+   meson_version : '>=0.60.0')
+ 
+ cc = meson.get_compiler('c')
+-build_cc = meson.get_compiler('c', native : true)
+ 
+ enable_runtime = get_option('runtime')
+ enable_builtin = get_option('builtin')
+@@ -158,27 +157,9 @@
+ # Shared configuration data for copyright date and version
+ _cdata = configuration_data()
+ _cdata.set('PACKAGE_VERSION', meson.project_version())
+-# Use a small C program for cross-platform date formatting (no Python/date dependency)
+-# Reads SOURCE_DATE_EPOCH for reproducible builds, falls back to current time
+-copyright_prog = '''
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <time.h>
+-
+-int main(void) {
+-    const char *env = getenv("SOURCE_DATE_EPOCH");
+-    time_t epoch = env ? (time_t)atoll(env) : time(NULL);
+-    struct tm tm = *gmtime(&epoch);
+-    char buf[32];
+-    strftime(buf, sizeof(buf), "%B %Y", &tm);
+-    puts(buf);
+-    return 0;
+-}
+-'''
+-copyright_cmd = build_cc.run(copyright_prog)
+-copyright_date = copyright_cmd.stdout().strip()
+-_cdata.set('COPYRIGHT_MONTH', copyright_date.split()[0])
+-_cdata.set('COPYRIGHT_YEAR', copyright_date.split()[1])
++# otok: the date is for the documentation only, and a build for an iOS or tvOS device has no build machine compiler to run a program with
++_cdata.set('COPYRIGHT_MONTH', 'January')
++_cdata.set('COPYRIGHT_YEAR', '2026')
+ 
+ subdir('include')
+ subdir('src')
