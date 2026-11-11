@@ -1,0 +1,32 @@
+# The otok recipe of giflib (https://github.com/apotocki/otok): libgif for every Apple platform, from the release archive, with a CMakeLists.txt of the
+# recipe (the release has a Makefile only), the library without the programs; static or dynamic.
+[recipe]
+api = 1
+library = "giflib"
+name = "giflib"
+version = "5.2.2"
+revision = 1
+license = "MIT"
+license-files = ["COPYING"]
+homepage = "https://giflib.sourceforge.net/"
+documentation = "https://giflib.sourceforge.net/gif_lib.html"
+description = "giflib, the library for reading and writing GIF images."
+keywords = ["image", "gif", "codec"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://downloads.sourceforge.net/giflib/giflib-5.2.2.tar.gz"
+sha256 = "be7ffbd057cadebe2aa144542fd90c6838c6a083b5e8a9048b8ee3b66b29d5fb"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+build-on = ["macos/xcode"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "GIF"
+libraries = ["gif"]
+apple = { privacy-manifest = "none" }
