@@ -1,0 +1,32 @@
+# The otok recipe of Brotli (https://github.com/apotocki/otok): libbrotlienc, libbrotlidec and libbrotlicommon for every Apple platform, from
+# the release tag, with Brotli's CMake, the libraries only; static or dynamic.
+[recipe]
+api = 1
+library = "brotli"
+name = "brotli"
+version = "1.2.1"
+revision = 1
+license = "MIT"
+license-files = ["LICENSE"]
+homepage = "https://github.com/google/brotli"
+description = "Brotli, a generic-purpose lossless compression algorithm (encoder, decoder and the common dictionary)."
+keywords = ["compression", "brotli"]
+linkage = ["static", "dynamic"]
+
+[source]
+git = "https://github.com/google/brotli"
+commit = "db24a98aed38a16de78cc05ca15cdd8dc2a0d92d"
+tag = "v1.2.1"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+build-on = ["macos/xcode"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "Brotli"
+libraries = ["brotlienc", "brotlidec", "brotlicommon"]
+apple = { privacy-manifest = "none" }
