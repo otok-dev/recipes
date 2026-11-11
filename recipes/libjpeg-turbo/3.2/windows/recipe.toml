@@ -1,0 +1,44 @@
+# The otok recipe of libjpeg-turbo (https://github.com/apotocki/otok): libjpeg, or with the option api the TurboJPEG library,
+# for Windows, from the release archive, with libjpeg-turbo's CMake, the libraries only (no tools); static or dynamic.
+[recipe]
+api = 1
+library = "libjpeg-turbo"
+name = "libjpeg-turbo"
+version = "3.2.1"
+revision = 1
+license = "IJG AND BSD-3-Clause AND Zlib"
+license-files = ["LICENSE.md", "README.ijg"]
+homepage = "https://libjpeg-turbo.org"
+documentation = "https://libjpeg-turbo.org/Documentation/Documentation"
+description = "libjpeg-turbo, a JPEG image codec with SIMD acceleration: the libjpeg API and, optionally, the TurboJPEG API."
+keywords = ["image", "jpeg", "codec"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://github.com/libjpeg-turbo/libjpeg-turbo/releases/download/3.2.1/libjpeg-turbo-3.2.1.tar.gz"
+sha256 = "c27ad72a68da151177929aa969ae773a2da5ac2af9ce946079314fdac8cece7f"
+
+[options.api]
+type = "enum"
+values = ["libjpeg", "turbojpeg"]
+default = "libjpeg"
+doc = "The library: libjpeg (jpeglib.h) or TurboJPEG (turbojpeg.h, a higher-level API with its own PNG and PPM readers). The static TurboJPEG library holds the libjpeg code as well, the shared one does not export it."
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc", "linux/clang-cl"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+nasm = { version = ">= 2.14", default-recipe = "apotocki/nasm", when = { arch = ["x86_64"] } }  # the assembly of x86_64
+
+[[product]]
+name = "JPEG"
+when = { option = "api", is = "libjpeg" }
+libraries = ["jpeg"]
+
+[[product]]
+name = "TurboJPEG"
+when = { option = "api", is = "turbojpeg" }
+libraries = ["turbojpeg"]
