@@ -1,0 +1,88 @@
+# The otok recipe of libtiff (https://github.com/apotocki/otok): libtiff for Linux, from the release archive, with libtiff's CMake,
+# the C library only (no tools, no C++ stream API), with exactly the codecs asked for; static or dynamic.
+[recipe]
+api = 1
+library = "libtiff"
+name = "libtiff"
+version = "4.7.2"
+revision = 1
+license = "libtiff"
+license-files = ["LICENSE.md"]
+homepage = "https://libtiff.gitlab.io/libtiff/"
+documentation = "https://libtiff.gitlab.io/libtiff/"
+description = "libtiff, the library for reading and writing TIFF images."
+keywords = ["image", "tiff", "codec"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://download.osgeo.org/libtiff/tiff-4.7.2.tar.gz"
+sha256 = "672bd7d10aee4606171afb864f3570b83340f6a33e2c186dc0512f7145ffdf6a"
+
+[options.zlib]
+type = "bool"
+default = true
+additive = true
+doc = "Deflate and PixarLog compression, with zlib."
+
+[options.jpeg]
+type = "bool"
+default = false
+additive = true
+doc = "JPEG compression, with libjpeg (of libjpeg-turbo)."
+
+[options.lzma]
+type = "bool"
+default = false
+additive = true
+doc = "LZMA2 compression, with liblzma."
+
+[options.zstd]
+type = "bool"
+default = false
+additive = true
+doc = "ZSTD compression, with zstd."
+
+[options.webp]
+type = "bool"
+default = false
+additive = true
+doc = "WebP compression, with libwebp."
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[deps.zlib]
+version = ">= 1.2"
+default-recipe = "apotocki/zlib"
+when = { option = "zlib" }
+
+[deps.libjpeg-turbo]
+version = ">= 3.0"
+default-recipe = "apotocki/libjpeg-turbo"
+requires-options = { api = "libjpeg" }
+when = { option = "jpeg" }
+
+[deps.lzma]
+version = ">= 5.2"
+default-recipe = "apotocki/lzma"
+when = { option = "lzma" }
+
+[deps.zstd]
+version = ">= 1.4"
+default-recipe = "apotocki/zstd"
+when = { option = "zstd" }
+
+[deps.libwebp]
+version = ">= 1.0"
+default-recipe = "apotocki/libwebp"
+when = { option = "webp" }
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "TIFF"
+libraries = ["tiff"]
+link = { libraries = ["m"] }
