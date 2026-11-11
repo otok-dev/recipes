@@ -1,0 +1,56 @@
+# The otok recipe of SQLite (https://github.com/apotocki/otok): libsqlite3 for Windows, from the amalgamation, with a CMakeLists.txt of the
+# recipe, the library without the shell; static or dynamic.
+[recipe]
+api = 1
+library = "sqlite"
+name = "sqlite"
+version = "3.54.1"
+revision = 1
+license = "blessing"
+license-files = [{ recipe = "LICENSE.txt" }]
+homepage = "https://sqlite.org"
+documentation = "https://sqlite.org/docs.html"
+description = "SQLite, a self-contained SQL database engine."
+keywords = ["database", "sql", "sqlite"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://sqlite.org/2026/sqlite-amalgamation-3540100.zip"
+sha256 = "0a9c8e34352dad46006aa82836d5383bff9dc6bc9ce5a60553c05aa30e6ad1f9"
+
+[options.fts5]
+type = "bool"
+default = true
+doc = "Full-text search, the FTS5 module."
+
+[options.rtree]
+type = "bool"
+default = true
+doc = "The R*Tree and Geopoly modules."
+
+[options.math]
+type = "bool"
+default = true
+doc = "The SQL math functions (sin, log, ceil and the like)."
+
+[options.column-metadata]
+type = "bool"
+default = false
+doc = "The column metadata API (sqlite3_column_table_name and the like)."
+
+[options.extensions]
+type = "bool"
+default = false
+doc = "Loadable extensions (sqlite3_load_extension); without them the library needs no dynamic loader."
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc", "linux/clang-cl"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "SQLite"
+libraries = ["sqlite3"]
