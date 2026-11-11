@@ -8,7 +8,7 @@ function build(slice, options, deps)
         BUILD_CURL_EXE = false, BUILD_TESTING = false, BUILD_EXAMPLES = false, BUILD_LIBCURL_DOCS = false,
         BUILD_MISC_DOCS = false, ENABLE_CURL_MANUAL = false, BUILD_STATIC_LIBS = static,
         CURL_USE_PKGCONFIG = false, CURL_USE_CMAKECONFIG = false, CURL_ZLIB = "ON",
-        CURL_BROTLI = options.brotli and "ON" or "OFF", CURL_ZSTD = options.zstd and "ON" or "OFF", USE_NGHTTP2 = options.http2, CURL_USE_LIBPSL = options.psl, USE_LIBIDN2 = false,
+        CURL_BROTLI = options.brotli and "ON" or "OFF", CURL_ZSTD = options.zstd and "ON" or "OFF", USE_NGHTTP2 = options.http2, CURL_USE_LIBPSL = options.psl, USE_LIBIDN2 = false, USE_APPLE_IDN = options.idn,
         CURL_USE_LIBSSH = false, CURL_USE_GSSAPI = false, CURL_DISABLE_LDAP = true,
         CURL_USE_LIBSSH2 = options.ssh, CURL_ENABLE_SSL = tls ~= "none",
         CURL_USE_OPENSSL = tls == "openssl", CURL_USE_MBEDTLS = tls == "mbedtls",
