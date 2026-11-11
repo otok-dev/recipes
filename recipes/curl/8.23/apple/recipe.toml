@@ -1,7 +1,7 @@
 # The otok recipe of curl (https://github.com/apotocki/otok): libcurl for every Apple platform, from the release archive, with
 # curl's CMake. TLS by the option `tls`: OpenSSL (the default; certificates are verified by the system's Security framework),
 # Mbed TLS (the certificates are the consumer's to give) or none; SFTP and SCP with libssh2 (`ssh`, which needs OpenSSL).
-# Zstandard with the option `zstd`. No HTTP/2, HTTP/3, brotli, libpsl, IDN or LDAP: only the libraries of the system and of the recipes below.
+# Zstandard with the option `zstd`, Brotli with `brotli`. No HTTP/2, HTTP/3, libpsl, IDN or LDAP: only the libraries of the system and of the recipes below.
 [recipe]
 api = 1
 library = "curl"
@@ -60,6 +60,17 @@ doc = "Content-Encoding: zstd, with Zstandard."
 version = ">= 1.4"
 default-recipe = "apotocki/zstd"
 when = { option = "zstd" }
+
+[options.brotli]
+type = "bool"
+default = false
+additive = true
+doc = "Content-Encoding: br, with Brotli."
+
+[deps.brotli]
+version = ">= 1.0"
+default-recipe = "apotocki/brotli"
+when = { option = "brotli" }
 
 [toolchains]
 cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }

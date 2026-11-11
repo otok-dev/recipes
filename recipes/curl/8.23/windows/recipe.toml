@@ -1,6 +1,6 @@
 # The otok recipe of curl (https://github.com/apotocki/otok): libcurl for Windows, from the release archive, with curl's
 # CMake, static (consumers are built with CURL_STATICLIB, which the product defines). TLS by the option `tls`: Schannel (the
-# default, the system's certificates), OpenSSL, Mbed TLS or none. zlib from its recipe, Zstandard with the option `zstd`. No HTTP/2, HTTP/3, brotli,
+# default, the system's certificates), OpenSSL, Mbed TLS or none. zlib from its recipe, Zstandard with the option `zstd`, Brotli with `brotli`. No HTTP/2, HTTP/3,
 # libpsl, IDN, LDAP or libssh2.
 [recipe]
 api = 1
@@ -54,6 +54,17 @@ doc = "Content-Encoding: zstd, with Zstandard."
 version = ">= 1.4"
 default-recipe = "apotocki/zstd"
 when = { option = "zstd" }
+
+[options.brotli]
+type = "bool"
+default = false
+additive = true
+doc = "Content-Encoding: br, with Brotli."
+
+[deps.brotli]
+version = ">= 1.0"
+default-recipe = "apotocki/brotli"
+when = { option = "brotli" }
 
 [toolchains]
 cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
