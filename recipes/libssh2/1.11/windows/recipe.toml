@@ -1,0 +1,48 @@
+# The otok recipe of libssh2 (https://github.com/apotocki/otok): the SSH2 client library for Windows, from the release archive,
+# with zlib compression from the zlib recipe; static or dynamic. The crypto backend by the option `crypto`: WinCNG (Windows' own,
+# the default, no dependency; with ECDSA, so Windows 10 or later) or OpenSSL.
+[recipe]
+api = 1
+library = "libssh2"
+name = "libssh2"
+version = "1.11.1"
+revision = 1
+license = "BSD-3-Clause"
+license-files = ["COPYING"]
+homepage = "https://libssh2.org"
+description = "libssh2, a client-side C library implementing the SSH2 protocol."
+keywords = ["ssh", "sftp"]
+linkage = ["static", "dynamic"]
+
+[source]
+# the release archive: the git tag says "1.11.1_DEV" in libssh2.h
+url = "https://libssh2.org/download/libssh2-1.11.1.tar.gz"
+sha256 = "d9ec76cbe34db98eec3539fe2c899d26b0c837cb3eb466a56b0f109cabf658f7"
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc", "linux/clang-cl"]
+
+[options.crypto]
+type = "enum"
+values = ["wincng", "openssl"]
+default = "wincng"
+doc = "The crypto backend: WinCNG (Windows' own; with ECDSA, Windows 10 or later) or OpenSSL."
+
+[deps.openssl]
+version = ">= 3.0"
+default-recipe = "apotocki/openssl"
+when = { option = "crypto", is = "openssl" }
+
+[deps.zlib]
+version = ">= 1.2"
+default-recipe = "apotocki/zlib"
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "LibSSH2"
+libraries = ["ssh2"]
+link = { libraries = ["ws2_32", "crypt32", "bcrypt"] }
