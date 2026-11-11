@@ -1,0 +1,32 @@
+# The otok recipe of libwebp (https://github.com/apotocki/otok): libwebp, libwebpdemux, libwebpmux and libsharpyuv for every Apple platform, from the
+# release archive, with libwebp's CMake, the libraries only (no tools); static or dynamic.
+[recipe]
+api = 1
+library = "libwebp"
+name = "libwebp"
+version = "1.6.0"
+revision = 1
+license = "BSD-3-Clause"
+license-files = ["COPYING", "PATENTS"]
+homepage = "https://developers.google.com/speed/webp"
+documentation = "https://developers.google.com/speed/webp/docs/api"
+description = "libwebp, the WebP image format codec, with the demux and mux libraries and sharp YUV conversion."
+keywords = ["image", "webp", "codec"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.6.0.tar.gz"
+sha256 = "e4ab7009bf0629fd11982d4c2aa83964cf244cffba7347ecd39019a9e38c4564"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+build-on = ["macos/xcode"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "WebP"
+libraries = ["webpmux", "webpdemux", "webp", "sharpyuv"]
+apple = { privacy-manifest = "none" }
