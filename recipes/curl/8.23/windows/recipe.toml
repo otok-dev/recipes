@@ -1,6 +1,6 @@
 # The otok recipe of curl (https://github.com/apotocki/otok): libcurl for Windows, from the release archive, with curl's
 # CMake, static (consumers are built with CURL_STATICLIB, which the product defines). TLS by the option `tls`: Schannel (the
-# default, the system's certificates), OpenSSL, Mbed TLS or none. zlib from its recipe, Zstandard with the option `zstd`, Brotli with `brotli`, HTTP/2 with `http2`, the Public Suffix List with `psl`. No HTTP/3,
+# default, the system's certificates), OpenSSL, Mbed TLS or none. zlib from its recipe, Zstandard with the option `zstd`, Brotli with `brotli`, HTTP/2 with `http2`, HTTP/3 with `http3` (OpenSSL only), the Public Suffix List with `psl`. ,
 # LDAP; IDN with the option `idn`; SFTP and SCP with the option `ssh`.
 [recipe]
 api = 1
@@ -103,6 +103,22 @@ doc = "The Public Suffix List, with libpsl: cookies are refused for domains that
 version = ">= 0.20"
 default-recipe = "apotocki/libpsl"
 when = { option = "psl" }
+
+[options.http3]
+type = "bool"
+default = false
+additive = true
+doc = "HTTP/3 over QUIC, with ngtcp2 and nghttp3. Needs tls = openssl, OpenSSL 3.5 or later (its QUIC API)."
+
+[deps.ngtcp2]
+version = ">= 1.12"
+default-recipe = "apotocki/ngtcp2"
+when = { option = "http3" }
+
+[deps.nghttp3]
+version = ">= 1.0"
+default-recipe = "apotocki/nghttp3"
+when = { option = "http3" }
 
 [toolchains]
 cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }

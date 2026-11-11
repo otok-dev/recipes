@@ -8,7 +8,7 @@ function build(slice, options, deps)
         BUILD_CURL_EXE = false, BUILD_TESTING = false, BUILD_EXAMPLES = false, BUILD_LIBCURL_DOCS = false,
         BUILD_MISC_DOCS = false, ENABLE_CURL_MANUAL = false, BUILD_STATIC_LIBS = true,
         CURL_USE_PKGCONFIG = false, CURL_USE_CMAKECONFIG = false,
-        CURL_BROTLI = options.brotli and "ON" or "OFF", CURL_ZSTD = options.zstd and "ON" or "OFF", USE_NGHTTP2 = options.http2, CURL_USE_LIBPSL = options.psl, USE_LIBIDN2 = false,
+        CURL_BROTLI = options.brotli and "ON" or "OFF", CURL_ZSTD = options.zstd and "ON" or "OFF", USE_NGHTTP2 = options.http2, USE_NGTCP2 = options.http3, CURL_USE_LIBPSL = options.psl, USE_LIBIDN2 = false,
         USE_WIN32_IDN = options.idn, USE_WIN32_LDAP = false, CURL_DISABLE_LDAP = true,
         CURL_USE_LIBSSH2 = options.ssh, CURL_USE_LIBSSH = false, CURL_USE_GSSAPI = false,
         CURL_ENABLE_SSL = tls ~= "none", CURL_USE_SCHANNEL = tls == "schannel",
@@ -37,6 +37,17 @@ function build(slice, options, deps)
         defines.LIBSSH2_INCLUDE_DIR = ssh.include
         defines.LIBSSH2_LIBRARY = ssh.libraries.ssh2
         defines.LIBSSH2_USE_STATIC_LIBS = ssh.linkage == "static"
+    end
+    if options.http3 then
+        if tls ~= "openssl" then error("the option http3 needs tls = openssl: ngtcp2 uses the QUIC API of OpenSSL 3.5 or later") end
+        local q, h3 = deps.ngtcp2, deps.nghttp3
+        defines.NGTCP2_USE_STATIC_LIBS = q.linkage == "static"
+        defines.NGTCP2_INCLUDE_DIR = q.include
+        defines.NGTCP2_LIBRARY = q.libraries.ngtcp2
+        defines.NGTCP2_CRYPTO_OSSL_LIBRARY = q.libraries.ngtcp2_crypto_ossl
+        defines.NGHTTP3_USE_STATIC_LIBS = h3.linkage == "static"
+        defines.NGHTTP3_INCLUDE_DIR = h3.include
+        defines.NGHTTP3_LIBRARY = h3.libraries.nghttp3
     end
     if options.psl then
         local psl = deps.libpsl

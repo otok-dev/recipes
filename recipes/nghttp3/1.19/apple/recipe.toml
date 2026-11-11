@@ -1,0 +1,32 @@
+# The otok recipe of nghttp3 (https://github.com/apotocki/otok): libnghttp3, the HTTP/3 and QPACK library, for every Apple platform, from the
+# release archive, with nghttp3's CMake, the library only; static or dynamic.
+[recipe]
+api = 1
+library = "nghttp3"
+name = "nghttp3"
+version = "1.19.0"
+revision = 1
+license = "MIT"
+license-files = ["COPYING"]
+homepage = "https://nghttp2.org/nghttp3/"
+documentation = "https://nghttp2.org/nghttp3/"
+description = "nghttp3, an implementation of RFC 9114 HTTP/3 mapping over QUIC and RFC 9204 QPACK in C."
+keywords = ["http3", "quic", "qpack", "http"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://github.com/ngtcp2/nghttp3/releases/download/v1.19.0/nghttp3-1.19.0.tar.xz"
+sha256 = "228e17f5cc3d4de7bfced9912bd09de30e7f45741cc47503cf88d3fa9209e155"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+build-on = ["macos/xcode"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "NGHTTP3"
+libraries = ["nghttp3"]
+apple = { privacy-manifest = "none" }

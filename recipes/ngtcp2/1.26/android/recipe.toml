@@ -1,0 +1,36 @@
+# The otok recipe of ngtcp2 (https://github.com/apotocki/otok): libngtcp2, the QUIC library, and libngtcp2_crypto_ossl, its
+# glue to the QUIC API of OpenSSL 3.5 or later, for Android, from the release archive, with ngtcp2's CMake, the libraries
+# only; static or dynamic.
+[recipe]
+api = 1
+library = "ngtcp2"
+name = "ngtcp2"
+version = "1.26.0"
+revision = 1
+license = "MIT"
+license-files = ["COPYING"]
+homepage = "https://github.com/ngtcp2/ngtcp2"
+documentation = "https://nghttp2.org/ngtcp2/"
+description = "ngtcp2, an implementation of the IETF QUIC protocol (RFC 9000) in C, with OpenSSL as its TLS."
+keywords = ["quic", "http3", "tls"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://github.com/ngtcp2/ngtcp2/releases/download/v1.26.0/ngtcp2-1.26.0.tar.xz"
+sha256 = "7804aa0fa1c39942ba322a90805824c37231f7675b08d0c3cc4332858a7b085e"
+
+[platforms]
+supported = ["android"]
+build-on = ["*/ndk"]
+
+[deps.openssl]
+version = ">= 3.5"
+default-recipe = "apotocki/openssl"
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "NGTCP2"
+libraries = ["ngtcp2_crypto_ossl", "ngtcp2"]
