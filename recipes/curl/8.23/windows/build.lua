@@ -10,7 +10,7 @@ function build(slice, options, deps)
         CURL_USE_PKGCONFIG = false, CURL_USE_CMAKECONFIG = false,
         CURL_BROTLI = options.brotli and "ON" or "OFF", CURL_ZSTD = options.zstd and "ON" or "OFF", USE_NGHTTP2 = options.http2, CURL_USE_LIBPSL = false, USE_LIBIDN2 = false,
         USE_WIN32_IDN = false, USE_WIN32_LDAP = false, CURL_DISABLE_LDAP = true,
-        CURL_USE_LIBSSH2 = false, CURL_USE_LIBSSH = false, CURL_USE_GSSAPI = false,
+        CURL_USE_LIBSSH2 = options.ssh, CURL_USE_LIBSSH = false, CURL_USE_GSSAPI = false,
         CURL_ENABLE_SSL = tls ~= "none", CURL_USE_SCHANNEL = tls == "schannel",
         CURL_USE_OPENSSL = tls == "openssl", CURL_USE_MBEDTLS = tls == "mbedtls",
         CURL_CA_BUNDLE = "none", CURL_CA_PATH = "none", CURL_DISABLE_CA_SEARCH = true,
@@ -31,6 +31,12 @@ function build(slice, options, deps)
         defines.MBEDTLS_LIBRARY = mbed.libraries.mbedtls
         defines.MBEDX509_LIBRARY = mbed.libraries.mbedx509
         defines.MBEDCRYPTO_LIBRARY = mbed.libraries.tfpsacrypto
+    end
+    if options.ssh then
+        local ssh = deps.libssh2
+        defines.LIBSSH2_INCLUDE_DIR = ssh.include
+        defines.LIBSSH2_LIBRARY = ssh.libraries.ssh2
+        defines.LIBSSH2_USE_STATIC_LIBS = ssh.linkage == "static"
     end
     if options.http2 then
         local h2 = deps.nghttp2

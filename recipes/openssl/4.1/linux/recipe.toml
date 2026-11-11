@@ -1,0 +1,40 @@
+# The otok recipe of OpenSSL (https://github.com/apotocki/otok): libssl and libcrypto for Linux, from the release
+# tag, with OpenSSL's own Configure targets (linux-x86_64, linux-aarch64) and the slice's compiler; static or dynamic.
+[recipe]
+api = 1
+library = "openssl"
+name = "openssl"
+version = "4.1.0"
+revision = 1
+license = "Apache-2.0"
+license-files = ["LICENSE.txt"]
+homepage = "https://www.openssl.org"
+description = "OpenSSL (libssl, libcrypto), built from source."
+keywords = ["tls", "crypto"]
+linkage = ["static", "dynamic"]
+
+[source]
+git = "https://github.com/openssl/openssl"
+commit = "2f4e3a5fec05394068cfa7379890ab552483a8a6"
+tag = "openssl-4.1.0"
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[options.no-deprecated]
+type = "bool"
+default = false
+doc = "Configure with no-deprecated: removes the deprecated APIs."
+
+[[product]]
+name = "OpenSSL"
+libraries = ["ssl", "crypto"]
+headers = "crypto"
+# what a static libcrypto calls (Configure's ex_libs of the linux targets)
+link = { libraries = ["dl", "pthread"] }
+defines = [{ define = "OPENSSL_NO_DEPRECATED", when = { option = "no-deprecated" } }]
+
+[toolchains]
+make = { version = ">= 3.81", default-recipe = "apotocki/make" }
+perl = { version = ">= 5.30", default-recipe = "apotocki/perl" }

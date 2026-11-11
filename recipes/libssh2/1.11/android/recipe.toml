@@ -1,0 +1,36 @@
+# The otok recipe of libssh2 (https://github.com/apotocki/otok): the SSH2 client library for Android, from the release archive,
+# with OpenSSL as its crypto backend and zlib compression of the NDK; static or dynamic.
+[recipe]
+api = 1
+library = "libssh2"
+name = "libssh2"
+version = "1.11.1"
+revision = 1
+license = "BSD-3-Clause"
+license-files = ["COPYING"]
+homepage = "https://libssh2.org"
+description = "libssh2, a client-side C library implementing the SSH2 protocol."
+keywords = ["ssh", "sftp"]
+linkage = ["static", "dynamic"]
+
+[source]
+# the release archive: the git tag says "1.11.1_DEV" in libssh2.h
+url = "https://libssh2.org/download/libssh2-1.11.1.tar.gz"
+sha256 = "d9ec76cbe34db98eec3539fe2c899d26b0c837cb3eb466a56b0f109cabf658f7"
+
+[platforms]
+supported = ["android"]
+build-on = ["*/ndk"]
+
+[deps.openssl]
+version = ">= 3.0"
+default-recipe = "apotocki/openssl"
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "LibSSH2"
+libraries = ["ssh2"]
+link = { libraries = ["z"] }
