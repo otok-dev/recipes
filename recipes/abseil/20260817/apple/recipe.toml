@@ -1,0 +1,33 @@
+# The otok recipe of Abseil (https://github.com/apotocki/otok): the Abseil C++ libraries for every Apple platform, from the release archive, with Abseil's
+# CMake, static (Abseil's ABI is not stable, so it is linked into the program or library that uses it).
+[recipe]
+api = 1
+library = "abseil"
+name = "abseil"
+version = "20260817.0"
+revision = 1
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+homepage = "https://abseil.io"
+documentation = "https://abseil.io/docs/cpp/"
+description = "Abseil, the C++ common libraries of Google."
+keywords = ["cpp", "base", "containers", "strings", "synchronization", "time"]
+cxx-standard = ">= 17"
+linkage = ["static"]
+
+[source]
+url = "https://github.com/abseil/abseil-cpp/releases/download/20260817.0/abseil-cpp-20260817.0.tar.gz"
+sha256 = "f7e05179df39c45434cad433f5783840bb3788ef322976f9138bc6b72b3a107d"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+build-on = ["macos/xcode"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "Abseil"
+libraries = ["absl_statusor", "absl_status_builder", "absl_status", "absl_scoped_set_env", "absl_random_seed_sequences", "absl_random_internal_entropy_pool", "absl_random_seed_gen_exception", "absl_random_internal_seed_material", "absl_random_internal_randen", "absl_random_internal_randen_slow", "absl_random_internal_randen_hwaes", "absl_random_internal_randen_hwaes_impl", "absl_random_internal_platform", "absl_random_internal_distribution_test_util", "absl_random_distributions", "absl_poison", "absl_periodic_sampler", "absl_log_initialize", "absl_log_flags", "absl_hashtable_profiler", "absl_profile_builder", "absl_generic_printer_internal", "absl_flags_parse", "absl_flags_usage", "absl_flags_usage_internal", "absl_flags_reflection", "absl_raw_hash_set", "absl_hashtablez_sampler", "absl_flags_private_handle_accessor", "absl_flags_internal", "absl_flags_marshalling", "absl_flags_config", "absl_flags_program_name", "absl_flags_commandlineflag", "absl_flags_commandlineflag_internal", "absl_failure_signal_handler", "absl_die_if_null", "absl_cordz_sample_token", "absl_clock_interface", "absl_cord", "absl_cordz_info", "absl_cordz_handle", "absl_cordz_functions", "absl_exponential_biased", "absl_cord_internal", "absl_crc_cord_state", "absl_crc32c", "absl_crc_internal", "absl_base_cpu_detect", "absl_log_internal_conditions", "absl_log_internal_check_op", "absl_log_internal_message", "absl_strerror", "absl_log_internal_structured_proto", "absl_log_internal_log_sink_set", "absl_log_sink", "absl_log_entry", "absl_log_globals", "absl_vlog_config_internal", "absl_synchronization", "absl_tracing_internal", "absl_kernel_timeout_internal", "absl_graphcycles_internal", "absl_log_internal_fnmatch", "absl_hash", "absl_city", "absl_log_internal_proto", "absl_log_internal_format", "absl_str_format_internal", "absl_log_internal_globals", "absl_time", "absl_time_zone", "absl_civil_time", "absl_examine_stack", "absl_symbolize", "absl_demangle_internal", "absl_demangle_rust", "absl_decode_rust_punycode", "absl_utf8_for_code_point", "absl_stacktrace", "absl_malloc_internal", "absl_debugging_internal", "absl_strings", "absl_source_location", "absl_int128", "absl_strings_internal", "absl_throw_delegate", "absl_hardening", "absl_log_internal_nullguard", "absl_leak_check", "absl_base", "absl_spinlock_wait", "absl_raw_logging_internal", "absl_log_severity"]
+apple = { privacy-manifest = "none", frameworks = ["CoreFoundation"] }

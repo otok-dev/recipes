@@ -1,0 +1,59 @@
+# The otok recipe of Protocol Buffers (https://github.com/apotocki/otok): the C++ runtime (libprotobuf or libprotobuf-lite) for Linux, from the
+# release archive, with protobuf's CMake and the Abseil of deps, static, without protoc.
+[recipe]
+api = 1
+library = "protobuf"
+name = "protobuf"
+version = "36.2"
+revision = 1
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+homepage = "https://protobuf.dev"
+documentation = "https://protobuf.dev/reference/cpp/"
+description = "Protocol Buffers, Google's data interchange format: the C++ runtime."
+keywords = ["protobuf", "serialization", "rpc"]
+cxx-standard = ">= 17"
+linkage = ["static"]
+
+[source]
+url = "https://github.com/protocolbuffers/protobuf/releases/download/v36.2/protobuf-36.2.tar.gz"
+sha256 = "3d9642a662d10e68ebae5e53f14dcce5105684212d5078f8e0d47d1ab3ae6b64"
+
+[options.runtime]
+type = "enum"
+values = ["full", "lite"]
+default = "full"
+doc = "The runtime: full (libprotobuf: reflection, descriptors, text and JSON) or lite (libprotobuf-lite: messages optimized for code size, no reflection). A program uses one of them."
+
+[options.zlib]
+type = "bool"
+default = false
+additive = true
+doc = "GzipOutputStream and ZeroCopyGzip streams, with zlib."
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[deps.abseil]
+version = ">= 20260000"
+default-recipe = "apotocki/abseil"
+
+[deps.zlib]
+version = ">= 1.2"
+default-recipe = "apotocki/zlib"
+when = { option = "zlib" }
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "Protobuf"
+when = { option = "runtime", is = "full" }
+libraries = ["protobuf", "utf8_validity", "utf8_range"]
+
+[[product]]
+name = "ProtobufLite"
+when = { option = "runtime", is = "lite" }
+libraries = ["protobuf-lite", "utf8_validity", "utf8_range"]
