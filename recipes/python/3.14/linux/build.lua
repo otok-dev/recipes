@@ -2,7 +2,7 @@
 -- lib/python3.14.
 function build(slice, options, deps)
     local r = slice.resources
-    local standalone = r.linux_x86_64 or r.linux_arm64
+    local standalone = r.linux_x86_64 or r.linux_arm64 or r.linux_x86_64_musl or r.linux_arm64_musl
     if not standalone then error("no prebuilt Python for this build machine") end
     for _, dir in ipairs{ "bin", "lib" } do
         otok.copy(standalone .. "/" .. dir, slice.prefix .. "/" .. dir)

@@ -1,13 +1,14 @@
 # The otok recipe of Python (https://github.com/apotocki/otok): the python program for the build scripts of other
 # recipes, which name it as their toolchain (`python = { default-recipe = "apotocki/python" }`), on Linux: the
-# install_only build of python-build-standalone of the build machine (a resource per architecture, fetched on that
-# machine only). It has no pip packages: the standard library only. The source archive carries the license.
+# install_only build of python-build-standalone of the build machine (a resource per architecture and C library,
+# fetched on that machine only: glibc's, or musl's on Alpine, `linux-<arch>-musl`). It has no pip packages: the
+# standard library only. The source archive carries the license.
 [recipe]
 api = 1
 library = "python"
 name = "python"
 version = "3.14.10"
-revision = 1
+revision = 2
 license = "PSF-2.0"
 license-files = ["LICENSE"]
 homepage = "https://www.python.org"
@@ -32,6 +33,18 @@ name = "linux_arm64"
 url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.14.10%2B20261026-aarch64-unknown-linux-gnu-install_only.tar.gz"
 sha256 = "dcc31ce7b9ddbbffac160da7fff0cc069054f43eca52382a7d0eebf94e985b88"
 when = { host = ["linux-arm64"] }
+
+[[resource]]
+name = "linux_x86_64_musl"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.14.10%2B20261026-x86_64-unknown-linux-musl-install_only.tar.gz"
+sha256 = "4c03a4d9d582ce3610f622c2d69c9a83cbfbdd6fc1d75689820f8f54aa73f0dc"
+when = { host = ["linux-x86_64-musl"] }
+
+[[resource]]
+name = "linux_arm64_musl"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.14.10%2B20261026-aarch64-unknown-linux-musl-install_only.tar.gz"
+sha256 = "2220e769dfae157c16cd387705bf6b9a934955d93e0b818112c2f296cc3ae50f"
+when = { host = ["linux-arm64-musl"] }
 
 [platforms]
 supported = ["linux"]
