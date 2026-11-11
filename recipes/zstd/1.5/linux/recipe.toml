@@ -1,0 +1,31 @@
+# The otok recipe of Zstandard (https://github.com/apotocki/otok): libzstd for Linux, from the release archive, with the
+# CMake project in build/cmake, the library only; static or dynamic.
+[recipe]
+api = 1
+library = "zstd"
+name = "zstd"
+version = "1.5.7"
+revision = 1
+license = "BSD-3-Clause OR GPL-2.0-only"
+license-files = ["LICENSE"]
+homepage = "https://facebook.github.io/zstd/"
+documentation = "https://facebook.github.io/zstd/zstd_manual.html"
+description = "Zstandard, a fast lossless compression algorithm."
+keywords = ["compression", "zstd"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz"
+sha256 = "eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3"
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "Zstd"
+libraries = ["zstd"]
