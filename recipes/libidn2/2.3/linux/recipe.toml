@@ -1,0 +1,32 @@
+# The otok recipe of libidn2 (https://github.com/apotocki/otok): libidn2, the IDNA 2008 (and TR46) library, for Linux, from the
+# release archive, with its own configure and make, the library only; with the parts of libunistring it needs built in
+# (no libunistring to bring), without gettext, documentation and the programs; static or dynamic. Its licenses are the
+# GNU LGPL 3 or the GNU GPL 2 for the code, and the Unicode terms for the character data.
+[recipe]
+api = 1
+library = "libidn2"
+name = "libidn2"
+version = "2.3.8"
+revision = 1
+license = "(GPL-2.0-or-later OR LGPL-3.0-or-later) AND Unicode-DFS-2016"
+license-files = ["COPYING.LESSERv3", "COPYINGv2", "COPYING.unicode"]
+homepage = "https://www.gnu.org/software/libidn/#libidn2"
+description = "libidn2, an implementation of the Internationalized Domain Names (IDNA 2008 and TR46) specifications."
+keywords = ["idn", "idna", "domain", "punycode"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://ftp.gnu.org/gnu/libidn/libidn2-2.3.8.tar.gz"
+sha256 = "f557911bf6171621e1f72ff35f5b1825bb35b52ed45325dcdee931e5d3c0787a"
+mirrors = ["https://ftpmirror.gnu.org/gnu/libidn/libidn2-2.3.8.tar.gz"]
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[toolchains]
+make = { version = ">= 3.81", default-recipe = "apotocki/make" }
+
+[[product]]
+name = "IDN2"
+libraries = ["idn2"]

@@ -8,7 +8,7 @@ function build(slice, options, deps)
         BUILD_CURL_EXE = false, BUILD_TESTING = false, BUILD_EXAMPLES = false, BUILD_LIBCURL_DOCS = false,
         BUILD_MISC_DOCS = false, ENABLE_CURL_MANUAL = false, BUILD_STATIC_LIBS = static,
         CURL_USE_PKGCONFIG = false, CURL_USE_CMAKECONFIG = false,
-        CURL_BROTLI = options.brotli and "ON" or "OFF", CURL_ZSTD = options.zstd and "ON" or "OFF", USE_NGHTTP2 = options.http2, CURL_USE_LIBPSL = options.psl, USE_LIBIDN2 = false,
+        CURL_BROTLI = options.brotli and "ON" or "OFF", CURL_ZSTD = options.zstd and "ON" or "OFF", USE_NGHTTP2 = options.http2, CURL_USE_LIBPSL = options.psl, USE_LIBIDN2 = options.idn,
         CURL_USE_LIBSSH2 = options.ssh, CURL_USE_LIBSSH = false, CURL_USE_GSSAPI = false, CURL_DISABLE_LDAP = true,
         CURL_ENABLE_SSL = tls ~= "none", CURL_USE_OPENSSL = tls == "openssl", CURL_USE_MBEDTLS = tls == "mbedtls",
         CURL_CA_BUNDLE = "none", CURL_CA_PATH = "/system/etc/security/cacerts",
@@ -34,6 +34,12 @@ function build(slice, options, deps)
         defines.LIBSSH2_INCLUDE_DIR = ssh.include
         defines.LIBSSH2_LIBRARY = ssh.libraries.ssh2
         defines.LIBSSH2_USE_STATIC_LIBS = ssh.linkage == "static"
+    end
+    if options.idn then
+        local idn = deps.libidn2
+        defines.LIBIDN2_INCLUDE_DIR = idn.include
+        defines.LIBIDN2_LIBRARY = idn.libraries.idn2
+        defines.LIBIDN2_USE_STATIC_LIBS = idn.linkage == "static"
     end
     if options.psl then
         local psl = deps.libpsl
