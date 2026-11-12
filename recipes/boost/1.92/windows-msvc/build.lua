@@ -4,9 +4,11 @@
 
 function build_tools(slice, options, deps)
     -- bootstrap finds the build machine's compiler: by its full path, and with cmd finding the scripts it calls in the
-    -- current directory, which NoDefaultCurrentDirectoryInExePath turns off
+    -- current directory, which NoDefaultCurrentDirectoryInExePath turns off; without the slice's flags, which build.bat
+    -- appends to its own: /MD over its /MT (D9025), /O2 and /DNDEBUG twice
     local script = (slice.source .. "/bootstrap.bat"):gsub("/", "\\")
-    otok.run({ "cmd.exe", "/c", script }, { env = { NoDefaultCurrentDirectoryInExePath = false } })
+    otok.run({ "cmd.exe", "/c", script },
+        { env = { NoDefaultCurrentDirectoryInExePath = false, CFLAGS = false, CXXFLAGS = false, LDFLAGS = false } })
     otok.copy(slice.source .. "/b2.exe", slice.prefix .. "/bin/b2.exe")
 end
 
