@@ -1,5 +1,5 @@
 -- protobuf's CMake project, the runtime libraries only, static, with the Abseil of deps and no protoc (the compiler runs on the
--- build machine: a program that generates code gets it from its own tools). Nothing is fetched. What it installs: libprotobuf.lib or libprotobuf-lite.lib, libutf8_validity.lib and libutf8_range.lib.
+-- build machine: a program that generates code gets it from its own tools). Nothing is fetched. What it installs: libprotobuf.lib or libprotobuf-lite.lib and libutf8_validity.lib.
 function build(slice, options, deps)
     local defines = {
         protobuf_BUILD_TESTS = false, protobuf_BUILD_CONFORMANCE = false, protobuf_BUILD_EXAMPLES = false,
@@ -20,7 +20,6 @@ function build(slice, options, deps)
     local libraries = {
         [lite and "protobuf-lite" or "protobuf"] = otok.glob(lite and "lib/libprotobuf-lite.lib" or "lib/libprotobuf.lib", p)[1],
         utf8_validity = otok.glob("lib/libutf8_validity.lib", p)[1],
-        utf8_range = otok.glob("lib/libutf8_range.lib", p)[1],
     }
     return { libraries = libraries, headers = p .. "/include" }
 end

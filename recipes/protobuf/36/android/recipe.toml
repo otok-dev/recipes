@@ -46,11 +46,11 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 [[product]]
 name = "Protobuf"
 when = { option = "runtime", is = "full" }
-libraries = ["protobuf", "utf8_validity", "utf8_range"]
+libraries = ["protobuf", "utf8_validity"]
 link = { libraries = [{ library = "z", when = { option = "zlib" } }] }
 
 [[product]]
 name = "ProtobufLite"
 when = { option = "runtime", is = "lite" }
-libraries = ["protobuf-lite", "utf8_validity", "utf8_range"]
+libraries = ["protobuf-lite", "utf8_validity"]
 link = { libraries = [{ library = "z", when = { option = "zlib" } }] }
