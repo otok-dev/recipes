@@ -1,0 +1,33 @@
+# The otok recipe of Microsoft Detours (https://github.com/apotocki/otok): the detours library for Windows, from a commit
+# of Detours' main (its last release, 4.0.1, is of 2018; the version is 4.0.1 and the date of the commit), with a
+# CMakeLists.txt of the recipe in place of Detours' nmake Makefile, with MSVC or with clang-cl across from Linux; static
+# only, as Detours builds it. The headers are in include/detours/, as vcpkg lays them out.
+[recipe]
+api = 1
+library = "detours"
+name = "detours"
+version = "4.0.1.20260929"
+revision = 1
+license = "MIT"
+license-files = ["LICENSE"]
+homepage = "https://github.com/microsoft/Detours"
+documentation = "https://github.com/microsoft/Detours/wiki"
+description = "Microsoft Detours, the library for intercepting and instrumenting Win32 API calls."
+keywords = ["hooking", "instrumentation", "interception", "windows"]
+linkage = ["static"]
+
+[source]
+git = "https://github.com/microsoft/Detours"
+commit = "1dbd4ea281d73d478aa8d09a8b83fbd265f715f7"
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc", "linux/clang-cl"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "Detours"
+libraries = ["detours"]
