@@ -1,0 +1,128 @@
+# The otok recipe of libarchive (https://github.com/apotocki/otok): libarchive for Windows, from the release archive, with
+# libarchive's CMake; the library, static or dynamic, and, built for the build machine as a tool, the programs bsdtar and
+# bsdunzip. The formats come with the libraries of the options (zlib, bzip2, lzma, lz4, zstd, all on by default), XAR
+# with Windows' XmlLite or libxml2 (libarchive's CMake told to take it without iconv) or Expat (reading only), encryption
+# and the digests with Windows' CNG or OpenSSL. Without libb2 (libarchive's own BLAKE2 is used), LZO, Mbed TLS
+# (libarchive needs its 3.x API), Nettle and PCRE.
+[recipe]
+api = 1
+library = "libarchive"
+name = "libarchive"
+version = "3.8.11"
+revision = 1
+license = "BSD-2-Clause AND BSD-3-Clause AND (CC0-1.0 OR OpenSSL OR Apache-2.0)"
+license-files = ["COPYING"]
+homepage = "https://www.libarchive.org"
+documentation = "https://github.com/libarchive/libarchive/wiki"
+description = "libarchive, a library reading and writing tar, cpio, zip, 7-Zip, RAR, ISO 9660, XAR and other archive and compression formats, with bsdtar and bsdunzip."
+keywords = ["archive", "tar", "zip", "7z", "compression"]
+linkage = ["static", "dynamic"]
+
+[tool]
+programs = ["bsdtar", "bsdunzip"]
+
+[source]
+url = "https://github.com/libarchive/libarchive/releases/download/v3.8.11/libarchive-3.8.11.tar.xz"
+sha256 = "a3dc0872b1b39da34dc18ef1b944f0f11ffd37425d70ae04be679279f1cf43d2"
+mirrors = ["https://www.libarchive.org/downloads/libarchive-3.8.11.tar.xz"]
+
+[options.zlib]
+type = "bool"
+default = true
+additive = true
+doc = "gzip, deflate in zip, and the formats that need it (ISO 9660 zisofs, XAR, 7-Zip deflate), with zlib."
+
+[options.bzip2]
+type = "bool"
+default = true
+additive = true
+doc = "bzip2, and bzip2 in zip, 7-Zip and XAR, with bzip2."
+
+[options.lzma]
+type = "bool"
+default = true
+additive = true
+doc = "xz, lzma and lzip, and LZMA in zip, 7-Zip and XAR, with liblzma."
+
+[options.lz4]
+type = "bool"
+default = true
+additive = true
+doc = "lz4, with lz4."
+
+[options.zstd]
+type = "bool"
+default = true
+additive = true
+doc = "zstd, and zstd in zip and 7-Zip, with zstd."
+
+[options.xml]
+type = "enum"
+values = ["xmllite", "libxml2", "expat", "none"]
+default = "xmllite"
+doc = "The XML library of the XAR format: Windows' XmlLite or libxml2 (reading and writing), Expat (reading only), or none (no XAR)."
+
+[options.crypto]
+type = "enum"
+values = ["cng", "openssl", "none"]
+default = "cng"
+doc = "Windows' CNG or OpenSSL for traditional and AES encryption of zip and the digests of XAR, mtree and WARC; none leaves them out."
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc", "linux/clang-cl"]
+
+[deps.zlib]
+version = ">= 1.2.1"
+default-recipe = "apotocki/zlib"
+when = { option = "zlib" }
+
+[deps.bzip2]
+version = ">= 1.0"
+default-recipe = "apotocki/bzip2"
+when = { option = "bzip2" }
+
+[deps.lzma]
+version = ">= 5.0"
+default-recipe = "apotocki/lzma"
+when = { option = "lzma" }
+
+[deps.lz4]
+version = ">= 1.7"
+default-recipe = "apotocki/lz4"
+when = { option = "lz4" }
+
+[deps.zstd]
+version = ">= 1.4"
+default-recipe = "apotocki/zstd"
+when = { option = "zstd" }
+
+[deps.expat]
+version = ">= 2.0"
+default-recipe = "apotocki/expat"
+linkage = "static"
+when = { option = "xml", is = "expat" }
+
+[deps.libxml2]
+version = ">= 2.9"
+default-recipe = "apotocki/libxml2"
+linkage = "static"
+when = { option = "xml", is = "libxml2" }
+
+[deps.openssl]
+version = ">= 3.0"
+default-recipe = "apotocki/openssl"
+when = { option = "crypto", is = "openssl" }
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "LibArchive"
+libraries = ["archive"]
+link = { libraries = [
+    "bcrypt",
+    { library = "xmllite", when = { option = "xml", is = "xmllite" } },
+    { library = "uuid", when = { option = "xml", is = "xmllite" } },
+] }

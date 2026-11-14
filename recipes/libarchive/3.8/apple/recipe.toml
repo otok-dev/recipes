@@ -1,0 +1,111 @@
+# The otok recipe of libarchive (https://github.com/apotocki/otok): libarchive for Apple platforms, from the release
+# archive, with libarchive's CMake; the library, static or dynamic, and, built for the build machine as a tool, the
+# programs bsdtar and bsdunzip. The formats come with the libraries of the options (zlib, the SDK's, bzip2, lzma, lz4, zstd,
+# all on by default; bzip2, lzma and lz4 static, as their recipes are here), XAR with libxml2 (or Expat, reading only);
+# encryption and the digests are CommonCrypto's, iconv and ACLs the system's. No external filter programs on watchOS and
+# tvOS, which have no fork or posix_spawn. Without OpenSSL (libarchive's CMake leaves it out on Apple platforms), libb2
+# (libarchive's own BLAKE2 is used), LZO, Mbed TLS, Nettle and PCRE.
+[recipe]
+api = 1
+library = "libarchive"
+name = "libarchive"
+version = "3.8.11"
+revision = 1
+license = "BSD-2-Clause AND BSD-3-Clause AND (CC0-1.0 OR OpenSSL OR Apache-2.0)"
+license-files = ["COPYING"]
+homepage = "https://www.libarchive.org"
+documentation = "https://github.com/libarchive/libarchive/wiki"
+description = "libarchive, a library reading and writing tar, cpio, zip, 7-Zip, RAR, ISO 9660, XAR and other archive and compression formats, with bsdtar and bsdunzip."
+keywords = ["archive", "tar", "zip", "7z", "compression"]
+linkage = ["static", "dynamic"]
+
+[tool]
+programs = ["bsdtar", "bsdunzip"]
+
+[source]
+url = "https://github.com/libarchive/libarchive/releases/download/v3.8.11/libarchive-3.8.11.tar.xz"
+sha256 = "a3dc0872b1b39da34dc18ef1b944f0f11ffd37425d70ae04be679279f1cf43d2"
+mirrors = ["https://www.libarchive.org/downloads/libarchive-3.8.11.tar.xz"]
+
+[options.zlib]
+type = "bool"
+default = true
+additive = true
+doc = "gzip, deflate in zip, and the formats that need it (ISO 9660 zisofs, XAR, 7-Zip deflate), with the SDK's zlib."
+
+[options.bzip2]
+type = "bool"
+default = true
+additive = true
+doc = "bzip2, and bzip2 in zip, 7-Zip and XAR, with bzip2."
+
+[options.lzma]
+type = "bool"
+default = true
+additive = true
+doc = "xz, lzma and lzip, and LZMA in zip, 7-Zip and XAR, with liblzma."
+
+[options.lz4]
+type = "bool"
+default = true
+additive = true
+doc = "lz4, with lz4."
+
+[options.zstd]
+type = "bool"
+default = true
+additive = true
+doc = "zstd, and zstd in zip and 7-Zip, with zstd."
+
+[options.xml]
+type = "enum"
+values = ["libxml2", "expat", "none"]
+default = "libxml2"
+doc = "The XML library of the XAR format: libxml2 (reading and writing), Expat (reading only), or none (no XAR)."
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+build-on = ["macos/xcode"]
+
+[deps.bzip2]
+version = ">= 1.0"
+default-recipe = "apotocki/bzip2"
+linkage = "static"
+when = { option = "bzip2" }
+
+[deps.lzma]
+version = ">= 5.0"
+default-recipe = "apotocki/lzma"
+linkage = "static"
+when = { option = "lzma" }
+
+[deps.lz4]
+version = ">= 1.7"
+default-recipe = "apotocki/lz4"
+linkage = "static"
+when = { option = "lz4" }
+
+[deps.zstd]
+version = ">= 1.4"
+default-recipe = "apotocki/zstd"
+when = { option = "zstd" }
+
+[deps.expat]
+version = ">= 2.0"
+default-recipe = "apotocki/expat"
+when = { option = "xml", is = "expat" }
+
+[deps.libxml2]
+version = ">= 2.9"
+default-recipe = "apotocki/libxml2"
+when = { option = "xml", is = "libxml2" }
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "LibArchive"
+libraries = ["archive"]
+apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }
+link = { libraries = ["iconv", { library = "z", when = { option = "zlib" } }] }
