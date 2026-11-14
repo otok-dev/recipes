@@ -1,0 +1,60 @@
+# The otok recipe of nlohmann/json (https://github.com/apotocki/otok): JSON for Modern C++ for Android, from the release tag; its
+# headers, with upstream's CMake options written into them as the recipe's options.
+[recipe]
+api = 1
+library = "nlohmann-json"
+name = "nlohmann-json"
+version = "3.12.0"
+revision = 1
+license = "MIT"
+license-files = ["LICENSE.MIT"]
+homepage = "https://json.nlohmann.me/"
+description = "JSON for Modern C++: a header-only JSON library with an intuitive syntax, JSON Pointer and Patch, and binary formats (BSON, CBOR, MessagePack, UBJSON, BJData)."
+keywords = ["json", "parser", "serializer", "cbor", "msgpack", "cpp", "header-only"]
+cxx-standard = ">= 11"
+
+[source]
+git = "https://github.com/nlohmann/json"
+commit = "55f93686c01528224f448c19128836e7df245f72"
+tag = "v3.12.0"
+
+[platforms]
+supported = ["android"]
+build-on = ["*/ndk"]
+
+[options.diagnostics]
+type = "bool"
+default = false
+additive = true
+doc = "Extended diagnostic messages: exceptions name the JSON Pointer of the value that failed (JSON_DIAGNOSTICS=1). It costs memory and time, and changes the ABI namespace."
+
+[options.diagnostic-positions]
+type = "bool"
+default = false
+additive = true
+doc = "The parsed values keep their start and end positions in the input, named by exceptions (JSON_DIAGNOSTIC_POSITIONS=1). It changes the ABI namespace."
+
+[options.implicit-conversions]
+type = "bool"
+default = true
+doc = "Implicit conversions of a json value to other types; false makes them explicit, get<T>() only (JSON_USE_IMPLICIT_CONVERSIONS=0)."
+
+[options.global-udls]
+type = "bool"
+default = true
+doc = "The user-defined literals _json and _json_pointer in the global namespace too; false keeps them in nlohmann::literals::json_literals only (JSON_USE_GLOBAL_UDLS=0)."
+
+[options.disable-enum-serialization]
+type = "bool"
+default = false
+doc = "No implicit serialization of enumerations as integers: an enumeration needs NLOHMANN_JSON_SERIALIZE_ENUM or its own to_json/from_json (JSON_DISABLE_ENUM_SERIALIZATION=1)."
+
+[options.legacy-discarded-value-comparison]
+type = "bool"
+default = false
+doc = "Comparisons with a discarded value as before 3.11.0 (JSON_USE_LEGACY_DISCARDED_VALUE_COMPARISON=1). It changes the ABI namespace."
+
+[[product]]
+name = "NlohmannJson"
+libraries = []
+link = { runtime = "c++" }
