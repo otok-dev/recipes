@@ -1,0 +1,38 @@
+# The otok recipe of libacl (https://github.com/apotocki/otok): libacl, the POSIX 1003.1e draft ACL library of the acl package,
+# for Linux, from the release archive, with its own configure and make, the library and its headers only (no getfacl,
+# setfacl, chacl, gettext or documentation); static or dynamic. The library is under the GNU LGPL 2.1; the tools left out
+# are under the GNU GPL 2.
+[recipe]
+api = 1
+library = "libacl"
+name = "libacl"
+version = "2.4.0"
+revision = 1
+license = "LGPL-2.1-or-later"
+license-files = ["doc/COPYING", "doc/COPYING.LGPL"]
+homepage = "https://savannah.nongnu.org/projects/acl"
+description = "libacl, the library of POSIX access control lists of Linux file systems."
+keywords = ["acl", "permissions", "filesystem", "linux"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://download.savannah.nongnu.org/releases/acl/acl-2.4.0.tar.xz"
+sha256 = "e661131456d2708a01c614a0f400e11d7d1bfaeb6f3e74b75bb980b72f0161a3"
+
+# attr/error_context.h, the one header of the attr package that libacl is compiled with (its installed headers only declare
+# the struct); nothing of libattr is linked.
+[[resource]]
+name = "attr"
+url = "https://download.savannah.nongnu.org/releases/attr/attr-2.6.0.tar.xz"
+sha256 = "6c8a2148a7b85043b68492bce43316b0e2e214fc4e628c7ede078e76e216330b"
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[toolchains]
+make = { version = ">= 3.81", default-recipe = "apotocki/make" }
+
+[[product]]
+name = "ACL"
+libraries = ["acl"]
