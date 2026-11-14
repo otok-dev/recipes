@@ -1,5 +1,5 @@
 # The otok recipe of Protocol Buffers (https://github.com/apotocki/otok): the C++ runtime (libprotobuf or libprotobuf-lite) for every Apple platform, from the
-# release archive, with protobuf's CMake and the Abseil of deps, static, without protoc.
+# release archive, with protobuf's CMake and the Abseil of deps, static; protoc for the build machine where it is a tool.
 [recipe]
 api = 1
 library = "protobuf"
@@ -10,10 +10,14 @@ license = "BSD-3-Clause"
 license-files = ["LICENSE"]
 homepage = "https://protobuf.dev"
 documentation = "https://protobuf.dev/reference/cpp/"
-description = "Protocol Buffers, Google's data interchange format: the C++ runtime."
+description = "Protocol Buffers, Google's data interchange format: the C++ runtime, and protoc for the build machine."
 keywords = ["protobuf", "serialization", "rpc"]
 cxx-standard = ">= 17"
 linkage = ["static"]
+
+# protoc in the tool slice (build.lua): for the recipes that generate code with it and for projects that deliver it
+[tool]
+programs = ["protoc"]
 
 [source]
 url = "https://github.com/protocolbuffers/protobuf/releases/download/v36.2/protobuf-36.2.tar.gz"
