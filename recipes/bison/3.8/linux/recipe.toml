@@ -1,0 +1,38 @@
+# The otok recipe of GNU Bison (https://github.com/apotocki/otok): the bison program for the builds of other recipes and
+# for projects that deliver it ([tool-deps.bison] with `deliver`), on Linux: built from the release archive with its
+# configure and make. Bison runs m4, which it carries in libexec/bison/ beside the program, and reads its skeletons from
+# share/bison/: bin/bison is a script running it with both, so it needs nothing of the machine's.
+[recipe]
+api = 1
+library = "bison"
+name = "bison"
+version = "3.8.2"
+revision = 1
+# the m4 beside the program is GPL-3.0-or-later as well
+license = "GPL-3.0-or-later"
+license-files = ["COPYING"]
+homepage = "https://www.gnu.org/software/bison/"
+documentation = "https://www.gnu.org/software/bison/manual/"
+description = "GNU Bison, the parser generator, built from source."
+keywords = ["parser", "generator", "yacc", "tool"]
+
+[tool]
+programs = ["bison"]
+
+[source]
+url = "https://ftp.gnu.org/gnu/bison/bison-3.8.2.tar.xz"
+sha256 = "9bba0214ccf7f1079c5d59210045227bcf619519840ebfa80cd3849cff5a5bf2"
+mirrors = ["https://ftpmirror.gnu.org/gnu/bison/bison-3.8.2.tar.xz"]
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[toolchains]
+make = { version = ">= 3.81", default-recipe = "apotocki/make" }
+
+# m4, which configure checks and the program runs: a tool dependency rather than a toolchain, so that build.lua may copy
+# it beside the program (deps.tools.m4)
+[tool-deps.m4]
+version = ">= 1.4.6"
+default-recipe = "apotocki/m4"

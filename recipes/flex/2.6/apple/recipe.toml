@@ -1,0 +1,37 @@
+# The otok recipe of flex (https://github.com/apotocki/otok): the flex program for the builds of other recipes and for
+# projects that deliver it ([tool-deps.flex] with `deliver`), on macOS: built from the release archive with its configure
+# and make. flex runs m4, which it carries in libexec/flex/ beside the program: bin/flex is a script running it with
+# that m4, so it needs none of the machine's.
+[recipe]
+api = 1
+library = "flex"
+name = "flex"
+version = "2.6.4"
+revision = 1
+# the m4 beside the program: GPL-3.0-or-later (COPYING-m4, the COPYING of GNU M4 1.4.21)
+license = "BSD-3-Clause-flex AND GPL-3.0-or-later"
+license-files = ["COPYING", { recipe = "COPYING-m4" }]
+homepage = "https://github.com/westes/flex"
+documentation = "https://westes.github.io/flex/manual/"
+description = "flex, the fast lexical analyzer generator, built from source."
+keywords = ["lexer", "parser", "generator", "tool"]
+
+[tool]
+programs = ["flex"]
+
+[source]
+url = "https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz"
+sha256 = "e87aae032bf07c26f85ac0ed3250998c37621d95f8bd748b31f15b33c45ee995"
+
+[platforms]
+supported = ["macosx"]
+build-on = ["macos/xcode"]
+
+[toolchains]
+make = { version = ">= 3.81", default-recipe = "apotocki/make" }
+
+# m4, which configure checks and the program runs: a tool dependency rather than a toolchain, so that build.lua may copy
+# it beside the program (deps.tools.m4)
+[tool-deps.m4]
+version = ">= 1.4.6"
+default-recipe = "apotocki/m4"
