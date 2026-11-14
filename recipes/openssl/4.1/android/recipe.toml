@@ -35,4 +35,6 @@ defines = [{ define = "OPENSSL_NO_DEPRECATED", when = { option = "no-deprecated"
 
 [toolchains]
 make = { version = ">= 3.81", default-recipe = "apotocki/make" }
-perl = { version = ">= 5.30", default-recipe = "apotocki/perl" }
+# OpenSSL's Configure writes the Unix makefile of the android targets only with a perl of Unix paths: on Windows, the
+# perl of MSYS2 beside make (apotocki/make 4.4.1-r4 or later), not the native one of apotocki/perl (build.lua)
+perl = { version = ">= 5.30", default-recipe = "apotocki/perl", when = { environment = ["linux/ndk", "macos/ndk"] } }

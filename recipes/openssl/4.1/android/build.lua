@@ -1,13 +1,31 @@
 -- Configure with a target of Configurations/60-otok.conf and the slice's compiler and flags (the NDK's clang for the ABI and
 -- the API level), then the libraries and the development files only. The directory OpenSSL looks for certificates in is
 -- /system/etc/ssl.
+--
+-- On Windows, Configure refuses the native perl for the Unix makefile of the android targets: it runs with the perl of
+-- MSYS2 beside make, which takes the source and the prefix as MSYS2 names them (/c/…; a path with a drive is not an
+-- absolute one to its File::Spec) and hands them to the NDK's programs as C:/… again. The makefile's rules run in sh,
+-- which would drop the backslashes of the -ffile-prefix-map the toolchain writes with Windows' separators.
+local function msys_path(path)
+    return (path:gsub("^(%a):/", function(drive) return "/" .. drive:lower() .. "/" end))
+end
+
 function build(slice, options, deps)
     local t = slice.toolchain
     local shared = slice.linkage == "dynamic"
     otok.copy(slice.recipe .. "/Configurations/60-otok.conf", slice.source .. "/Configurations/60-otok.conf")
-    local configure = { slice.toolchains.perl, slice.source .. "/Configure", "otok-android-" .. slice.arch,
-        shared and "shared" or "no-shared", "no-tests", "--prefix=" .. slice.prefix, "--openssldir=/system/etc/ssl", "--libdir=lib",
-        "CC=" .. t.cc, "CFLAGS=" .. table.concat(t.cflags, " "), "AR=" .. t.ar, "RANLIB=" .. t.ranlib }
+    local perl, source, prefix, cflags = slice.toolchains.perl, slice.source, slice.prefix, {}
+    for i, flag in ipairs(t.cflags) do cflags[i] = flag end
+    if slice.host:find("^windows") then
+        perl = slice.toolchains.make:gsub("[^/]*$", "") .. "perl.exe"  -- apotocki/make 4.4.1-r4 or later
+        source, prefix = msys_path(source), msys_path(prefix)
+        for i, flag in ipairs(cflags) do
+            if flag:find("^%-ffile%-prefix%-map=") then cflags[i] = flag:gsub("\\", "/") end
+        end
+    end
+    local configure = { perl, source .. "/Configure", "otok-android-" .. slice.arch,
+        shared and "shared" or "no-shared", "no-tests", "--prefix=" .. prefix, "--openssldir=/system/etc/ssl", "--libdir=lib",
+        "CC=" .. t.cc, "CFLAGS=" .. table.concat(cflags, " "), "AR=" .. t.ar, "RANLIB=" .. t.ranlib }
     if options["no-deprecated"] then table.insert(configure, "no-deprecated") end
     otok.run(configure, { cwd = slice.build })
     otok.make{ "build_libs", cwd = slice.build }

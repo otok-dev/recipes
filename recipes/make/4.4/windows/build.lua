@@ -42,5 +42,5 @@ function build(slice, options, deps)
     end
     otok.write(p .. "/etc/fstab", fstab)
     local bin = p .. "/usr/bin/"
-    return { programs = { make = bin .. "make.exe", m4 = bin .. "m4.exe", as = bin .. "as.exe" } }
+    return { programs = { make = bin .. "make.exe", m4 = bin .. "m4.exe", as = bin .. "as.exe", perl = bin .. "perl.exe" } }
 end
