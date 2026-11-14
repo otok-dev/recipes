@@ -1,0 +1,31 @@
+# The otok recipe of flex (https://github.com/apotocki/otok): the flex program for the builds of other recipes and for
+# projects that deliver it ([tool-deps.flex] with `deliver`), on Windows: win_flex of winflexbison, flex for Windows
+# built with MSVC, with m4 built in, no runtime of MSYS2 or Cygwin.
+[recipe]
+api = 1
+library = "flex"
+name = "flex"
+version = "2.6.4"
+revision = 1
+# win_flex links the m4 and gnulib code of winflexbison's common library, GPL-3.0-or-later
+license = "BSD-3-Clause-flex AND GPL-3.0-or-later"
+license-files = ["flex/src/COPYING", "COPYING"]
+homepage = "https://github.com/westes/flex"
+documentation = "https://westes.github.io/flex/manual/"
+description = "flex, the fast lexical analyzer generator: win_flex of winflexbison."
+keywords = ["lexer", "parser", "generator", "tool"]
+
+[tool]
+programs = ["flex"]
+
+[source]
+url = "https://github.com/lexxmark/winflexbison/archive/refs/tags/v2.5.25.tar.gz"
+sha256 = "8e1b71e037b524ba3f576babb0cf59182061df1f19cd86112f085a882560f60b"
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }

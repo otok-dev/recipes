@@ -1,0 +1,30 @@
+# The otok recipe of GNU Bison (https://github.com/apotocki/otok): the bison program for the builds of other recipes and
+# for projects that deliver it ([tool-deps.bison] with `deliver`), on Windows: win_bison of winflexbison, Bison for
+# Windows built with MSVC, with m4 built in, no runtime of MSYS2 or Cygwin; its skeletons in data/ beside the program.
+[recipe]
+api = 1
+library = "bison"
+name = "bison"
+version = "3.8.2"
+revision = 1
+license = "GPL-3.0-or-later"
+license-files = ["COPYING"]
+homepage = "https://www.gnu.org/software/bison/"
+documentation = "https://www.gnu.org/software/bison/manual/"
+description = "GNU Bison, the parser generator: win_bison of winflexbison."
+keywords = ["parser", "generator", "yacc", "tool"]
+
+[tool]
+programs = ["bison"]
+
+[source]
+url = "https://github.com/lexxmark/winflexbison/archive/refs/tags/v2.5.25.tar.gz"
+sha256 = "8e1b71e037b524ba3f576babb0cf59182061df1f19cd86112f085a882560f60b"
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
