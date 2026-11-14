@@ -1,0 +1,33 @@
+# The otok recipe of inja (https://github.com/apotocki/otok): inja for every Apple platform, from the release tag; its headers,
+# with nlohmann/json of its own recipe instead of the copy in its tree.
+[recipe]
+api = 1
+library = "inja"
+name = "inja"
+version = "3.5.0"
+revision = 1
+license = "MIT"
+license-files = ["LICENSE"]
+homepage = "https://pantor.github.io/inja/"
+description = "inja, a template engine for modern C++ in the spirit of Jinja2, over nlohmann/json: loops, conditions, includes, inheritance and callbacks."
+keywords = ["template", "template-engine", "jinja", "json", "cpp", "header-only"]
+cxx-standard = ">= 17"
+
+[source]
+git = "https://github.com/pantor/inja"
+commit = "7d1b4600b68595085a949743331c2e5673f511ea"
+tag = "v3.5.0"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+build-on = ["macos/xcode"]
+
+[deps.nlohmann-json]
+version = ">= 3.11"
+default-recipe = "apotocki/nlohmann-json"
+
+[[product]]
+name = "Inja"
+libraries = []
+link = { runtime = "c++" }
+apple = { privacy-manifest = "none" }
