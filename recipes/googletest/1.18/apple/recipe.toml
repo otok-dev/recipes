@@ -1,0 +1,43 @@
+# The otok recipe of GoogleTest (https://github.com/apotocki/otok): gtest and gmock, static, for the native tests on
+# every Apple platform (e.g. an iOS simulator executable started by `simctl spawn`), from the release tag. Without
+# gtest_main / gmock_main (the other variants have them): both define main, which an Apple output refuses in one
+# output; a test executable of Apple's platforms has its own main.
+[recipe]
+api = 1
+library = "googletest"
+name = "googletest"
+version = "1.18.0"
+revision = 1
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+homepage = "https://github.com/google/googletest"
+description = "GoogleTest and GoogleMock, Google's C++ test framework."
+keywords = ["testing", "gtest", "gmock"]
+linkage = ["static"]
+cxx-standard = ">= 17"
+
+[source]
+git = "https://github.com/google/googletest"
+commit = "063de7e9578f82b369302001269680b4b1553359"
+tag = "v1.18.0"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+build-on = ["macos/xcode"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "GTest"
+libraries = ["gtest"]
+link = { runtime = "c++" }
+apple = { privacy-manifest = "none" }
+
+[[product]]
+name = "GMock"
+libraries = ["gmock"]
+headers = false
+apple = { privacy-manifest = "none" }
+depends = ["GTest"]
