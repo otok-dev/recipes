@@ -33,7 +33,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 name = "GTest"
 libraries = ["gtest"]
 link = { runtime = "c++" }
-apple = { privacy-manifest = "none" }
+apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }
 
 [[product]]
 name = "GMock"
