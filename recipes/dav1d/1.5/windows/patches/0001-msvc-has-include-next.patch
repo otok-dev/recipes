@@ -1,0 +1,23 @@
+dav1d's stdatomic.h for MSVC with cl of MSVC 14.52 and later.
+
+- include/compat/msvc/stdatomic.h: __has_include_next, a macro cl does not define, apart in an #if of its own under
+  defined(__clang__): cl 14.52 refuses an undefined function-like macro in #if (C7780) even where && skips it.
+
+diff --git a/include/compat/msvc/stdatomic.h b/include/compat/msvc/stdatomic.h
+--- a/include/compat/msvc/stdatomic.h
++++ b/include/compat/msvc/stdatomic.h
+@@ -32,7 +32,13 @@
+ #pragma warning(push)
+ #pragma warning(disable:4067)    /* newline for __has_include_next */
+ 
+-#if defined(__clang__) && __has_include_next(<stdatomic.h>)
++#if defined(__clang__)
++#if __has_include_next(<stdatomic.h>)
++#define MSCVER_STDATOMIC_NEXT_ 1
++#endif
++#endif
++
++#ifdef MSCVER_STDATOMIC_NEXT_
+    /* use the clang stdatomic.h with clang-cl*/
+ #  include_next <stdatomic.h>
+ #else /* ! stdatomic.h */
