@@ -7,7 +7,7 @@ api = 1
 library = "zxing-cpp"
 name = "zxing-cpp"
 version = "3.1.1"
-revision = 1
+revision = 2
 # the reader carries libzueci (core/src/libzueci), the writer libzint (zint/backend), both BSD-3-Clause; the source has
 # neither text: zint/LICENSE only says which part of zint is BSD, the text is in the headers of its files. The code of
 # android/ and wrappers/ is this recipe's own, CC0-1.0.
@@ -48,3 +48,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 name = "ZXing"
 libraries = ["ZXing"]
 link = { runtime = "c++" }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.ZXing]
+targets = { "ZXing::{ZXing,Core}" = "ZXing" }

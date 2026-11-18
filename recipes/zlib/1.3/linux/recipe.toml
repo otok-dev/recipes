@@ -5,7 +5,7 @@ api = 1
 library = "zlib"
 name = "zlib"
 version = "1.3.2"
-revision = 1
+revision = 2
 license = "Zlib"
 license-files = ["LICENSE"]
 homepage = "https://zlib.net"
@@ -28,3 +28,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 [[product]]
 name = "ZLIB"
 libraries = ["z"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.ZLIB]
+targets = { "ZLIB::{ZLIB,ZLIBSTATIC}" = "ZLIB" }

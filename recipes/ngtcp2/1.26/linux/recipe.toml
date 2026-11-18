@@ -6,7 +6,7 @@ api = 1
 library = "ngtcp2"
 name = "ngtcp2"
 version = "1.26.0"
-revision = 1
+revision = 2
 license = "MIT"
 license-files = ["COPYING"]
 homepage = "https://github.com/ngtcp2/ngtcp2"
@@ -34,3 +34,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 [[product]]
 name = "NGTCP2"
 libraries = ["ngtcp2_crypto_ossl", "ngtcp2"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.ngtcp2]
+targets = { "ngtcp2::ngtcp2{,_static}" = "NGTCP2", "ngtcp2::ngtcp2_crypto_ossl{,_static}" = "NGTCP2" }

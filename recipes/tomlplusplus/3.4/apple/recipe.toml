@@ -5,7 +5,7 @@ api = 1
 library = "tomlplusplus"
 name = "tomlplusplus"
 version = "3.4.0"
-revision = 1
+revision = 2
 license = "MIT"
 license-files = ["LICENSE"]
 homepage = "https://marzer.github.io/tomlplusplus/"
@@ -45,3 +45,7 @@ libraries = ["tomlplusplus"]
 headers = false
 depends = ["TomlPlusPlus"]
 when = { option = "compiled" }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.tomlplusplus]
+targets = { "tomlplusplus::tomlplusplus" = "TomlPlusPlus" }

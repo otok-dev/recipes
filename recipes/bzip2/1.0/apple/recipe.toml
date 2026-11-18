@@ -5,7 +5,7 @@ api = 1
 library = "bzip2"
 name = "bzip2"
 version = "1.0.8"
-revision = 1
+revision = 2
 license = "bzip2-1.0.6"
 license-files = ["LICENSE"]
 homepage = "https://sourceware.org/bzip2/"
@@ -29,3 +29,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 name = "BZip2"
 libraries = ["bz2"]
 apple = { privacy-manifest = "none" }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.BZip2]
+targets = { "BZip2::BZip2" = "BZip2" }

@@ -6,7 +6,7 @@ api = 1
 library = "mbedtls"
 name = "mbedtls"
 version = "4.2.0"
-revision = 1
+revision = 2
 license = "Apache-2.0 OR GPL-2.0-or-later"
 license-files = ["LICENSE"]
 homepage = "https://www.trustedfirmware.org/projects/mbed-tls/"
@@ -33,3 +33,10 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 name = "MbedTLS"
 libraries = ["mbedtls", "mbedx509", "tfpsacrypto"]
 apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.MbedTLS]
+targets = { "MbedTLS::{mbedtls,mbedx509,tfpsacrypto}" = "MbedTLS" }
+
+[cmake.TF-PSA-Crypto]
+targets = { "TF-PSA-Crypto::tfpsacrypto" = "MbedTLS" }

@@ -6,7 +6,7 @@ api = 1
 library = "libssh2"
 name = "libssh2"
 version = "1.11.1"
-revision = 1
+revision = 2
 license = "BSD-3-Clause"
 license-files = ["COPYING"]
 homepage = "https://libssh2.org"
@@ -46,3 +46,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 name = "LibSSH2"
 libraries = ["ssh2"]
 link = { libraries = ["ws2_32", "crypt32", "bcrypt"] }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.libssh2]
+targets = { "libssh2::libssh2{,_shared,_static}" = "LibSSH2", "Libssh2::libssh2" = "LibSSH2" }

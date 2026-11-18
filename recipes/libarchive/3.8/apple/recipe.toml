@@ -10,7 +10,7 @@ api = 1
 library = "libarchive"
 name = "libarchive"
 version = "3.8.11"
-revision = 1
+revision = 2
 license = "BSD-2-Clause AND BSD-3-Clause AND (CC0-1.0 OR OpenSSL OR Apache-2.0)"
 license-files = ["COPYING"]
 homepage = "https://www.libarchive.org"
@@ -109,3 +109,7 @@ name = "LibArchive"
 libraries = ["archive"]
 apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }
 link = { libraries = ["iconv", { library = "z", when = { option = "zlib" } }] }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.LibArchive]
+targets = { "LibArchive::LibArchive" = "LibArchive" }

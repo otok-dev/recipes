@@ -5,7 +5,7 @@ api = 1
 library = "libjpeg-turbo"
 name = "libjpeg-turbo"
 version = "3.2.1"
-revision = 1
+revision = 2
 license = "IJG AND BSD-3-Clause AND Zlib"
 license-files = ["LICENSE.md", "README.ijg"]
 homepage = "https://libjpeg-turbo.org"
@@ -44,3 +44,10 @@ name = "TurboJPEG"
 when = { option = "api", is = "turbojpeg" }
 libraries = ["turbojpeg"]
 apple = { privacy-manifest = "none" }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.JPEG]
+targets = { "JPEG::JPEG" = "JPEG" }
+
+[cmake.libjpeg-turbo]
+targets = { "libjpeg-turbo::jpeg{,-static}" = "JPEG", "libjpeg-turbo::turbojpeg{,-static}" = "TurboJPEG" }

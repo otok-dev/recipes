@@ -5,7 +5,7 @@ api = 1
 library = "libtiff"
 name = "libtiff"
 version = "4.7.2"
-revision = 1
+revision = 2
 license = "libtiff"
 license-files = ["LICENSE.md"]
 homepage = "https://libtiff.gitlab.io/libtiff/"
@@ -82,3 +82,7 @@ name = "TIFF"
 libraries = ["tiff"]
 apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }
 link = { libraries = [{ library = "z", when = { option = "zlib" } }] }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.TIFF]
+targets = { "TIFF::{TIFF,tiff}" = "TIFF" }

@@ -5,7 +5,7 @@ api = 1
 library = "libwebp"
 name = "libwebp"
 version = "1.6.0"
-revision = 1
+revision = 2
 license = "BSD-3-Clause"
 license-files = ["COPYING", "PATENTS"]
 homepage = "https://developers.google.com/speed/webp"
@@ -29,3 +29,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 [[product]]
 name = "WebP"
 libraries = ["webpmux", "webpdemux", "webp", "sharpyuv", "cpufeatures-webp"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.WebP]
+targets = { "WebP::{webp,webpdecoder,webpdemux,libwebpmux,sharpyuv}" = "WebP" }

@@ -5,7 +5,7 @@ api = 1
 library = "lzma"
 name = "lzma"
 version = "5.8.4"
-revision = 1
+revision = 2
 license = "0BSD"
 # COPYING tells which license applies to which part; liblzma is 0BSD
 license-files = ["COPYING", "COPYING.0BSD"]
@@ -30,3 +30,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 [[product]]
 name = "LZMA"
 libraries = ["lzma"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.LibLZMA]
+targets = { "LibLZMA::LibLZMA" = "LZMA", "liblzma::liblzma" = "LZMA" }

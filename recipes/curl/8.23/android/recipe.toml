@@ -6,7 +6,7 @@ api = 1
 library = "curl"
 name = "curl"
 version = "8.23.0"
-revision = 1
+revision = 2
 license = "curl"
 license-files = ["COPYING"]
 homepage = "https://curl.se"
@@ -128,3 +128,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 name = "CURL"
 libraries = ["curl"]
 link = { libraries = ["z"] }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.CURL]
+targets = { "CURL::libcurl{,_static,_shared}" = "CURL" }

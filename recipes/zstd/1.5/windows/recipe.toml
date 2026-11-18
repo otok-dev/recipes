@@ -5,7 +5,7 @@ api = 1
 library = "zstd"
 name = "zstd"
 version = "1.5.7"
-revision = 1
+revision = 2
 license = "BSD-3-Clause OR GPL-2.0-only"
 license-files = ["LICENSE"]
 homepage = "https://facebook.github.io/zstd/"
@@ -29,3 +29,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 [[product]]
 name = "Zstd"
 libraries = ["zstd"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.zstd]
+targets = { "zstd::libzstd{,_shared,_static}" = "Zstd" }

@@ -5,7 +5,7 @@ api = 1
 library = "lunasvg"
 name = "lunasvg"
 version = "3.5.0"
-revision = 1
+revision = 2
 license = "MIT"
 license-files = ["LICENSE"]
 homepage = "https://github.com/sammycage/lunasvg"
@@ -35,3 +35,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 name = "LunaSVG"
 libraries = ["lunasvg"]
 link = { runtime = "c++" }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.lunasvg]
+targets = { "lunasvg::lunasvg" = "LunaSVG" }

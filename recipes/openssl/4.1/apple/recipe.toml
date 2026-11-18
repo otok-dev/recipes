@@ -5,7 +5,7 @@ api = 1
 library = "openssl"
 name = "openssl"
 version = "4.1.0"
-revision = 1
+revision = 2
 license = "Apache-2.0"
 license-files = ["LICENSE.txt"]
 homepage = "https://www.openssl.org"
@@ -43,3 +43,9 @@ apple = { module = "COpenSSL", privacy-manifest = "PrivacyInfo.xcprivacy" }
 [toolchains]
 make = { version = ">= 3.81", default-recipe = "apotocki/make" }
 perl = { version = ">= 5.30", default-recipe = "apotocki/perl" }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.OpenSSL]
+targets = { "OpenSSL::{SSL,Crypto}" = "OpenSSL" }
+components = { SSL = "OpenSSL", Crypto = "OpenSSL" }
+variables = { OPENSSL_SSL_LIBRARY = "OpenSSL", OPENSSL_CRYPTO_LIBRARY = "OpenSSL", OPENSSL_INCLUDE_DIR = { include = "OpenSSL" } }

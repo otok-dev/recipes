@@ -6,7 +6,7 @@ api = 1
 library = "freetype"
 name = "freetype"
 version = "2.13.3"
-revision = 1
+revision = 2
 license = "FTL OR GPL-2.0-or-later"
 license-files = ["LICENSE.TXT", "docs/FTL.TXT", "docs/GPLv2.TXT"]
 homepage = "https://freetype.org"
@@ -31,3 +31,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 [[product]]
 name = "FreeType"
 libraries = ["freetype"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.Freetype]
+targets = { "Freetype::Freetype" = "FreeType" }

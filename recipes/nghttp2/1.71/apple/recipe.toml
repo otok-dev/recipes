@@ -5,7 +5,7 @@ api = 1
 library = "nghttp2"
 name = "nghttp2"
 version = "1.71.0"
-revision = 1
+revision = 2
 license = "MIT"
 license-files = ["COPYING"]
 homepage = "https://nghttp2.org"
@@ -30,3 +30,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 name = "NGHTTP2"
 libraries = ["nghttp2"]
 apple = { privacy-manifest = "none" }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.nghttp2]
+targets = { "nghttp2::nghttp2{,_static}" = "NGHTTP2" }

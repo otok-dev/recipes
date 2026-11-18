@@ -5,7 +5,7 @@ api = 1
 library = "inja"
 name = "inja"
 version = "3.5.0"
-revision = 1
+revision = 2
 license = "MIT"
 license-files = ["LICENSE"]
 homepage = "https://pantor.github.io/inja/"
@@ -31,3 +31,7 @@ name = "Inja"
 libraries = []
 link = { runtime = "c++" }
 apple = { privacy-manifest = "none" }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.inja]
+targets = { "pantor::inja" = "Inja" }

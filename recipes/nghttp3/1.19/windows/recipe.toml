@@ -5,7 +5,7 @@ api = 1
 library = "nghttp3"
 name = "nghttp3"
 version = "1.19.0"
-revision = 1
+revision = 2
 license = "MIT"
 license-files = ["COPYING"]
 homepage = "https://nghttp2.org/nghttp3/"
@@ -30,3 +30,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 name = "NGHTTP3"
 libraries = ["nghttp3"]
 defines = ["NGHTTP3_STATICLIB"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.nghttp3]
+targets = { "nghttp3::nghttp3{,_static}" = "NGHTTP3" }

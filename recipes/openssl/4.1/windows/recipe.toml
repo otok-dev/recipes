@@ -6,7 +6,7 @@ api = 1
 library = "openssl"
 name = "openssl"
 version = "4.1.0"
-revision = 1
+revision = 2
 license = "Apache-2.0"
 license-files = ["LICENSE.txt"]
 homepage = "https://www.openssl.org"
@@ -40,3 +40,9 @@ defines = [{ define = "OPENSSL_NO_DEPRECATED", when = { option = "no-deprecated"
 perl = { version = ">= 5.30", default-recipe = "apotocki/perl" }
 nasm = { version = ">= 2.09", default-recipe = "apotocki/nasm", when = { arch = ["x86_64"], environment = ["windows/msvc"] } }
 make = { version = ">= 3.81", default-recipe = "apotocki/make", when = { environment = ["linux/clang-cl"] } }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.OpenSSL]
+targets = { "OpenSSL::{SSL,Crypto}" = "OpenSSL" }
+components = { SSL = "OpenSSL", Crypto = "OpenSSL" }
+variables = { OPENSSL_SSL_LIBRARY = "OpenSSL", OPENSSL_CRYPTO_LIBRARY = "OpenSSL", OPENSSL_INCLUDE_DIR = { include = "OpenSSL" } }

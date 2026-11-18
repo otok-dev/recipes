@@ -5,7 +5,7 @@ api = 1
 library = "lua"
 name = "lua"
 version = "5.5.1"
-revision = 2
+revision = 3
 license = "MIT"
 # the release archive has no license file: LICENSE is the notice at the end of src/lua.h
 license-files = [{ recipe = "LICENSE" }]
@@ -30,3 +30,9 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 [[product]]
 name = "Lua"
 libraries = ["lua"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+# CMake's FindLua defines variables only: Lua::Lua is otok's, LUA_LIBRARIES and LUA_INCLUDE_DIR the module's
+[cmake.Lua]
+targets = { "Lua::Lua" = "Lua" }
+variables = { LUA_INCLUDE_DIR = { include = "Lua" } }

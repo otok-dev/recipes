@@ -5,7 +5,7 @@ api = 1
 library = "protobuf"
 name = "protobuf"
 version = "36.2"
-revision = 1
+revision = 2
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
 homepage = "https://protobuf.dev"
@@ -61,3 +61,7 @@ libraries = ["protobuf", "utf8_validity"]
 name = "ProtobufLite"
 when = { option = "runtime", is = "lite" }
 libraries = ["protobuf-lite", "utf8_validity"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.Protobuf]
+targets = { "protobuf::libprotobuf" = "Protobuf", "protobuf::libprotobuf-lite" = "ProtobufLite" }

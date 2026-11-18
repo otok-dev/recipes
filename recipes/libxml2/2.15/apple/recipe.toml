@@ -5,7 +5,7 @@ api = 1
 library = "libxml2"
 name = "libxml2"
 version = "2.15.4"
-revision = 1
+revision = 2
 license = "MIT"
 license-files = ["Copyright"]
 homepage = "https://gitlab.gnome.org/GNOME/libxml2"
@@ -37,3 +37,7 @@ name = "LibXml2"
 libraries = ["xml2"]
 apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }
 link = { libraries = ["iconv", { library = "z", when = { option = "zlib" } }] }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.LibXml2]
+targets = { "LibXml2::LibXml2" = "LibXml2" }

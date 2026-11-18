@@ -5,7 +5,7 @@ api = 1
 library = "libpng"
 name = "libpng"
 version = "1.6.47"
-revision = 1
+revision = 2
 license = "libpng-2.0"
 license-files = ["LICENSE"]
 homepage = "http://www.libpng.org/pub/png/libpng.html"
@@ -33,3 +33,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 [[product]]
 name = "PNG"
 libraries = ["png16"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.PNG]
+targets = { "PNG::{PNG,png_shared,png_static}" = "PNG" }

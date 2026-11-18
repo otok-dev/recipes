@@ -5,7 +5,7 @@ api = 1
 library = "googletest"
 name = "googletest"
 version = "1.18.0"
-revision = 1
+revision = 2
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
 homepage = "https://github.com/google/googletest"
@@ -49,3 +49,7 @@ name = "GMockMain"
 libraries = ["gmock_main"]
 headers = false
 depends = ["GMock"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.GTest]
+targets = { "GTest::gtest" = "GTest", "GTest::gtest_main" = "GTestMain", "GTest::gmock" = "GMock", "GTest::gmock_main" = "GMockMain", "GTest::GTest" = "GTest", "GTest::Main" = "GTestMain" }

@@ -7,7 +7,7 @@ api = 1
 library = "icu4c"
 name = "icu4c"
 version = "79.1"
-revision = 1
+revision = 2
 license = "Unicode-3.0"
 license-files = ["LICENSE"]
 homepage = "https://icu.unicode.org"
@@ -67,3 +67,8 @@ link = { runtime = "c++" }
 headers = "uc"
 # the installed headers do not record --disable-renaming
 defines = [{ define = "U_DISABLE_RENAMING=1", when = { option = "no-renaming" } }]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.ICU]
+targets = { "ICU::{uc,i18n,io,data}" = "ICU" }
+components = { uc = "ICU", i18n = "ICU", io = "ICU", data = "ICU" }

@@ -1,0 +1,83 @@
+# The otok recipe of otok (https://github.com/otok-dev/otok): otok itself for Windows, from the source archive of its
+# release, with its own CMake project and the libraries of these recipes in place of vcpkg's: toml++ (compiled),
+# nlohmann/json, inja, curl with Schannel, libarchive with zlib, bzip2, liblzma, LZ4 and Zstandard, and Microsoft
+# Detours. A tool only: the program otok, with otok-sandbox.dll beside it. The tests are not built.
+[recipe]
+api = 1
+library = "otok"
+name = "otok"
+version = "0.5.16"
+revision = 1
+license = "GPL-3.0-only WITH AdditionRef-otok-output-exception"
+license-files = ["LICENSE", "LICENSE-EXCEPTION"]
+homepage = "https://otok-dev.github.io"
+documentation = "https://github.com/otok-dev/otok"
+description = "otok, the dependency manager that builds native libraries from source, built by otok."
+keywords = ["package-manager", "build", "dependencies"]
+cxx-standard = ">= 23"
+
+[tool]
+programs = ["otok"]
+
+[source]
+url = "https://github.com/otok-dev/otok/releases/download/v0.5.16/otok-0.5.16.tar.gz"
+sha256 = "d4c9de3d10e26b0eaedf9df995572cbc3dc6bbb1f0ece485e2771dc2509ca9d1"
+
+[vars]
+revision = { default = "v0.5.16" }
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc"]
+
+[deps.tomlplusplus]
+version = ">= 3.4"
+default-recipe = "apotocki/tomlplusplus"
+requires-options = { compiled = true }
+
+[deps.nlohmann-json]
+version = ">= 3.11"
+default-recipe = "apotocki/nlohmann-json"
+
+[deps.inja]
+version = ">= 3.4"
+default-recipe = "apotocki/inja"
+
+[deps.curl]
+version = ">= 8.0"
+default-recipe = "apotocki/curl"
+requires-options = { tls = "schannel" }
+
+[deps.libarchive]
+version = ">= 3.7"
+default-recipe = "apotocki/libarchive"
+requires-options = { zlib = true, bzip2 = true, lzma = true, zstd = true, xml = "none", crypto = "none" }
+
+# The libraries a static curl and libarchive need, which otok links itself (their CMake files are not used)
+[deps.zlib]
+version = ">= 1.2"
+default-recipe = "apotocki/zlib"
+
+[deps.bzip2]
+version = ">= 1.0"
+default-recipe = "apotocki/bzip2"
+
+[deps.lzma]
+version = ">= 5.0"
+default-recipe = "apotocki/lzma"
+
+[deps.lz4]
+version = ">= 1.7"
+default-recipe = "apotocki/lz4"
+
+[deps.zstd]
+version = ">= 1.4"
+default-recipe = "apotocki/zstd"
+
+[deps.detours]
+version = ">= 4.0"
+default-recipe = "apotocki/detours"
+
+[toolchains]
+cmake = { version = ">= 3.25", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }

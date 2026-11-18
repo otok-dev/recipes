@@ -5,7 +5,7 @@ api = 1
 library = "giflib"
 name = "giflib"
 version = "5.2.2"
-revision = 1
+revision = 2
 license = "MIT"
 license-files = ["COPYING"]
 homepage = "https://giflib.sourceforge.net/"
@@ -30,3 +30,7 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 name = "GIF"
 libraries = ["gif"]
 apple = { privacy-manifest = "none" }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.GIF]
+targets = { "GIF::GIF" = "GIF" }
