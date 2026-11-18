@@ -1,4 +1,4 @@
-# The otok recipe of Python (https://github.com/apotocki/otok): the python program for the build scripts of other
+# The otok recipe of Python (https://github.com/otok-dev/otok): the python program for the build scripts of other
 # recipes, which name it as their toolchain (`python = { default-recipe = "apotocki/python" }`), on macOS: the
 # install_only build of python-build-standalone of the build machine (a resource per architecture, fetched on that
 # machine only). It has no pip packages: the standard library only. The source archive carries the license.
@@ -7,7 +7,7 @@ api = 1
 library = "python"
 name = "python"
 version = "3.14.10"
-revision = 1
+revision = 2
 license = "PSF-2.0"
 license-files = ["LICENSE"]
 homepage = "https://www.python.org"

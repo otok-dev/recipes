@@ -1,4 +1,4 @@
-# The otok recipe of OpenSSL (https://github.com/apotocki/otok): libssl and libcrypto for every
+# The otok recipe of OpenSSL (https://github.com/otok-dev/otok): libssl and libcrypto for every
 # Apple platform, from the release tag.
 [recipe]
 api = 1

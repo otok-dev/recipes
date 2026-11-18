@@ -1,4 +1,4 @@
-# The otok recipe of Mbed TLS (https://github.com/apotocki/otok): libmbedtls, libmbedx509 and libtfpsacrypto (the
+# The otok recipe of Mbed TLS (https://github.com/otok-dev/otok): libmbedtls, libmbedx509 and libtfpsacrypto (the
 # PSA Cryptography API of TF-PSA-Crypto) for every Apple platform, from the release archive, with Mbed TLS's CMake and its default
 # configuration; static or dynamic.
 [recipe]

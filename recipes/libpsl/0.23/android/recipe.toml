@@ -1,4 +1,4 @@
-# The otok recipe of libpsl (https://github.com/apotocki/otok): libpsl, the Public Suffix List library, for Android, from the
+# The otok recipe of libpsl (https://github.com/otok-dev/otok): libpsl, the Public Suffix List library, for Android, from the
 # release archive, with libpsl's meson build and its built-in copy of the list (the snapshot the release carries, made into
 # a table by Python while building); no IDNA library at run time, so domains are taken as ASCII or punycode; static or dynamic.
 [recipe]
@@ -6,7 +6,7 @@ api = 1
 library = "libpsl"
 name = "libpsl"
 version = "0.23.3"
-revision = 1
+revision = 2
 license = "MIT"
 license-files = ["COPYING"]
 homepage = "https://rockdaboot.github.io/libpsl/"

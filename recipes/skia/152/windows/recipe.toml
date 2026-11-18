@@ -1,4 +1,4 @@
-# The otok recipe of Skia (https://github.com/apotocki/otok): the 2D graphics library for Windows, built with GN and
+# The otok recipe of Skia (https://github.com/otok-dev/otok): the 2D graphics library for Windows, built with GN and
 # clang-cl, as skia.dll or skia.lib. The source is the branch otok/152 of apotocki/skia: Skia's main at 9f737d3a
 # (milestone 152) with the fixes of skia-dev, a commit each (leaks freed by SkGraphics::PurgeLeakedByDesignCaches(),
 # the Direct3D backend). The libraries of third_party/externals are resources at the commits of that revision's DEPS.
@@ -7,7 +7,7 @@ api = 1
 library = "skia"
 name = "skia"
 version = "152.0.0"
-revision = 1
+revision = 2
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
 homepage = "https://skia.org"

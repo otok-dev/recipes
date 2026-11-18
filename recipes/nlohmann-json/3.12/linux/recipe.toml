@@ -1,4 +1,4 @@
-# The otok recipe of nlohmann/json (https://github.com/apotocki/otok): JSON for Modern C++ for Linux, from the release tag; its
+# The otok recipe of nlohmann/json (https://github.com/otok-dev/otok): JSON for Modern C++ for Linux, from the release tag; its
 # headers, with upstream's CMake options written into them as the recipe's options.
 [recipe]
 api = 1

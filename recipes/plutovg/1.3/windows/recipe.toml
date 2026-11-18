@@ -1,11 +1,11 @@
-# The otok recipe of PlutoVG (https://github.com/apotocki/otok): plutovg for Windows, from the release tag, with MSVC
+# The otok recipe of PlutoVG (https://github.com/otok-dev/otok): plutovg for Windows, from the release tag, with MSVC
 # or with clang-cl across from Linux; static or dynamic.
 [recipe]
 api = 1
 library = "plutovg"
 name = "plutovg"
 version = "1.3.3"
-revision = 2
+revision = 3
 license = "MIT"
 license-files = ["LICENSE"]
 homepage = "https://github.com/sammycage/plutovg"

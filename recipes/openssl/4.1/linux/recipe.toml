@@ -1,4 +1,4 @@
-# The otok recipe of OpenSSL (https://github.com/apotocki/otok): libssl and libcrypto for Linux, from the release
+# The otok recipe of OpenSSL (https://github.com/otok-dev/otok): libssl and libcrypto for Linux, from the release
 # tag, with OpenSSL's own Configure targets (linux-x86_64, linux-aarch64) and the slice's compiler; static or dynamic.
 [recipe]
 api = 1

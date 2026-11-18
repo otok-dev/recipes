@@ -1,4 +1,4 @@
-# The otok recipe of toml++ (https://github.com/apotocki/otok): toml++ for every Apple platform, from the release tag; its headers, or with
+# The otok recipe of toml++ (https://github.com/otok-dev/otok): toml++ for every Apple platform, from the release tag; its headers, or with
 # the option `compiled` the library of src/toml.cpp (static), whose headers then state that they are not header-only.
 [recipe]
 api = 1

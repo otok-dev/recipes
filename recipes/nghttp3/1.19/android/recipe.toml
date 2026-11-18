@@ -1,11 +1,11 @@
-# The otok recipe of nghttp3 (https://github.com/apotocki/otok): libnghttp3, the HTTP/3 and QPACK library, for Android, from the
+# The otok recipe of nghttp3 (https://github.com/otok-dev/otok): libnghttp3, the HTTP/3 and QPACK library, for Android, from the
 # release archive, with nghttp3's CMake, the library only; static or dynamic.
 [recipe]
 api = 1
 library = "nghttp3"
 name = "nghttp3"
 version = "1.19.0"
-revision = 2
+revision = 3
 license = "MIT"
 license-files = ["COPYING"]
 homepage = "https://nghttp2.org/nghttp3/"

@@ -1,4 +1,4 @@
-# The otok recipe of pkgconf (https://github.com/apotocki/otok): the pkg-config program for the builds of other recipes,
+# The otok recipe of pkgconf (https://github.com/otok-dev/otok): the pkg-config program for the builds of other recipes,
 # which name it as their toolchain (`pkg-config = { default-recipe = "apotocki/pkgconf" }`), so the library is
 # pkg-config. Built with Meson and Ninja of their recipes; it searches only the paths it is given (PKG_CONFIG_PATH,
 # meson's pkg_config_path), none of the machine's.
@@ -7,7 +7,7 @@ api = 1
 library = "pkg-config"
 name = "pkgconf"
 version = "3.0.10"
-revision = 1
+revision = 2
 license = "ISC"
 license-files = ["COPYING"]
 homepage = "https://github.com/pkgconf/pkgconf"

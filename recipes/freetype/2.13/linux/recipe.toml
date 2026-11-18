@@ -1,4 +1,4 @@
-# The otok recipe of FreeType (https://github.com/apotocki/otok): libfreetype for Linux, from the release tag,
+# The otok recipe of FreeType (https://github.com/otok-dev/otok): libfreetype for Linux, from the release tag,
 # without its optional dependencies (zlib of its own, no bzip2, libpng, HarfBuzz or Brotli); static or dynamic.
 [recipe]
 api = 1

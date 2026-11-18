@@ -1,4 +1,4 @@
-# The otok recipe of toml++ (https://github.com/apotocki/otok): toml++ for Windows, with MSVC or with clang-cl across
+# The otok recipe of toml++ (https://github.com/otok-dev/otok): toml++ for Windows, with MSVC or with clang-cl across
 # from Linux, from the release tag; its headers, or with the option `compiled` the library of src/toml.cpp (static or a
 # DLL), whose headers then state that they are not header-only.
 [recipe]
@@ -6,7 +6,7 @@ api = 1
 library = "tomlplusplus"
 name = "tomlplusplus"
 version = "3.4.0"
-revision = 2
+revision = 3
 license = "MIT"
 license-files = ["LICENSE"]
 homepage = "https://marzer.github.io/tomlplusplus/"

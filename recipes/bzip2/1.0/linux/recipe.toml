@@ -1,4 +1,4 @@
-# The otok recipe of bzip2 (https://github.com/apotocki/otok): libbz2 for Linux, from the release archive; static
+# The otok recipe of bzip2 (https://github.com/otok-dev/otok): libbz2 for Linux, from the release archive; static
 # or dynamic.
 [recipe]
 api = 1

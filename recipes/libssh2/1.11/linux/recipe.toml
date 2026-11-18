@@ -1,4 +1,4 @@
-# The otok recipe of libssh2 (https://github.com/apotocki/otok): the SSH2 client library for Linux, from the release archive,
+# The otok recipe of libssh2 (https://github.com/otok-dev/otok): the SSH2 client library for Linux, from the release archive,
 # with OpenSSL as its crypto backend and zlib compression from the zlib recipe; static or dynamic.
 [recipe]
 api = 1

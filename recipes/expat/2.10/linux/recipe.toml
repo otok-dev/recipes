@@ -1,4 +1,4 @@
-# The otok recipe of Expat (https://github.com/apotocki/otok): libexpat for Linux, from the release archive, with Expat's CMake, the
+# The otok recipe of Expat (https://github.com/otok-dev/otok): libexpat for Linux, from the release archive, with Expat's CMake, the
 # library only (no xmlwf, examples or tests); static or dynamic.
 [recipe]
 api = 1

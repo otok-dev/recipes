@@ -1,4 +1,4 @@
-# The otok recipe of zlib (https://github.com/apotocki/otok): libz for Linux, from the release archive; static or
+# The otok recipe of zlib (https://github.com/otok-dev/otok): libz for Linux, from the release archive; static or
 # dynamic.
 [recipe]
 api = 1

@@ -1,4 +1,4 @@
-# The otok recipe of nghttp2 (https://github.com/apotocki/otok): libnghttp2, the HTTP/2 library, for Linux, from the release
+# The otok recipe of nghttp2 (https://github.com/otok-dev/otok): libnghttp2, the HTTP/2 library, for Linux, from the release
 # archive, with nghttp2's CMake, the library only (no applications, examples or tests); static or dynamic.
 [recipe]
 api = 1

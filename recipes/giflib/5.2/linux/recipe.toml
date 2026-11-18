@@ -1,4 +1,4 @@
-# The otok recipe of giflib (https://github.com/apotocki/otok): libgif for Linux, from the release archive, with a CMakeLists.txt of the
+# The otok recipe of giflib (https://github.com/otok-dev/otok): libgif for Linux, from the release archive, with a CMakeLists.txt of the
 # recipe (the release has a Makefile only), the library without the programs; static or dynamic.
 [recipe]
 api = 1

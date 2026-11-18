@@ -1,11 +1,11 @@
-# The otok recipe of OpenSSL (https://github.com/apotocki/otok): libssl and libcrypto for Android, from the release
+# The otok recipe of OpenSSL (https://github.com/otok-dev/otok): libssl and libcrypto for Android, from the release
 # tag, with the Configure targets of Configurations/60-otok.conf and the slice's compiler; static or dynamic.
 [recipe]
 api = 1
 library = "openssl"
 name = "openssl"
 version = "4.1.0"
-revision = 2
+revision = 3
 license = "Apache-2.0"
 license-files = ["LICENSE.txt"]
 homepage = "https://www.openssl.org"

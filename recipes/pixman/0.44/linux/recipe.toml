@@ -1,11 +1,11 @@
-# The otok recipe of Pixman (https://github.com/apotocki/otok): libpixman-1 for Linux, from the release tag; static or
+# The otok recipe of Pixman (https://github.com/otok-dev/otok): libpixman-1 for Linux, from the release tag; static or
 # dynamic.
 [recipe]
 api = 1
 library = "pixman"
 name = "pixman"
 version = "0.44.2"
-revision = 1
+revision = 2
 license = "MIT"
 license-files = ["COPYING"]
 homepage = "https://pixman.org"

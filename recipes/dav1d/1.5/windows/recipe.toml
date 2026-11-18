@@ -1,11 +1,11 @@
-# The otok recipe of dav1d (https://github.com/apotocki/otok): VideoLAN's AV1 decoder, built with meson
+# The otok recipe of dav1d (https://github.com/otok-dev/otok): VideoLAN's AV1 decoder, built with meson
 # (otok.meson), for Windows, with MSVC or with clang-cl across from Linux; static or dynamic.
 [recipe]
 api = 1
 library = "dav1d"
 name = "dav1d"
 version = "1.5.4"
-revision = 2
+revision = 3
 license = "BSD-2-Clause"
 license-files = ["COPYING"]
 homepage = "https://code.videolan.org/videolan/dav1d"

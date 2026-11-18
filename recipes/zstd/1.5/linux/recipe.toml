@@ -1,4 +1,4 @@
-# The otok recipe of Zstandard (https://github.com/apotocki/otok): libzstd for Linux, from the release archive, with the
+# The otok recipe of Zstandard (https://github.com/otok-dev/otok): libzstd for Linux, from the release archive, with the
 # CMake project in build/cmake, the library only; static or dynamic.
 [recipe]
 api = 1

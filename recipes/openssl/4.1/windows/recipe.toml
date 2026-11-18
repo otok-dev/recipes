@@ -1,4 +1,4 @@
-# The otok recipe of OpenSSL (https://github.com/apotocki/otok): libssl and libcrypto for Windows, from the release
+# The otok recipe of OpenSSL (https://github.com/otok-dev/otok): libssl and libcrypto for Windows, from the release
 # tag: with MSVC and nmake on Windows, the perl of its recipe (a native one, which the VC- targets need) and NASM for
 # the x86_64 assembler; or with clang-cl and GNU make across from Linux.
 [recipe]
@@ -6,7 +6,7 @@ api = 1
 library = "openssl"
 name = "openssl"
 version = "4.1.0"
-revision = 2
+revision = 3
 license = "Apache-2.0"
 license-files = ["LICENSE.txt"]
 homepage = "https://www.openssl.org"

@@ -1,11 +1,11 @@
-# The otok recipe of GoogleTest (https://github.com/apotocki/otok): gtest and gmock with their main libraries,
+# The otok recipe of GoogleTest (https://github.com/otok-dev/otok): gtest and gmock with their main libraries,
 # static, for the native tests of Android apps, from the release tag.
 [recipe]
 api = 1
 library = "googletest"
 name = "googletest"
 version = "1.18.0"
-revision = 2
+revision = 3
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
 homepage = "https://github.com/google/googletest"

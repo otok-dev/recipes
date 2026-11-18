@@ -1,4 +1,4 @@
-# The otok recipe of libxml2 (https://github.com/apotocki/otok): libxml2 for Linux, from the release archive, with libxml2's CMake, the
+# The otok recipe of libxml2 (https://github.com/otok-dev/otok): libxml2 for Linux, from the release archive, with libxml2's CMake, the
 # library only (no xmllint, tests or Python); static or dynamic.
 [recipe]
 api = 1

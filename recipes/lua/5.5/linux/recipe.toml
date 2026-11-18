@@ -1,4 +1,4 @@
-# The otok recipe of Lua (https://github.com/apotocki/otok): the library for Linux, from the release archive;
+# The otok recipe of Lua (https://github.com/otok-dev/otok): the library for Linux, from the release archive;
 # static or dynamic.
 [recipe]
 api = 1

@@ -1,4 +1,4 @@
-# The otok recipe of ngtcp2 (https://github.com/apotocki/otok): libngtcp2, the QUIC library, and libngtcp2_crypto_ossl, its
+# The otok recipe of ngtcp2 (https://github.com/otok-dev/otok): libngtcp2, the QUIC library, and libngtcp2_crypto_ossl, its
 # glue to the QUIC API of OpenSSL 3.5 or later, for every Apple platform, from the release archive, with ngtcp2's CMake, the libraries
 # only; static (the OpenSSL recipe for Apple is static).
 [recipe]

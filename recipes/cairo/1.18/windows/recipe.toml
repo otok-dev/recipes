@@ -1,4 +1,4 @@
-# The otok recipe of Cairo (https://github.com/apotocki/otok) for Windows: Cairo 1.18.4 from its release archive, or
+# The otok recipe of Cairo (https://github.com/otok-dev/otok) for Windows: Cairo 1.18.4 from its release archive, or
 # with d2d the branch d2d of the fork https://github.com/apotocki/cairo, which adds the Direct2D surface on Direct3D
 # 10.1 and 11. With MSVC or with clang-cl across from Linux. Static or dynamic; Pixman, FreeType and libpng static
 # unless the project chooses otherwise, zlib as the project builds it.
@@ -7,7 +7,7 @@ api = 1
 library = "cairo"
 name = "cairo"
 version = "1.18.4"
-revision = 1
+revision = 2
 license = "LGPL-2.1-only OR MPL-1.1"
 license-files = ["COPYING", "COPYING-LGPL-2.1", "COPYING-MPL-1.1"]
 homepage = "https://www.cairographics.org"

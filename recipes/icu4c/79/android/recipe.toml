@@ -1,4 +1,4 @@
-# The otok recipe of ICU4C (https://github.com/apotocki/otok): libicuuc, libicui18n, libicuio and the
+# The otok recipe of ICU4C (https://github.com/otok-dev/otok): libicuuc, libicui18n, libicuio and the
 # ICU data for Android, from the release archive with the prebuilt data, or with the data
 # built from its sources by the project's filter; the data in libicudata, as a file of its own or not at all;
 # static: its makefiles name shared objects with versions (libicuuc.so.79), which Android does not load. Its tools are
@@ -8,7 +8,7 @@ api = 1
 library = "icu4c"
 name = "icu4c"
 version = "79.1"
-revision = 2
+revision = 3
 license = "Unicode-3.0"
 license-files = ["LICENSE"]
 homepage = "https://icu.unicode.org"

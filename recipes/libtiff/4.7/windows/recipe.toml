@@ -1,11 +1,11 @@
-# The otok recipe of libtiff (https://github.com/apotocki/otok): libtiff for Windows, from the release archive, with libtiff's CMake,
+# The otok recipe of libtiff (https://github.com/otok-dev/otok): libtiff for Windows, from the release archive, with libtiff's CMake,
 # the C library only (no tools, no C++ stream API), with exactly the codecs asked for; static or dynamic.
 [recipe]
 api = 1
 library = "libtiff"
 name = "libtiff"
 version = "4.7.2"
-revision = 2
+revision = 3
 license = "libtiff"
 license-files = ["LICENSE.md"]
 homepage = "https://libtiff.gitlab.io/libtiff/"

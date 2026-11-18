@@ -1,4 +1,4 @@
-# The otok recipe of libpng (https://github.com/apotocki/otok): libpng16 for Linux, from the release tag, with zlib of
+# The otok recipe of libpng (https://github.com/otok-dev/otok): libpng16 for Linux, from the release tag, with zlib of
 # its own recipe; static or dynamic.
 [recipe]
 api = 1

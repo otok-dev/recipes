@@ -1,4 +1,4 @@
-# The otok recipe of Perl (https://github.com/apotocki/otok): the perl interpreter for the builds of other recipes, which
+# The otok recipe of Perl (https://github.com/otok-dev/otok): the perl interpreter for the builds of other recipes, which
 # name it as their toolchain (`perl = { default-recipe = "apotocki/perl" }`), on Linux: built from the release archive
 # with its Configure and make.
 [recipe]
@@ -6,7 +6,7 @@ api = 1
 library = "perl"
 name = "perl"
 version = "5.44.0"
-revision = 1
+revision = 2
 license = "Artistic-1.0-Perl OR GPL-1.0-or-later"
 license-files = ["Artistic", "Copying"]
 homepage = "https://www.perl.org"

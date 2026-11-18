@@ -1,4 +1,4 @@
-# The otok recipe of libarchive (https://github.com/apotocki/otok): libarchive for Apple platforms, from the release
+# The otok recipe of libarchive (https://github.com/otok-dev/otok): libarchive for Apple platforms, from the release
 # archive, with libarchive's CMake; the library, static or dynamic, and, built for the build machine as a tool, the
 # programs bsdtar and bsdunzip. The formats come with the libraries of the options (zlib, the SDK's, bzip2, lzma, lz4, zstd,
 # all on by default; bzip2, lzma and lz4 static, as their recipes are here), XAR with libxml2 (or Expat, reading only);

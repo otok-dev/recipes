@@ -1,11 +1,11 @@
-# The otok recipe of libxml2 (https://github.com/apotocki/otok): libxml2 for Android, from the release archive, with libxml2's CMake, the
+# The otok recipe of libxml2 (https://github.com/otok-dev/otok): libxml2 for Android, from the release archive, with libxml2's CMake, the
 # library only (no xmllint, tests or Python); static or dynamic.
 [recipe]
 api = 1
 library = "libxml2"
 name = "libxml2"
 version = "2.15.4"
-revision = 2
+revision = 3
 license = "MIT"
 license-files = ["Copyright"]
 homepage = "https://gitlab.gnome.org/GNOME/libxml2"

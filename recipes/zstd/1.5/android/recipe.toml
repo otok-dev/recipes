@@ -1,11 +1,11 @@
-# The otok recipe of Zstandard (https://github.com/apotocki/otok): libzstd for Android, from the release archive, with the
+# The otok recipe of Zstandard (https://github.com/otok-dev/otok): libzstd for Android, from the release archive, with the
 # CMake project in build/cmake, the library only; static or dynamic.
 [recipe]
 api = 1
 library = "zstd"
 name = "zstd"
 version = "1.5.7"
-revision = 2
+revision = 3
 license = "BSD-3-Clause OR GPL-2.0-only"
 license-files = ["LICENSE"]
 homepage = "https://facebook.github.io/zstd/"

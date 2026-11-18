@@ -1,4 +1,4 @@
-# The otok recipe of Pixman (https://github.com/apotocki/otok): pixman-1 for Windows, from the release tag, with MSVC
+# The otok recipe of Pixman (https://github.com/otok-dev/otok): pixman-1 for Windows, from the release tag, with MSVC
 # or with clang-cl across from Linux; static or dynamic. pixman_reset_static_data() frees the implementations it chose
 # for the CPU, which MSVC's builds never free (Cairo's cairo_debug_reset_static_data() calls it).
 [recipe]
@@ -6,7 +6,7 @@ api = 1
 library = "pixman"
 name = "pixman"
 version = "0.44.2"
-revision = 1
+revision = 2
 license = "MIT"
 license-files = ["COPYING"]
 homepage = "https://pixman.org"

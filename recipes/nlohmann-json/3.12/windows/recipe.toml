@@ -1,11 +1,11 @@
-# The otok recipe of nlohmann/json (https://github.com/apotocki/otok): JSON for Modern C++ for Windows, with MSVC or with clang-cl
+# The otok recipe of nlohmann/json (https://github.com/otok-dev/otok): JSON for Modern C++ for Windows, with MSVC or with clang-cl
 # across from Linux, from the release tag; its headers, with upstream's CMake options written into them as the recipe's options.
 [recipe]
 api = 1
 library = "nlohmann-json"
 name = "nlohmann-json"
 version = "3.12.0"
-revision = 2
+revision = 3
 license = "MIT"
 license-files = ["LICENSE.MIT"]
 homepage = "https://json.nlohmann.me/"

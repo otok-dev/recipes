@@ -1,4 +1,4 @@
-# The otok recipe of libacl (https://github.com/apotocki/otok): libacl, the POSIX 1003.1e draft ACL library of the acl package,
+# The otok recipe of libacl (https://github.com/otok-dev/otok): libacl, the POSIX 1003.1e draft ACL library of the acl package,
 # for Linux, from the release archive, with its own configure and make, the library and its headers only (no getfacl,
 # setfacl, chacl, gettext or documentation); static or dynamic. The library is under the GNU LGPL 2.1; the tools left out
 # are under the GNU GPL 2.
@@ -7,7 +7,7 @@ api = 1
 library = "libacl"
 name = "libacl"
 version = "2.4.0"
-revision = 1
+revision = 2
 license = "LGPL-2.1-or-later"
 license-files = ["doc/COPYING", "doc/COPYING.LGPL"]
 homepage = "https://savannah.nongnu.org/projects/acl"

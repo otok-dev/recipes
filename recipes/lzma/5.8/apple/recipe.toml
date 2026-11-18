@@ -1,4 +1,4 @@
-# The otok recipe of liblzma from XZ Utils (https://github.com/apotocki/otok): the library alone for every Apple
+# The otok recipe of liblzma from XZ Utils (https://github.com/otok-dev/otok): the library alone for every Apple
 # platform, from the release tag; static.
 [recipe]
 api = 1

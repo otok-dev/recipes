@@ -1,4 +1,4 @@
-# The otok recipe of GN (https://github.com/apotocki/otok): the gn program for the builds of other recipes, which name it
+# The otok recipe of GN (https://github.com/otok-dev/otok): the gn program for the builds of other recipes, which name it
 # as their toolchain (`gn = { default-recipe = "apotocki/gn" }`). GN has no releases; its version is the commit position
 # (`git describe --match initial-commit`), which `gn --version` prints. 2175 is the GN Skia pins (bin/fetch-gn).
 [recipe]
@@ -6,7 +6,7 @@ api = 1
 library = "gn"
 name = "gn"
 version = "2175"
-revision = 1
+revision = 2
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
 homepage = "https://gn.googlesource.com/gn"

@@ -1,4 +1,4 @@
-# The otok recipe of ICU4C (https://github.com/apotocki/otok): libicuuc, libicui18n, libicuio and the
+# The otok recipe of ICU4C (https://github.com/otok-dev/otok): libicuuc, libicui18n, libicuio and the
 # ICU data for every Apple platform, from the release archive with the prebuilt data, or with the data
 # built from its sources by the project's filter; the data in libicudata, as a file of its own or not at all;
 # static.

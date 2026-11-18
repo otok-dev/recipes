@@ -1,11 +1,11 @@
-# The otok recipe of bzip2 (https://github.com/apotocki/otok): libbz2 for Android, from the release archive; static
+# The otok recipe of bzip2 (https://github.com/otok-dev/otok): libbz2 for Android, from the release archive; static
 # or dynamic.
 [recipe]
 api = 1
 library = "bzip2"
 name = "bzip2"
 version = "1.0.8"
-revision = 2
+revision = 3
 license = "bzip2-1.0.6"
 license-files = ["LICENSE"]
 homepage = "https://sourceware.org/bzip2/"

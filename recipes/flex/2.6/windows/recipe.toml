@@ -1,4 +1,4 @@
-# The otok recipe of flex (https://github.com/apotocki/otok): the flex program for the builds of other recipes and for
+# The otok recipe of flex (https://github.com/otok-dev/otok): the flex program for the builds of other recipes and for
 # projects that deliver it ([tool-deps.flex] with `deliver`), on Windows: win_flex of winflexbison, flex for Windows
 # built with MSVC, with m4 built in, no runtime of MSYS2 or Cygwin.
 [recipe]
@@ -6,7 +6,7 @@ api = 1
 library = "flex"
 name = "flex"
 version = "2.6.4"
-revision = 1
+revision = 2
 # win_flex links the m4 and gnulib code of winflexbison's common library, GPL-3.0-or-later
 license = "BSD-3-Clause-flex AND GPL-3.0-or-later"
 license-files = ["flex/src/COPYING", "COPYING"]

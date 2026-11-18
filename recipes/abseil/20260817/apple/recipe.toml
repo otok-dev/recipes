@@ -1,4 +1,4 @@
-# The otok recipe of Abseil (https://github.com/apotocki/otok): the Abseil C++ libraries for every Apple platform, from the release archive, with Abseil's
+# The otok recipe of Abseil (https://github.com/otok-dev/otok): the Abseil C++ libraries for every Apple platform, from the release archive, with Abseil's
 # CMake, static (Abseil's ABI is not stable, so it is linked into the program or library that uses it).
 [recipe]
 api = 1

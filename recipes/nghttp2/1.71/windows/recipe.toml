@@ -1,11 +1,11 @@
-# The otok recipe of nghttp2 (https://github.com/apotocki/otok): libnghttp2, the HTTP/2 library, for Windows, from the release
+# The otok recipe of nghttp2 (https://github.com/otok-dev/otok): libnghttp2, the HTTP/2 library, for Windows, from the release
 # archive, with nghttp2's CMake, the library only (no applications, examples or tests); static (consumers are built with NGHTTP2_STATICLIB, which the product defines).
 [recipe]
 api = 1
 library = "nghttp2"
 name = "nghttp2"
 version = "1.71.0"
-revision = 2
+revision = 3
 license = "MIT"
 license-files = ["COPYING"]
 homepage = "https://nghttp2.org"

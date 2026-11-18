@@ -1,4 +1,4 @@
-# The otok recipe of libwebp (https://github.com/apotocki/otok): libwebp, libwebpdemux, libwebpmux and libsharpyuv for Linux, from the
+# The otok recipe of libwebp (https://github.com/otok-dev/otok): libwebp, libwebpdemux, libwebpmux and libsharpyuv for Linux, from the
 # release archive, with libwebp's CMake, the libraries only (no tools); static or dynamic.
 [recipe]
 api = 1

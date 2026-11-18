@@ -1,4 +1,4 @@
-# The otok recipe of bzip2 (https://github.com/apotocki/otok): libbz2 for every Apple platform, from the release
+# The otok recipe of bzip2 (https://github.com/otok-dev/otok): libbz2 for every Apple platform, from the release
 # archive; static.
 [recipe]
 api = 1

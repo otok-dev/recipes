@@ -1,4 +1,4 @@
-# The otok recipe of libarchive (https://github.com/apotocki/otok): libarchive for Android, from the release archive, with
+# The otok recipe of libarchive (https://github.com/otok-dev/otok): libarchive for Android, from the release archive, with
 # libarchive's CMake; the library, static or dynamic. The formats come with the libraries of the options (zlib, the NDK's,
 # bzip2, lzma, lz4, zstd, all on by default), XAR with Expat (reading only) or libxml2 (reading and writing; libarchive
 # takes it only with iconv, which Android has from API level 28), encryption and the digests with OpenSSL. Without ACLs,
@@ -8,7 +8,7 @@ api = 1
 library = "libarchive"
 name = "libarchive"
 version = "3.8.11"
-revision = 2
+revision = 3
 license = "BSD-2-Clause AND BSD-3-Clause AND (CC0-1.0 OR OpenSSL OR Apache-2.0)"
 license-files = ["COPYING"]
 homepage = "https://www.libarchive.org"

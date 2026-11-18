@@ -1,4 +1,4 @@
-# The otok recipe of FFmpeg (https://github.com/apotocki/otok): libavutil, libavcodec, libavformat, libavfilter,
+# The otok recipe of FFmpeg (https://github.com/otok-dev/otok): libavutil, libavcodec, libavformat, libavfilter,
 # libswscale and libswresample for Android, LGPL only (no GPL or nonfree parts), with FFmpeg's own configure and make;
 # MediaCodec (with JNI), the NDK's zlib, dav1d from its recipe; static or dynamic.
 [recipe]
@@ -6,7 +6,7 @@ api = 1
 library = "ffmpeg"
 name = "ffmpeg"
 version = "9.0.2"
-revision = 2
+revision = 3
 license = "LGPL-2.1-or-later"
 license-files = ["COPYING.LGPLv2.1", "LICENSE.md"]
 homepage = "https://ffmpeg.org"

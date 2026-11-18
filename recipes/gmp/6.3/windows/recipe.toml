@@ -1,4 +1,4 @@
-# The otok recipe of GMP (https://github.com/apotocki/otok): libgmp and the C++ class interface libgmpxx for Windows on
+# The otok recipe of GMP (https://github.com/otok-dev/otok): libgmp and the C++ class interface libgmpxx for Windows on
 # x86_64, from the release archive, with GMP's configure and make under MSYS2 (the tree of the make recipe) and MSVC; its
 # assembly, as GMP builds it with MinGW, by GNU as of that tree; a fat binary, which chooses the code of the CPU it runs
 # on; static or dynamic.
@@ -7,7 +7,7 @@ api = 1
 library = "gmp"
 name = "gmp"
 version = "6.3.0"
-revision = 1
+revision = 2
 license = "LGPL-3.0-or-later OR GPL-2.0-or-later"
 license-files = ["COPYING.LESSERv3", "COPYINGv3", "COPYINGv2"]
 homepage = "https://gmplib.org"

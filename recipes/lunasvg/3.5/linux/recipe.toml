@@ -1,4 +1,4 @@
-# The otok recipe of LunaSVG (https://github.com/apotocki/otok): liblunasvg for Linux, from the release tag, with
+# The otok recipe of LunaSVG (https://github.com/otok-dev/otok): liblunasvg for Linux, from the release tag, with
 # PlutoVG of its own recipe instead of the copy in its tree; static or dynamic.
 [recipe]
 api = 1

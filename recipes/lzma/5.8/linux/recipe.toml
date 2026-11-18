@@ -1,4 +1,4 @@
-# The otok recipe of liblzma from XZ Utils (https://github.com/apotocki/otok): the library alone for Linux, from
+# The otok recipe of liblzma from XZ Utils (https://github.com/otok-dev/otok): the library alone for Linux, from
 # the release tag; static or dynamic.
 [recipe]
 api = 1

@@ -1,11 +1,11 @@
-# The otok recipe of libjpeg-turbo (https://github.com/apotocki/otok): libjpeg, or with the option api the TurboJPEG library,
+# The otok recipe of libjpeg-turbo (https://github.com/otok-dev/otok): libjpeg, or with the option api the TurboJPEG library,
 # for Android, from the release archive, with libjpeg-turbo's CMake, the libraries only (no tools); static or dynamic.
 [recipe]
 api = 1
 library = "libjpeg-turbo"
 name = "libjpeg-turbo"
 version = "3.2.1"
-revision = 3
+revision = 4
 license = "IJG AND BSD-3-Clause AND Zlib"
 license-files = ["LICENSE.md", "README.ijg"]
 homepage = "https://libjpeg-turbo.org"

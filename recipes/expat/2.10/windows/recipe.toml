@@ -1,11 +1,11 @@
-# The otok recipe of Expat (https://github.com/apotocki/otok): libexpat for Windows, from the release archive, with Expat's CMake, the
+# The otok recipe of Expat (https://github.com/otok-dev/otok): libexpat for Windows, from the release archive, with Expat's CMake, the
 # library only (no xmlwf, examples or tests); static (consumers are built with XML_STATIC, which the product defines).
 [recipe]
 api = 1
 library = "expat"
 name = "expat"
 version = "2.10.0"
-revision = 2
+revision = 3
 license = "MIT"
 license-files = ["COPYING"]
 homepage = "https://libexpat.github.io"

@@ -1,4 +1,4 @@
-# The otok recipe of FreeType (https://github.com/apotocki/otok): freetype for Windows, from the release tag, with
+# The otok recipe of FreeType (https://github.com/otok-dev/otok): freetype for Windows, from the release tag, with
 # MSVC or with clang-cl across from Linux, without its optional dependencies (zlib of its own, no bzip2, libpng,
 # HarfBuzz or Brotli); static or dynamic.
 [recipe]
@@ -6,7 +6,7 @@ api = 1
 library = "freetype"
 name = "freetype"
 version = "2.13.3"
-revision = 2
+revision = 3
 license = "FTL OR GPL-2.0-or-later"
 license-files = ["LICENSE.TXT", "docs/FTL.TXT", "docs/GPLv2.TXT"]
 homepage = "https://freetype.org"

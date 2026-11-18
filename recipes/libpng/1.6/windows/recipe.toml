@@ -1,11 +1,11 @@
-# The otok recipe of libpng (https://github.com/apotocki/otok): libpng16 for Windows, from the release tag, with MSVC
+# The otok recipe of libpng (https://github.com/otok-dev/otok): libpng16 for Windows, from the release tag, with MSVC
 # or with clang-cl across from Linux, with zlib of its own recipe; static or dynamic.
 [recipe]
 api = 1
 library = "libpng"
 name = "libpng"
 version = "1.6.47"
-revision = 2
+revision = 3
 license = "libpng-2.0"
 license-files = ["LICENSE"]
 homepage = "http://www.libpng.org/pub/png/libpng.html"

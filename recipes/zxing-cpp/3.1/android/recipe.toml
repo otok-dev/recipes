@@ -1,4 +1,4 @@
-# The otok recipe of zxing-cpp (https://github.com/apotocki/otok): the barcode reader library, with `writers`
+# The otok recipe of zxing-cpp (https://github.com/otok-dev/otok): the barcode reader library, with `writers`
 # also the writer of its new backend, the bundled libzint (the submodule zint/), for Android. With `jni` the library is
 # the JNI library of zxing-cpp's Android wrapper instead, for an app that uses zxingcpp.BarcodeReader without the
 # wrapper's AAR, and with `writers` zxingcpp.BarcodeWriter of this recipe (android/) too.
@@ -7,7 +7,7 @@ api = 1
 library = "zxing-cpp"
 name = "zxing-cpp"
 version = "3.1.1"
-revision = 2
+revision = 3
 # the reader carries libzueci (core/src/libzueci), the writer libzint (zint/backend), both BSD-3-Clause; the source has
 # neither text: zint/LICENSE only says which part of zint is BSD, the text is in the headers of its files. The code of
 # android/ and wrappers/ is this recipe's own, CC0-1.0.

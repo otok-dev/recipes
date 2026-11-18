@@ -1,4 +1,4 @@
-# The otok recipe of flex (https://github.com/apotocki/otok): the flex program for the builds of other recipes and for
+# The otok recipe of flex (https://github.com/otok-dev/otok): the flex program for the builds of other recipes and for
 # projects that deliver it ([tool-deps.flex] with `deliver`), on macOS: built from the release archive with its configure
 # and make. flex runs m4, which it carries in libexec/flex/ beside the program: bin/flex is a script running it with
 # that m4, so it needs none of the machine's.
@@ -7,7 +7,7 @@ api = 1
 library = "flex"
 name = "flex"
 version = "2.6.4"
-revision = 1
+revision = 2
 # the m4 beside the program: GPL-3.0-or-later (COPYING-m4, the COPYING of GNU M4 1.4.21)
 license = "BSD-3-Clause-flex AND GPL-3.0-or-later"
 license-files = ["COPYING", { recipe = "COPYING-m4" }]

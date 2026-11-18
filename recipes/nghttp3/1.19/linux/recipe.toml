@@ -1,4 +1,4 @@
-# The otok recipe of nghttp3 (https://github.com/apotocki/otok): libnghttp3, the HTTP/3 and QPACK library, for Linux, from the
+# The otok recipe of nghttp3 (https://github.com/otok-dev/otok): libnghttp3, the HTTP/3 and QPACK library, for Linux, from the
 # release archive, with nghttp3's CMake, the library only; static or dynamic.
 [recipe]
 api = 1

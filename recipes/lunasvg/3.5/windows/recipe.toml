@@ -1,11 +1,11 @@
-# The otok recipe of LunaSVG (https://github.com/apotocki/otok): lunasvg for Windows, from the release tag, with MSVC
+# The otok recipe of LunaSVG (https://github.com/otok-dev/otok): lunasvg for Windows, from the release tag, with MSVC
 # or with clang-cl across from Linux, with PlutoVG of its own recipe instead of the copy in its tree; static or dynamic.
 [recipe]
 api = 1
 library = "lunasvg"
 name = "lunasvg"
 version = "3.5.0"
-revision = 2
+revision = 3
 license = "MIT"
 license-files = ["LICENSE"]
 homepage = "https://github.com/sammycage/lunasvg"

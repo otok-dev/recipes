@@ -1,11 +1,11 @@
-# The otok recipe of Brotli (https://github.com/apotocki/otok): libbrotlienc, libbrotlidec and libbrotlicommon for Windows, from
+# The otok recipe of Brotli (https://github.com/otok-dev/otok): libbrotlienc, libbrotlidec and libbrotlicommon for Windows, from
 # the release tag, with Brotli's CMake, the libraries only; static or dynamic.
 [recipe]
 api = 1
 library = "brotli"
 name = "brotli"
 version = "1.2.1"
-revision = 1
+revision = 2
 license = "MIT"
 license-files = ["LICENSE"]
 homepage = "https://github.com/google/brotli"

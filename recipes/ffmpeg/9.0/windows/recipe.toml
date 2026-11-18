@@ -1,4 +1,4 @@
-# The otok recipe of FFmpeg (https://github.com/apotocki/otok): libavutil, libavcodec, libavformat, libavfilter,
+# The otok recipe of FFmpeg (https://github.com/otok-dev/otok): libavutil, libavcodec, libavformat, libavfilter,
 # libswscale and libswresample for Windows on x86_64, LGPL only (no GPL or nonfree parts), with FFmpeg's own configure
 # and make under MSYS2 (the tree of the make recipe) and MSVC; D3D11VA, D3D12VA and DXVA2,
 # zlib and dav1d from their recipes; static or dynamic.
@@ -7,7 +7,7 @@ api = 1
 library = "ffmpeg"
 name = "ffmpeg"
 version = "9.0.2"
-revision = 1
+revision = 2
 license = "LGPL-2.1-or-later"
 license-files = ["COPYING.LGPLv2.1", "LICENSE.md"]
 homepage = "https://ffmpeg.org"

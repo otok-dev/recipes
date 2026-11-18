@@ -1,4 +1,4 @@
-# The otok recipe of PlutoVG (https://github.com/apotocki/otok): libplutovg for Linux, from the release tag; static
+# The otok recipe of PlutoVG (https://github.com/otok-dev/otok): libplutovg for Linux, from the release tag; static
 # or dynamic.
 [recipe]
 api = 1

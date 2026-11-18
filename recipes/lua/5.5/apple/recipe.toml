@@ -1,4 +1,4 @@
-# The otok recipe of Lua (https://github.com/apotocki/otok): the library for every Apple platform, from the
+# The otok recipe of Lua (https://github.com/otok-dev/otok): the library for every Apple platform, from the
 # release archive; static.
 [recipe]
 api = 1

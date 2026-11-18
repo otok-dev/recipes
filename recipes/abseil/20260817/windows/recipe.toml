@@ -1,11 +1,11 @@
-# The otok recipe of Abseil (https://github.com/apotocki/otok): the Abseil C++ libraries for Windows, from the release archive, with Abseil's
+# The otok recipe of Abseil (https://github.com/otok-dev/otok): the Abseil C++ libraries for Windows, from the release archive, with Abseil's
 # CMake, static (Abseil's ABI is not stable, so it is linked into the program or library that uses it).
 [recipe]
 api = 1
 library = "abseil"
 name = "abseil"
 version = "20260817.0"
-revision = 2
+revision = 3
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 homepage = "https://abseil.io"

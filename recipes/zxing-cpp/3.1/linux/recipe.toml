@@ -1,4 +1,4 @@
-# The otok recipe of zxing-cpp (https://github.com/apotocki/otok): the barcode reader library, with `writers`
+# The otok recipe of zxing-cpp (https://github.com/otok-dev/otok): the barcode reader library, with `writers`
 # also the writer of its new backend, the bundled libzint (the submodule zint/), for Linux.
 [recipe]
 api = 1

@@ -1,4 +1,4 @@
-# The otok recipe of GNU Make (https://github.com/apotocki/otok): the make program for the builds of other recipes, which
+# The otok recipe of GNU Make (https://github.com/otok-dev/otok): the make program for the builds of other recipes, which
 # name it as their toolchain (`make = { default-recipe = "apotocki/make" }`), on Windows: the make of MSYS2 with the
 # programs its rules and configure scripts run (bash as sh, coreutils, sed, grep, gawk, diffutils, findutils, m4), binutils,
 # whose GNU as assembles the GNU assembly of libraries built with MSVC (GMP), and perl, a Unix perl for the build
@@ -9,7 +9,7 @@ api = 1
 library = "make"
 name = "make"
 version = "4.4.1"
-revision = 4
+revision = 5
 license = "GPL-3.0-or-later"
 license-files = ["COPYING"]
 homepage = "https://www.gnu.org/software/make/"

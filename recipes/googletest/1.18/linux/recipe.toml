@@ -1,4 +1,4 @@
-# The otok recipe of GoogleTest (https://github.com/apotocki/otok): gtest and gmock with their main libraries,
+# The otok recipe of GoogleTest (https://github.com/otok-dev/otok): gtest and gmock with their main libraries,
 # static, for Linux, from the release tag.
 [recipe]
 api = 1

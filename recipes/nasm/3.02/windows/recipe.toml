@@ -1,4 +1,4 @@
-# The otok recipe of NASM (https://github.com/apotocki/otok): the nasm assembler for the builds of other recipes, which
+# The otok recipe of NASM (https://github.com/otok-dev/otok): the nasm assembler for the builds of other recipes, which
 # name it as their toolchain (`nasm = { default-recipe = "apotocki/nasm" }`), on Windows: built from the release archive
 # by nmake with its Mkfiles/msvc.mak in Visual Studio's environment.
 [recipe]
@@ -6,7 +6,7 @@ api = 1
 library = "nasm"
 name = "nasm"
 version = "3.02"
-revision = 1
+revision = 2
 license = "BSD-2-Clause"
 license-files = ["LICENSE"]
 homepage = "https://www.nasm.us"

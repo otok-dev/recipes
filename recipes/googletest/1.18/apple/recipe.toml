@@ -1,4 +1,4 @@
-# The otok recipe of GoogleTest (https://github.com/apotocki/otok): gtest and gmock, static, for the native tests on
+# The otok recipe of GoogleTest (https://github.com/otok-dev/otok): gtest and gmock, static, for the native tests on
 # every Apple platform (e.g. an iOS simulator executable started by `simctl spawn`), from the release tag. Without
 # gtest_main / gmock_main (the other variants have them): both define main, which an Apple output refuses in one
 # output; a test executable of Apple's platforms has its own main.
@@ -7,7 +7,7 @@ api = 1
 library = "googletest"
 name = "googletest"
 version = "1.18.0"
-revision = 1
+revision = 2
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
 homepage = "https://github.com/google/googletest"

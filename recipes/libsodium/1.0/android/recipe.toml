@@ -1,11 +1,11 @@
-# The otok recipe of libsodium (https://github.com/apotocki/otok): libsodium for Android, from the release archive, with
+# The otok recipe of libsodium (https://github.com/otok-dev/otok): libsodium for Android, from the release archive, with
 # its own configure; static or dynamic.
 [recipe]
 api = 1
 library = "libsodium"
 name = "libsodium"
 version = "1.0.22"
-revision = 1
+revision = 2
 license = "ISC"
 license-files = ["LICENSE"]
 homepage = "https://libsodium.org"

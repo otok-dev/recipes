@@ -1,4 +1,4 @@
-# The otok recipe of libidn2 (https://github.com/apotocki/otok): libidn2, the IDNA 2008 (and TR46) library, for Linux, from the
+# The otok recipe of libidn2 (https://github.com/otok-dev/otok): libidn2, the IDNA 2008 (and TR46) library, for Linux, from the
 # release archive, with its own configure and make, the library only; with the parts of libunistring it needs built in
 # (no libunistring to bring), without gettext, documentation and the programs; static or dynamic. Its licenses are the
 # GNU LGPL 3 or the GNU GPL 2 for the code, and the Unicode terms for the character data.

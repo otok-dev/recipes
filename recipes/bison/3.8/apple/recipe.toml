@@ -1,4 +1,4 @@
-# The otok recipe of GNU Bison (https://github.com/apotocki/otok): the bison program for the builds of other recipes and
+# The otok recipe of GNU Bison (https://github.com/otok-dev/otok): the bison program for the builds of other recipes and
 # for projects that deliver it ([tool-deps.bison] with `deliver`), on macOS: built from the release archive with its
 # configure and make. Bison runs m4, which it carries in libexec/bison/ beside the program, and reads its skeletons from
 # share/bison/: bin/bison is a script running it with both, so it needs nothing of the machine's.
@@ -7,7 +7,7 @@ api = 1
 library = "bison"
 name = "bison"
 version = "3.8.2"
-revision = 1
+revision = 2
 # the m4 beside the program is GPL-3.0-or-later as well
 license = "GPL-3.0-or-later"
 license-files = ["COPYING"]

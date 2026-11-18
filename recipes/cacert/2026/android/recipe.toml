@@ -1,4 +1,4 @@
-# The otok recipe of the CA certificates (https://github.com/apotocki/otok): the bundle of the root certificates Mozilla
+# The otok recipe of the CA certificates (https://github.com/otok-dev/otok): the bundle of the root certificates Mozilla
 # trusts for TLS servers, for Android, made from Mozilla's certdata.txt (the commit pinned below, the version is its date) by
 # curl's mk-ca-bundle.pl, as curl.se makes its cacert.pem. It is the same bundle, certificate for certificate; only the
 # comments of the file differ. The bundle is in libcacert (otok_cacert.h), for CURLOPT_CAINFO_BLOB and the like, or in
@@ -8,7 +8,7 @@ api = 1
 library = "cacert"
 name = "cacert"
 version = "2026.10.21"
-revision = 1
+revision = 2
 license = "MPL-2.0"
 license-files = [{ recipe = "LICENSE-MPL-2.0.txt" }]
 homepage = "https://wiki.mozilla.org/CA"

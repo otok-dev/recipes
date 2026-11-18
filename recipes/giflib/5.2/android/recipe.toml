@@ -1,11 +1,11 @@
-# The otok recipe of giflib (https://github.com/apotocki/otok): libgif for Android, from the release archive, with a CMakeLists.txt of the
+# The otok recipe of giflib (https://github.com/otok-dev/otok): libgif for Android, from the release archive, with a CMakeLists.txt of the
 # recipe (the release has a Makefile only), the library without the programs; static or dynamic.
 [recipe]
 api = 1
 library = "giflib"
 name = "giflib"
 version = "5.2.2"
-revision = 2
+revision = 3
 license = "MIT"
 license-files = ["COPYING"]
 homepage = "https://giflib.sourceforge.net/"
