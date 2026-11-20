@@ -1,0 +1,39 @@
+# The otok recipe of OpenJPEG (https://github.com/otok-dev/otok): openjp2, the JPEG 2000 codec library, for Apple platforms, from the
+# release tag, with OpenJPEG's CMake, the library only (no codec programs, no JPIP); static or dynamic.
+[recipe]
+api = 1
+library = "openjpeg"
+name = "openjpeg"
+version = "2.5.4"
+revision = 1
+license = "BSD-2-Clause"
+license-files = ["LICENSE"]
+homepage = "https://www.openjpeg.org"
+documentation = "https://www.openjpeg.org"
+description = "OpenJPEG, the reference JPEG 2000 codec library (openjp2): JPEG 2000 and HTJ2K decoding, JPEG 2000 encoding."
+keywords = ["image", "jpeg2000", "jp2", "codec"]
+linkage = ["static", "dynamic"]
+
+[source]
+git = "https://github.com/uclouvain/openjpeg"
+commit = "6c4a29b00211eb0430fa0e5e890f1ce5c80f409f"
+tag = "v2.5.4"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+build-on = ["macos/xcode"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "OpenJPEG"
+libraries = ["openjp2"]
+apple = { privacy-manifest = "none" }
+
+# the CMake names of the library (recipe-toml.md 11.4): OpenJPEG's own config exports the target openjp2, which has no
+# namespace, so projects take OPENJPEG_LIBRARIES and OPENJPEG_INCLUDE_DIRS
+[cmake.OpenJPEG]
+targets = { "OpenJPEG::openjp2" = "OpenJPEG" }
+variables = { OPENJPEG_LIBRARIES = "OpenJPEG", OPENJPEG_INCLUDE_DIRS = { include = "OpenJPEG" } }
