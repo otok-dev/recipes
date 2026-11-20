@@ -6,7 +6,7 @@ api = 1
 library = "ffmpeg"
 name = "ffmpeg"
 version = "9.0.2"
-revision = 2
+revision = 3
 license = "LGPL-2.1-or-later"
 license-files = ["COPYING.LGPLv2.1", "LICENSE.md"]
 homepage = "https://ffmpeg.org"
@@ -24,8 +24,9 @@ git = "https://github.com/FFmpeg/FFmpeg"
 commit = "946fcce07b6dcd0331c8cc609192aeff5e1924f8"
 tag = "n9.0.2"
 # libswscale compiles libavfilter's frame pool too: under names of its own, so that the static libraries do not both
-# define them
-patches = ["patches/0001-swscale-framepool-names.patch"]
+# define them; ff_sws_chroma_pos, which libswscale's graph calls, out of the code of
+# --enable-unstable (FFmpeg 9.0.2 defines it there only)
+patches = ["patches/0001-swscale-framepool-names.patch", "patches/0002-swscale-chroma-pos.patch"]
 
 [platforms]
 supported = ["linux"]

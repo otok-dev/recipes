@@ -1,10 +1,16 @@
 -- libjpeg-turbo's CMake project, the libraries only (no tools, no tests, no Java). What it installs: libjpeg and libturbojpeg,
 -- .a or .so with their links.
 -- libjpeg-turbo sets CMAKE_INSTALL_RPATH to the install directory of the shared libraries itself, which would lead into otok's
--- directories: not that, the one the helper gives (the toolchain file's).
+-- directories: not that, the one the helper gives (the toolchain file's). Under a strict C standard of the project
+-- (-std=c11) glibc declares no setenv, which jinclude.h calls: the POSIX and BSD declarations asked for with
+-- _DEFAULT_SOURCE.
 function build(slice, options, deps)
     local file = slice.source .. "/CMakeLists.txt"
-    otok.write(file, (otok.read(file):gsub("set%(CMAKE_INSTALL_RPATH %${CMAKE_INSTALL_FULL_LIBDIR}%)", "")))
+    local text = otok.read(file):gsub("set%(CMAKE_INSTALL_RPATH %${CMAKE_INSTALL_FULL_LIBDIR}%)", "")
+    local n
+    text, n = text:gsub("\nproject%(libjpeg%-turbo C%)\n", "\nproject(libjpeg-turbo C)\nadd_compile_definitions(_DEFAULT_SOURCE)\n")
+    if n ~= 1 then error("no project(libjpeg-turbo C) in " .. file) end
+    otok.write(file, text)
     local static = slice.linkage == "static"
     local turbo = options.api == "turbojpeg"
     otok.cmake{ defines = {
