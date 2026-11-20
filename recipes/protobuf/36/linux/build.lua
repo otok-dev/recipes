@@ -8,6 +8,8 @@ function build(slice, options, deps)
         protobuf_BUILD_LIBUPB = slice.is_tool,
         protobuf_BUILD_SHARED_LIBS = false, protobuf_MSVC_STATIC_RUNTIME = false,
         protobuf_LOCAL_DEPENDENCIES_ONLY = true, protobuf_WITH_ZLIB = options.zlib,
+        -- static libraries that a shared object may take in: PIE's local-exec TLS cannot be in one
+        CMAKE_POSITION_INDEPENDENT_CODE = true,
         absl_DIR = deps.abseil.prefix .. "/lib/cmake/absl",
     }
     if options.zlib then
