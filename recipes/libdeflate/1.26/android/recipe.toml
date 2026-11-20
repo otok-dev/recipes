@@ -1,0 +1,36 @@
+# The otok recipe of libdeflate (https://github.com/otok-dev/otok): a fast library of DEFLATE, zlib and gzip compression
+# and decompression in whole buffers, for Android, from the release tag, with libdeflate's CMake, the library only (no
+# libdeflate-gzip); static or dynamic.
+[recipe]
+api = 1
+library = "libdeflate"
+name = "libdeflate"
+version = "1.26"
+revision = 1
+license = "MIT"
+license-files = ["COPYING"]
+homepage = "https://github.com/ebiggers/libdeflate"
+description = "libdeflate, a heavily optimized library of DEFLATE, zlib and gzip compression and decompression of whole buffers."
+keywords = ["compression", "deflate", "zlib", "gzip"]
+linkage = ["static", "dynamic"]
+
+[source]
+git = "https://github.com/ebiggers/libdeflate"
+commit = "92e6a0db9fa848d742f9eb286c92afc60f2c3dda"
+tag = "v1.26"
+
+[platforms]
+supported = ["android"]
+build-on = ["*/ndk"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "Deflate"
+libraries = ["deflate"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.libdeflate]
+targets = { "libdeflate::libdeflate_{static,shared}" = "Deflate" }
