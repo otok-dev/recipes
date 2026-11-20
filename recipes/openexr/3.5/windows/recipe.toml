@@ -1,0 +1,57 @@
+# The otok recipe of OpenEXR (https://github.com/otok-dev/otok): the high-dynamic-range image format of the film
+# industry, for Windows, from the release tag, with OpenEXR's CMake: the libraries (OpenEXR, OpenEXRUtil, OpenEXRCore,
+# Iex, IlmThread) without tools or examples; Imath, libdeflate, OpenJPH and zstd of their recipes in place of the copies
+# OpenEXR carries; static or dynamic.
+[recipe]
+api = 1
+library = "openexr"
+name = "openexr"
+version = "3.5.4"
+revision = 1
+license = "BSD-3-Clause"
+license-files = ["LICENSE.md", "PATENTS"]
+homepage = "https://openexr.com"
+documentation = "https://openexr.com/en/latest/"
+description = "OpenEXR, the library of EXR images: high dynamic range, many channels, deep and multi-part images, lossless and lossy compression."
+keywords = ["image", "exr", "hdr", "vfx", "codec"]
+linkage = ["static", "dynamic"]
+cxx-standard = ">= 17"
+
+[source]
+git = "https://github.com/AcademySoftwareFoundation/openexr"
+commit = "86687e5f34e3a164820c5e280259550e3ca87c92"
+tag = "v3.5.4"
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc", "linux/clang-cl"]
+
+[deps.imath]
+version = ">= 3.1"
+default-recipe = "apotocki/imath"
+
+[deps.libdeflate]
+version = ">= 1.18"
+default-recipe = "apotocki/libdeflate"
+
+# the codec of HTJ2K compression
+[deps.openjph]
+version = ">= 0.32"
+default-recipe = "apotocki/openjph"
+
+# the codec of ZSTD compression
+[deps.zstd]
+version = ">= 1.5"
+default-recipe = "apotocki/zstd"
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "OpenEXR"
+libraries = ["OpenEXRUtil", "OpenEXR", "IlmThread", "Iex", "OpenEXRCore"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.OpenEXR]
+targets = { "OpenEXR::{OpenEXR,OpenEXRUtil,OpenEXRCore,Iex,IlmThread,OpenEXRConfig,IexConfig,IlmThreadConfig}" = "OpenEXR" }
