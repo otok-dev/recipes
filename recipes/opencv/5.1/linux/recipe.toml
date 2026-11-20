@@ -6,7 +6,7 @@ api = 1
 library = "opencv"
 name = "opencv"
 version = "5.1.0"
-revision = 3
+revision = 4
 license = "Apache-2.0 AND BSD-3-Clause AND MIT AND MIT-Modern-Variant AND OFL-1.1"
 # OpenCV's and those of the code of others it compiles in: SoftFloat (core), Rubik (the font of putText) and the subset of
 # HarfBuzz (imgproc), MSER's chi table and Annoy (features), FlatBuffers, DLPack and MLAS (dnn); on
@@ -38,10 +38,10 @@ doc = "The modules in opencv_world besides core, with the modules they need (img
 
 [options.codecs]
 type = "list"
-values = ["avif", "jpeg", "jpeg2000", "png", "tiff", "webp"]
+values = ["avif", "jpeg", "jpeg2000", "jpegxl", "png", "tiff", "webp"]
 default = ["jpeg", "png"]
 additive = true
-doc = "The image formats of imgcodecs that need a library, each from its recipe: avif (libavif with dav1d: reading AVIF), jpeg (libjpeg-turbo), jpeg2000 (OpenJPEG: JPEG 2000 and HTJ2K), png (libpng), tiff (libtiff), webp (libwebp). BMP, GIF, PNM/PAM, PFM, Sun Raster and Radiance HDR are always there."
+doc = "The image formats of imgcodecs that need a library, each from its recipe: avif (libavif with dav1d: reading AVIF), jpeg (libjpeg-turbo), jpeg2000 (OpenJPEG: JPEG 2000 and HTJ2K), jpegxl (libjxl: JPEG XL), png (libpng), tiff (libtiff), webp (libwebp). BMP, GIF, PNM/PAM, PFM, Sun Raster and Radiance HDR are always there."
 
 [options.ffmpeg]
 type = "bool"
@@ -100,6 +100,22 @@ when = { option = "codecs", has = "avif" }
 version = ">= 1.0"
 default-recipe = "apotocki/dav1d"
 when = { option = "codecs", has = "avif" }
+
+[deps.libjxl]
+version = ">= 0.10"
+default-recipe = "apotocki/libjxl"
+when = { option = "codecs", has = "jpegxl" }
+
+# what a static libjxl links, which a dynamic opencv_world links beside it
+[deps.brotli]
+version = ">= 1.0"
+default-recipe = "apotocki/brotli"
+when = { option = "codecs", has = "jpegxl" }
+
+[deps.highway]
+version = ">= 1.0.7"
+default-recipe = "apotocki/highway"
+when = { option = "codecs", has = "jpegxl" }
 
 # the ONNX, Caffe and TensorFlow importers of dnn: their messages generated anew by the protoc of the same version
 [deps.protobuf]

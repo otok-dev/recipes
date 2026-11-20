@@ -62,7 +62,7 @@ function build(slice, options, deps)
         WITH_OPENGL = false, WITH_VTK = false, WITH_1394 = false, WITH_OPENNI = false, WITH_OPENNI2 = false,
         WITH_PVAPI = false, WITH_ARAVIS = false, WITH_XIMEA = false, WITH_UEYE = false, WITH_LIBREALSENSE = false,
         WITH_GPHOTO2 = false, WITH_OBSENSOR = false, WITH_GDAL = false, WITH_GDCM = false, WITH_OPENEXR = false,
-        WITH_JASPER = false, WITH_OPENJPEG = codec.jpeg2000 == true, WITH_AVIF = codec.avif == true, WITH_JPEGXL = false, WITH_SPNG = false, WITH_HARFBUZZ = true,
+        WITH_JASPER = false, WITH_OPENJPEG = codec.jpeg2000 == true, WITH_AVIF = codec.avif == true, WITH_JPEGXL = codec.jpegxl == true, WITH_SPNG = false, WITH_HARFBUZZ = true,
         WITH_ZLIB_NG = false, WITH_UNIFONT = false, WITH_ITALICFONT = false,
         WITH_DSHOW = chosen.videoio == true, WITH_MSMF = chosen.videoio == true, WITH_MSMF_DXVA = false,
         WITH_PROTOBUF = chosen.dnn == true, WITH_FLATBUFFERS = chosen.dnn == true,
@@ -102,6 +102,24 @@ function build(slice, options, deps)
         local text, n = otok.read(file):gsub("CV_CheckEQ%(animation%.frames%.size%(%), 1L,", "CV_CheckEQ(animation.frames.size(), size_t(1),")
         if n ~= 1 then error("no check of the frames' count in " .. file) end
         otok.write(file, text)
+    end
+    if codec.jpegxl then
+        -- libjxl of deps in place of OpenCV's search for it (pkg-config and the libraries it would find anywhere): its
+        -- headers and libraries, a static libjxl with Brotli and Highway, which it links
+        local jxl = deps.libjxl
+        local function cmake_path(p) return (p:gsub("\\", "/")) end
+        local libs = { jxl.libraries.jxl, jxl.libraries.jxl_threads, jxl.libraries.jxl_cms }
+        if jxl.linkage == "static" then
+            for _, name in ipairs{ "brotlienc", "brotlidec", "brotlicommon" } do libs[#libs + 1] = deps.brotli.libraries[name] end
+            libs[#libs + 1] = deps.highway.libraries.hwy
+        end
+        for i, lib in ipairs(libs) do libs[i] = "\"" .. cmake_path(lib) .. "\"" end
+        otok.write(slice.source .. "/cmake/OpenCVFindJPEGXL.cmake", table.concat({
+            "set(JPEGXL_FOUND TRUE)",
+            "set(JPEGXL_VERSION \"" .. jxl.version .. "\")",
+            "set(JPEGXL_INCLUDE_DIRS \"" .. cmake_path(jxl.include) .. "\")",
+            "set(JPEGXL_LIBRARIES " .. table.concat(libs, " ") .. ")",
+            "set(JPEGXL_LIBRARY ${JPEGXL_LIBRARIES})", "" }, "\n"))
     end
     if codec.jpeg2000 then
         -- OpenJPEG's own CMake package, which OpenCV reads (without it, OpenCV would build its copy)
