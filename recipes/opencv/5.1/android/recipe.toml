@@ -1,0 +1,141 @@
+# The otok recipe of OpenCV (https://github.com/otok-dev/otok): OpenCV for Android, from the release tag, with OpenCV's
+# CMake, as one library opencv_world holding the modules asked for (and those they need); image codecs from their
+# recipes, nothing found on the machine and nothing downloaded during the build; static or dynamic.
+[recipe]
+api = 1
+library = "opencv"
+name = "opencv"
+version = "5.1.0"
+revision = 1
+license = "Apache-2.0 AND BSD-3-Clause AND MIT AND MIT-Modern-Variant AND OFL-1.1"
+# OpenCV's and those of the code of others it compiles in: SoftFloat (core), Rubik (the font of putText) and the subset of
+# HarfBuzz (imgproc), MSER's chi table and Annoy (features), FlatBuffers, DLPack and MLAS (dnn); on
+# ARM also carotene (BSD-3-Clause, its license in its sources) and KleidiCV (Apache-2.0, a resource, arm64-v8a), the HAL of
+# imgproc and core
+license-files = ["LICENSE", "modules/core/3rdparty/SoftFloat/COPYING.txt", "modules/imgproc/fonts/Rubik_OFL.txt",
+                 "3rdparty/harfbuzz/COPYING", "modules/features/3rdparty/mscr/chi_table_LICENSE.txt",
+                 "modules/features/3rdparty/annoy/LICENSE", "3rdparty/flatbuffers/LICENSE.txt", "3rdparty/dlpack/LICENSE",
+                 "3rdparty/mlas/LICENSE"]
+homepage = "https://opencv.org"
+documentation = "https://docs.opencv.org/5.x/"
+description = "OpenCV, the library of computer vision: image processing, codecs, features, calibration, video analysis, DNN inference."
+keywords = ["computer-vision", "image", "image-processing", "video", "dnn", "opencv"]
+linkage = ["static", "dynamic"]
+cxx-standard = ">= 17"
+
+[source]
+git = "https://github.com/opencv/opencv"
+commit = "e4f78fbcf1a773fbed69e14500e8b734963eb585"
+tag = "5.1.0"
+
+[options.modules]
+type = "list"
+values = ["calib", "dnn", "features", "flann", "geometry", "imgcodecs", "imgproc", "objdetect", "photo", "stereo",
+          "stitching", "video", "videoio"]
+default = ["imgcodecs", "imgproc"]
+additive = true
+doc = "The modules in opencv_world besides core, with the modules they need (imgproc needs geometry and flann): calib, dnn, features, flann, geometry, imgcodecs, imgproc, objdetect, photo, stereo, stitching, video, videoio (the NDK's media and camera APIs: API level 24 or later)."
+
+[options.codecs]
+type = "list"
+values = ["jpeg", "png", "tiff", "webp"]
+default = ["jpeg", "png"]
+additive = true
+doc = "The image formats of imgcodecs that need a library, each from its recipe: jpeg (libjpeg-turbo), png (libpng), tiff (libtiff), webp (libwebp). BMP, GIF, PNM/PAM, PFM, Sun Raster and Radiance HDR are always there."
+
+[options.ffmpeg]
+type = "bool"
+default = false
+doc = "FFmpeg (its recipe) as a backend of videoio, which needs videoio in modules: reading and writing the video files and streams FFmpeg knows. A dynamic opencv needs a dynamic ffmpeg."
+
+[platforms]
+supported = ["android"]
+build-on = ["*/ndk"]
+
+# the source of KleidiCV, Arm's image processing for AArch64, which OpenCV uses through its HAL (OpenCV would fetch it)
+[[resource]]
+name = "kleidicv"
+git = "https://gitlab.arm.com/kleidi/kleidicv.git"
+commit = "cacea38588eb35de69075a0a1a876b82bfcd88dd"
+tag = "26.09"
+when = { arch = ["arm64-v8a"] }
+
+[deps.libjpeg-turbo]
+version = ">= 3.0"
+default-recipe = "apotocki/libjpeg-turbo"
+requires-options = { api = "libjpeg" }
+when = { option = "codecs", has = "jpeg" }
+
+[deps.libpng]
+version = ">= 1.6"
+default-recipe = "apotocki/libpng"
+when = { option = "codecs", has = "png" }
+
+[deps.libtiff]
+version = ">= 4.0"
+default-recipe = "apotocki/libtiff"
+when = { option = "codecs", has = "tiff" }
+
+[deps.libwebp]
+version = ">= 1.0"
+default-recipe = "apotocki/libwebp"
+when = { option = "codecs", has = "webp" }
+
+# the ONNX, Caffe and TensorFlow importers of dnn: their messages generated anew by the protoc of the same version
+[deps.protobuf]
+version = ">= 30"
+default-recipe = "apotocki/protobuf"
+linkage = "static"  # its recipe builds static libraries only
+requires-options = { runtime = "full" }
+toolchains = ["protoc"]
+when = { option = "modules", has = "dnn" }
+
+# protobuf's CMake package needs Abseil's
+[deps.abseil]
+version = ">= 20260000"
+default-recipe = "apotocki/abseil"
+linkage = "static"
+when = { option = "modules", has = "dnn" }
+
+# the FFmpeg backend of videoio
+[deps.ffmpeg]
+version = ">= 6.0"
+default-recipe = "apotocki/ffmpeg"
+when = { option = "ffmpeg" }
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "OpenCV"
+libraries = ["opencv_world"]
+link = { libraries = [
+    "log", "m", "dl", "z",
+    { library = "android", when = { option = "modules", has = "videoio" } },
+    { library = "mediandk", when = { option = "modules", has = "videoio" } },
+    { library = "camera2ndk", when = { option = "modules", has = "videoio" } },
+], runtime = "c++" }
+
+# the CMake names of the library (recipe-toml.md 11.4): OpenCV's own targets (opencv_core, …) have no namespace, so
+# projects take OpenCV_LIBS and OpenCV_INCLUDE_DIRS
+[cmake.OpenCV]
+targets = { "OpenCV::OpenCV" = "OpenCV" }
+variables = { OpenCV_LIBS = "OpenCV" }
+
+[cmake.OpenCV.components]
+core = "OpenCV"
+calib = "OpenCV"
+dnn = "OpenCV"
+features = "OpenCV"
+flann = "OpenCV"
+geometry = "OpenCV"
+imgcodecs = "OpenCV"
+imgproc = "OpenCV"
+objdetect = "OpenCV"
+photo = "OpenCV"
+stereo = "OpenCV"
+stitching = "OpenCV"
+video = "OpenCV"
+videoio = "OpenCV"
+world = "OpenCV"
