@@ -1,6 +1,6 @@
 -- protobuf's CMake project, the runtime libraries, static, with the Abseil of deps; in the tool slice (a tool dependency, or a
 -- tool a project delivers to its own build) protoc too, with libprotoc and libupb, which its upb generator needs. Nothing is
--- fetched. What it installs: libprotobuf.lib or libprotobuf-lite.lib and libutf8_validity.lib.
+-- fetched. What it installs: libprotobuf.lib or libprotobuf-lite.lib (with the suffix d in debug) and libutf8_validity.lib.
 function build(slice, options, deps)
     local defines = {
         protobuf_BUILD_TESTS = false, protobuf_BUILD_CONFORMANCE = false, protobuf_BUILD_EXAMPLES = false,
@@ -19,8 +19,9 @@ function build(slice, options, deps)
     otok.cmake{ defines = defines }
     local p = slice.prefix
     local lite = options.runtime == "lite"
+    local d = slice.configuration == "debug" and "d" or ""  -- protobuf_DEBUG_POSTFIX
     local libraries = {
-        [lite and "protobuf-lite" or "protobuf"] = otok.glob(lite and "lib/libprotobuf-lite.lib" or "lib/libprotobuf.lib", p)[1],
+        [lite and "protobuf-lite" or "protobuf"] = otok.glob(lite and "lib/libprotobuf-lite" .. d .. ".lib" or "lib/libprotobuf" .. d .. ".lib", p)[1],
         utf8_validity = otok.glob("lib/libutf8_validity.lib", p)[1],
     }
     local out = { libraries = libraries, headers = p .. "/include" }

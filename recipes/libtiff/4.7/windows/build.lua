@@ -1,5 +1,5 @@
 -- libtiff's CMake project, the C library only. Every codec libtiff can look for on the machine is given or switched off:
--- the libraries of deps, as the options ask, and nothing else (zlib on Apple and Android is the SDK's or the NDK's). What it installs: tiff.lib (static), or tiff.lib, the import library, with tiff.dll.
+-- the libraries of deps, as the options ask, and nothing else (zlib on Apple and Android is the SDK's or the NDK's). What it installs: tiff.lib (static), or tiff.lib, the import library, with tiff.dll; with the suffix d in debug.
 function build(slice, options, deps)
     local static = slice.linkage == "static"
     local defines = {
@@ -42,7 +42,8 @@ function build(slice, options, deps)
     end
     otok.cmake{ defines = defines }
     local p = slice.prefix
-    local lib = otok.glob("lib/tiff.lib", p)[1]
-    local dll = otok.glob("bin/tiff.dll", p)[1]
+    local d = slice.configuration == "debug" and "d" or ""  -- CMAKE_DEBUG_POSTFIX of libtiff
+    local lib = otok.glob("lib/tiff" .. d .. ".lib", p)[1]
+    local dll = otok.glob("bin/tiff" .. d .. ".dll", p)[1]
     return { libraries = { tiff = dll and { link = lib, runtime = dll } or lib }, headers = p .. "/include" }
 end
