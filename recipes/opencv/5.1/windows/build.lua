@@ -61,7 +61,7 @@ function build(slice, options, deps)
         WITH_GSTREAMER = false, WITH_GTK = false, WITH_QT = false, WITH_WIN32UI = false,
         WITH_OPENGL = false, WITH_VTK = false, WITH_1394 = false, WITH_OPENNI = false, WITH_OPENNI2 = false,
         WITH_PVAPI = false, WITH_ARAVIS = false, WITH_XIMEA = false, WITH_UEYE = false, WITH_LIBREALSENSE = false,
-        WITH_GPHOTO2 = false, WITH_OBSENSOR = false, WITH_GDAL = false, WITH_GDCM = false, WITH_OPENEXR = false,
+        WITH_GPHOTO2 = false, WITH_OBSENSOR = false, WITH_GDAL = false, WITH_GDCM = false, WITH_OPENEXR = codec.openexr == true,
         WITH_JASPER = false, WITH_OPENJPEG = codec.jpeg2000 == true, WITH_AVIF = codec.avif == true, WITH_JPEGXL = codec.jpegxl == true, WITH_SPNG = false, WITH_HARFBUZZ = true,
         WITH_ZLIB_NG = false, WITH_UNIFONT = false, WITH_ITALICFONT = false,
         WITH_DSHOW = chosen.videoio == true, WITH_MSMF = chosen.videoio == true, WITH_MSMF_DXVA = false,
@@ -120,6 +120,14 @@ function build(slice, options, deps)
             "set(JPEGXL_INCLUDE_DIRS \"" .. cmake_path(jxl.include) .. "\")",
             "set(JPEGXL_LIBRARIES " .. table.concat(libs, " ") .. ")",
             "set(JPEGXL_LIBRARY ${JPEGXL_LIBRARIES})", "" }, "\n"))
+    end
+    if codec.openexr then
+        -- OpenEXR's own CMake package, which OpenCV reads, and the packages of what it links, which that one reads
+        defines.OpenEXR_DIR = deps.openexr.prefix .. "/lib/cmake/OpenEXR"
+        defines.Imath_DIR = deps.imath.prefix .. "/lib/cmake/Imath"
+        defines.libdeflate_DIR = deps.libdeflate.prefix .. "/lib/cmake/libdeflate"
+        defines.openjph_DIR = deps.openjph.prefix .. "/lib/cmake/openjph"
+        defines.zstd_DIR = deps.zstd.prefix .. "/lib/cmake/zstd"
     end
     if codec.jpeg2000 then
         -- OpenJPEG's own CMake package, which OpenCV reads (without it, OpenCV would build its copy)
