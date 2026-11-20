@@ -62,7 +62,7 @@ function build(slice, options, deps)
         WITH_OPENGL = false, WITH_VTK = false, WITH_1394 = false, WITH_OPENNI = false, WITH_OPENNI2 = false,
         WITH_PVAPI = false, WITH_ARAVIS = false, WITH_XIMEA = false, WITH_UEYE = false, WITH_LIBREALSENSE = false,
         WITH_GPHOTO2 = false, WITH_OBSENSOR = false, WITH_GDAL = false, WITH_GDCM = false, WITH_OPENEXR = false,
-        WITH_JASPER = false, WITH_OPENJPEG = codec.jpeg2000 == true, WITH_AVIF = false, WITH_JPEGXL = false, WITH_SPNG = false, WITH_HARFBUZZ = true,
+        WITH_JASPER = false, WITH_OPENJPEG = codec.jpeg2000 == true, WITH_AVIF = codec.avif == true, WITH_JPEGXL = false, WITH_SPNG = false, WITH_HARFBUZZ = true,
         WITH_ZLIB_NG = false, WITH_UNIFONT = false, WITH_ITALICFONT = false,
         WITH_DSHOW = chosen.videoio == true, WITH_MSMF = chosen.videoio == true, WITH_MSMF_DXVA = false,
         WITH_PROTOBUF = chosen.dnn == true, WITH_FLATBUFFERS = chosen.dnn == true,
@@ -87,6 +87,21 @@ function build(slice, options, deps)
         local tiff = deps.libtiff
         defines.TIFF_INCLUDE_DIR = tiff.include
         defines.TIFF_LIBRARY = tiff.libraries.tiff
+    end
+    if codec.avif then
+        -- libavif's headers and library in place of OpenCV's search (its CMake package, installed with a dynamic libavif
+        -- only, is left aside); a static libavif needs dav1d beside it in a dynamic opencv_world
+        local avif = deps.libavif
+        defines.CMAKE_DISABLE_FIND_PACKAGE_libavif = true
+        defines.AVIF_INCLUDE_DIR = avif.include
+        local libs = { avif.libraries.avif }
+        if avif.linkage == "static" then libs[2] = deps.dav1d.libraries.dav1d end
+        defines.AVIF_LIBRARY = table.concat(libs, ";")
+        -- a size_t compared with 1L, whose long is 32 bits on Windows: no overload of OpenCV's check fits better
+        local file = slice.source .. "/modules/imgcodecs/src/grfmt_avif.cpp"
+        local text, n = otok.read(file):gsub("CV_CheckEQ%(animation%.frames%.size%(%), 1L,", "CV_CheckEQ(animation.frames.size(), size_t(1),")
+        if n ~= 1 then error("no check of the frames' count in " .. file) end
+        otok.write(file, text)
     end
     if codec.jpeg2000 then
         -- OpenJPEG's own CMake package, which OpenCV reads (without it, OpenCV would build its copy)
