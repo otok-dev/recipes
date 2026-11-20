@@ -1,0 +1,39 @@
+# The otok recipe of Imath (https://github.com/otok-dev/otok): the C++ library of vectors, matrices and the 16-bit float
+# half of computer graphics, for Android, from the release tag, with Imath's CMake, without Python bindings; static or
+# dynamic.
+[recipe]
+api = 1
+library = "imath"
+name = "imath"
+version = "3.2.3"
+revision = 1
+license = "BSD-3-Clause"
+license-files = ["LICENSE.md"]
+homepage = "https://github.com/AcademySoftwareFoundation/Imath"
+documentation = "https://imath.readthedocs.io"
+description = "Imath, the C++ and Python library of 2D and 3D vectors, matrices, quaternions and the half float type of OpenEXR."
+keywords = ["math", "vector", "matrix", "half", "graphics"]
+linkage = ["static", "dynamic"]
+cxx-standard = ">= 14"
+
+[source]
+git = "https://github.com/AcademySoftwareFoundation/Imath"
+commit = "5f27ba266d3ea1565e912570c30b5eafc89959f1"
+tag = "v3.2.3"
+
+[platforms]
+supported = ["android"]
+build-on = ["*/ndk"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "Imath"
+libraries = ["Imath"]
+link = { libraries = ["m"], runtime = "c++" }
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.Imath]
+targets = { "Imath::{Imath,ImathConfig}" = "Imath" }
