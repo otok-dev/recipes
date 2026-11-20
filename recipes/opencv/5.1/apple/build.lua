@@ -103,7 +103,7 @@ function build(slice, options, deps)
         WITH_FRAMEBUFFER = false, WITH_OPENGL = false, WITH_VTK = false, WITH_1394 = false, WITH_OPENNI = false,
         WITH_OPENNI2 = false, WITH_PVAPI = false, WITH_ARAVIS = false, WITH_XIMEA = false, WITH_UEYE = false,
         WITH_LIBREALSENSE = false, WITH_COCOA = false, WITH_GPHOTO2 = false, WITH_OBSENSOR = false, WITH_GDAL = false, WITH_GDCM = false,
-        WITH_OPENEXR = false, WITH_JASPER = false, WITH_OPENJPEG = false, WITH_AVIF = false, WITH_JPEGXL = false,
+        WITH_OPENEXR = false, WITH_JASPER = false, WITH_OPENJPEG = codec.jpeg2000 == true, WITH_AVIF = false, WITH_JPEGXL = false,
         WITH_SPNG = false, WITH_HARFBUZZ = true, WITH_ZLIB_NG = false, WITH_UNIFONT = false, WITH_ITALICFONT = false,
         WITH_V4L = false, WITH_CAP_IOS = false, WITH_AVFOUNDATION = chosen.videoio == true and capture[slice.platform] == true,
         WITH_PROTOBUF = chosen.dnn == true, WITH_FLATBUFFERS = chosen.dnn == true,
@@ -126,6 +126,10 @@ function build(slice, options, deps)
         local tiff = deps.libtiff
         defines.TIFF_INCLUDE_DIR = tiff.include
         defines.TIFF_LIBRARY = tiff.libraries.tiff
+    end
+    if codec.jpeg2000 then
+        -- OpenJPEG's own CMake package, which OpenCV reads (without it, OpenCV would build its copy)
+        defines.OpenJPEG_DIR = deps.openjpeg.prefix .. "/lib/cmake/openjpeg-2.5"
     end
     if codec.webp then
         local webp = deps.libwebp
