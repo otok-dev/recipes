@@ -1,0 +1,42 @@
+# The otok recipe of libavif (https://github.com/otok-dev/otok): the library of the AV1 Image File Format for Windows, from
+# the release tag, with libavif's CMake: decoding through dav1d of its recipe, no encoder yet; static or dynamic.
+[recipe]
+api = 1
+library = "libavif"
+name = "libavif"
+version = "1.4.2"
+revision = 1
+# libavif's, and the subset of libyuv it compiles in for its conversions (third_party/libyuv, BSD-3-Clause); both in LICENSE
+license = "BSD-2-Clause AND BSD-3-Clause"
+license-files = ["LICENSE"]
+homepage = "https://github.com/AOMediaCodec/libavif"
+description = "libavif, the library of AVIF, the AV1 Image File Format: reading AVIF images, their alpha, depth and color properties."
+keywords = ["image", "avif", "av1", "codec"]
+linkage = ["static", "dynamic"]
+
+[source]
+git = "https://github.com/AOMediaCodec/libavif"
+commit = "c5240fc79fe5c2407e10afd35f5505ef6333ea49"
+tag = "v1.4.2"
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc", "linux/clang-cl"]
+
+# the AV1 decoder
+[deps.dav1d]
+version = ">= 1.0"
+default-recipe = "apotocki/dav1d"
+
+[toolchains]
+cmake = { version = ">= 3.22", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "AVIF"
+libraries = ["avif"]
+
+# the CMake names of the library (recipe-toml.md 11.4): libavif's own config exports the target avif, which has no
+# namespace
+[cmake.libavif]
+targets = { "libavif::avif" = "AVIF" }
