@@ -1,0 +1,37 @@
+# The otok recipe of OpenJPH (https://github.com/otok-dev/otok): an implementation of High-Throughput JPEG 2000 (HTJ2K),
+# for Windows, from the release tag, with OpenJPH's CMake, the library only (no programs, no TIFF); static or dynamic.
+[recipe]
+api = 1
+library = "openjph"
+name = "openjph"
+version = "0.33.0"
+revision = 1
+license = "BSD-2-Clause"
+license-files = ["LICENSE"]
+homepage = "https://github.com/aous72/OpenJPH"
+description = "OpenJPH, an open-source implementation of HTJ2K (JPEG 2000 Part 15), the codec of OpenEXR's HTJ2K compression."
+keywords = ["image", "jpeg2000", "htj2k", "codec"]
+linkage = ["static", "dynamic"]
+cxx-standard = ">= 14"
+
+[source]
+git = "https://github.com/aous72/OpenJPH"
+commit = "345a8bcd1c7a3908e3870797057277660a412073"
+tag = "0.33.0"
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc", "linux/clang-cl"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "OpenJPH"
+libraries = ["openjph"]
+
+# the CMake names of the library (recipe-toml.md 11.4): OpenJPH's own config exports the target openjph, which has no
+# namespace
+[cmake.openjph]
+targets = { "openjph::openjph" = "OpenJPH" }
