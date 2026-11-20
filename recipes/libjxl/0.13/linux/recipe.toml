@@ -1,0 +1,55 @@
+# The otok recipe of libjxl (https://github.com/otok-dev/otok): the reference library of JPEG XL for Linux, from the
+# release tag, with libjxl's CMake: libjxl (encoder and decoder), libjxl_threads and libjxl_cms, with Highway and Brotli
+# of their recipes and skcms, which libjxl compiles in, as a resource; no tools; static or dynamic.
+[recipe]
+api = 1
+library = "libjxl"
+name = "libjxl"
+version = "0.13.0"
+revision = 1
+# libjxl's, and skcms's, which libjxl_cms compiles in (a resource: its license in the recipe, LICENSE.skcms)
+license = "BSD-3-Clause"
+license-files = ["LICENSE", "PATENTS", { recipe = "LICENSE.skcms" }]
+homepage = "https://jpeg.org/jpegxl/"
+documentation = "https://libjxl.readthedocs.io"
+description = "libjxl, the reference library of JPEG XL: encoding and decoding, lossless JPEG recompression, color management."
+keywords = ["image", "jpegxl", "jxl", "codec"]
+linkage = ["static", "dynamic"]
+cxx-standard = ">= 17"
+
+[source]
+git = "https://github.com/libjxl/libjxl"
+commit = "5a7da83447212fe4900fc29ce97430b881caa67e"
+tag = "v0.13.0"
+
+# skcms at the commit libjxl's submodule names (libjxl's color management), copied by build.lua into
+# third_party/skcms, the empty directory of the submodule
+[[resource]]
+name = "skcms"
+git = "https://github.com/google/skcms"
+commit = "96d9171c94b937a1b5f0293de7309ac16311b722"
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[deps.highway]
+version = ">= 1.0.7"
+default-recipe = "apotocki/highway"
+
+[deps.brotli]
+version = ">= 1.0"
+default-recipe = "apotocki/brotli"
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "JXL"
+libraries = ["jxl", "jxl_threads", "jxl_cms"]
+link = { libraries = ["pthread", "m"], runtime = "c++" }
+
+# the CMake names of the library (recipe-toml.md 11.4): libjxl installs no CMake package, only pkg-config files
+[cmake.JPEGXL]
+targets = { "JPEGXL::jxl" = "JXL" }
