@@ -1,0 +1,38 @@
+# The otok recipe of Highway (https://github.com/otok-dev/otok): Google's portable SIMD library with dispatch at run time,
+# for Windows, from the release tag, with Highway's CMake, the library hwy only (no contrib, tests or examples); static or
+# dynamic.
+[recipe]
+api = 1
+library = "highway"
+name = "highway"
+version = "1.4.0"
+revision = 1
+license = "Apache-2.0 OR BSD-3-Clause"
+license-files = ["LICENSE"]
+homepage = "https://github.com/google/highway"
+documentation = "https://google.github.io/highway/"
+description = "Highway, a C++ library of portable SIMD and vector intrinsics, its best code chosen for the CPU at run time."
+keywords = ["simd", "vector", "performance", "cpu"]
+linkage = ["static", "dynamic"]
+cxx-standard = ">= 17"
+
+[source]
+git = "https://github.com/google/highway"
+commit = "2607d3b5b0113992fe84d3848859eae13b3b52c1"
+tag = "1.4.0"
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc", "linux/clang-cl"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "Highway"
+libraries = ["hwy"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.hwy]
+targets = { "hwy::hwy" = "Highway" }
