@@ -6,7 +6,7 @@ api = 1
 library = "opencv"
 name = "opencv"
 version = "5.1.0"
-revision = 5
+revision = 6
 license = "Apache-2.0 AND BSD-3-Clause AND MIT AND MIT-Modern-Variant AND OFL-1.1"
 # OpenCV's and those of the code of others it compiles in: SoftFloat (core), Rubik (the font of putText) and the subset of
 # HarfBuzz (imgproc), MSER's chi table and Annoy (features), FlatBuffers, DLPack and MLAS (dnn); on
@@ -47,6 +47,11 @@ doc = "The image formats of imgcodecs that need a library, each from its recipe:
 type = "bool"
 default = false
 doc = "FFmpeg (its recipe) as a backend of videoio, which needs videoio in modules: reading and writing the video files and streams FFmpeg knows. A dynamic opencv needs a dynamic ffmpeg."
+
+[options.tbb]
+type = "bool"
+default = false
+doc = "oneTBB (its recipe) as the backend of OpenCV's parallel loops in place of its own threads (pthreads)."
 
 [platforms]
 supported = ["linux"]
@@ -164,6 +169,12 @@ when = { option = "modules", has = "dnn" }
 version = ">= 6.0"
 default-recipe = "apotocki/ffmpeg"
 when = { option = "ffmpeg" }
+
+# the backend of parallel loops
+[deps.onetbb]
+version = ">= 2021.0"
+default-recipe = "apotocki/onetbb"
+when = { option = "tbb" }
 
 [toolchains]
 cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }

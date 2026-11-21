@@ -2,7 +2,8 @@
 -- Everything OpenCV can find on the machine or download is given or switched off: the codecs of deps as the option asks,
 -- zlib of the NDK, protobuf of deps for dnn (its messages generated anew by that protobuf's protoc), KleidiCV from the
 -- recipe's resource on arm64-v8a, the NDK's media and camera APIs for videoio, FFmpeg of deps for videoio as the option
--- ffmpeg asks, and none of IPP, TBB, Eigen, LAPACK, OpenCL, CUDA, GStreamer or the GUI toolkits.
+-- ffmpeg asks, oneTBB of deps as the option tbb asks, and none of IPP, Eigen, LAPACK, OpenCL, CUDA, GStreamer or the
+-- GUI toolkits.
 -- Of OpenCV's own copies of libraries only HarfBuzz, the subset it keeps for putText, which needs it since 5.0, and on
 -- ARM carotene. What it installs: libopencv_world.a (static, the static libraries of those copies and of KleidiCV
 -- merged into it, so that the library is one file), or libopencv_world.so with its links.
@@ -90,7 +91,8 @@ function build(slice, options, deps)
         BUILD_PNG = false, BUILD_WEBP = false, BUILD_HARFBUZZ = true, BUILD_TBB = false, BUILD_IPP_IW = false,
         BUILD_ITT = false, BUILD_CLAPACK = false, BUILD_PROTOBUF = false,
         -- what OpenCV would find on the machine or download
-        WITH_IPP = false, WITH_ITT = false, WITH_TBB = false, WITH_OPENMP = false, WITH_EIGEN = false, WITH_LAPACK = false,
+        WITH_IPP = false, WITH_ITT = false, WITH_TBB = deps.onetbb ~= nil, WITH_OPENMP = false, WITH_EIGEN = false,
+        WITH_LAPACK = false,
         WITH_CUDA = false, WITH_OPENCL = false, WITH_VULKAN = false, WITH_OPENVINO = false, WITH_ONNXRUNTIME = false,
         WITH_WEBNN = false, WITH_TIMVX = false, WITH_CANN = false, WITH_VA = false, WITH_VA_INTEL = false, WITH_MFX = false,
         WITH_NVCUVID = false, WITH_NVCUVENC = false, WITH_ARMPL = false, WITH_FASTCV = false,
@@ -182,6 +184,10 @@ function build(slice, options, deps)
         defines.utf8_range_DIR = deps.protobuf.prefix .. "/lib/cmake/utf8_range"
     end
     if deps.ffmpeg then use_ffmpeg(slice, chosen, deps.ffmpeg) end
+    if deps.onetbb then
+        -- oneTBB's own CMake package, which OpenCV reads
+        defines.TBB_DIR = deps.onetbb.prefix .. "/lib/cmake/TBB"
+    end
     otok.cmake{ defines = defines }
 
     local p = slice.prefix
