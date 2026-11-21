@@ -1,0 +1,44 @@
+# The otok recipe of oneTBB (https://github.com/otok-dev/otok): oneAPI Threading Building Blocks, a C++ library of
+# parallel algorithms, concurrent containers and a task scheduler, with its scalable memory allocator, for every Apple
+# platform, from the release tag, with oneTBB's CMake; static or dynamic.
+[recipe]
+api = 1
+library = "onetbb"
+name = "onetbb"
+version = "2023.2.0"
+revision = 1
+license = "Apache-2.0"
+license-files = ["LICENSE.txt"]
+homepage = "https://github.com/uxlfoundation/oneTBB"
+description = "oneTBB, a C++ library of parallel algorithms, concurrent containers and a work-stealing task scheduler, with the scalable allocator tbbmalloc."
+keywords = ["parallel", "threading", "tasks", "concurrency", "allocator"]
+linkage = ["static", "dynamic"]
+
+[source]
+git = "https://github.com/uxlfoundation/oneTBB"
+commit = "41158a44ab3fb7ac5df7f99ef82626c87607447f"
+tag = "v2023.2.0"
+
+[platforms]
+supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
+build-on = ["macos/xcode"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+# one product: the XCFrameworks of one product share its headers, which those of two products could not both hold
+[[product]]
+name = "TBB"
+libraries = ["tbb", "tbbmalloc"]
+link = { runtime = "c++" }
+# stat of a dynamic tbb (whether a library it would load is a file beside it, in the app): the file timestamp APIs
+apple = { privacy-manifest = "PrivacyInfo.xcprivacy" }
+
+# the CMake names of the libraries (recipe-toml.md 11.4)
+[cmake.TBB]
+targets = { "TBB::tbb" = "TBB", "TBB::tbbmalloc" = "TBB" }
+
+[cmake.TBB.components]
+tbb = "TBB"
+tbbmalloc = "TBB"

@@ -1,0 +1,46 @@
+# The otok recipe of oneTBB (https://github.com/otok-dev/otok): oneAPI Threading Building Blocks, a C++ library of
+# parallel algorithms, concurrent containers and a task scheduler, with its scalable memory allocator, for Linux, from
+# the release tag, with oneTBB's CMake; static or dynamic.
+[recipe]
+api = 1
+library = "onetbb"
+name = "onetbb"
+version = "2023.2.0"
+revision = 1
+license = "Apache-2.0"
+license-files = ["LICENSE.txt"]
+homepage = "https://github.com/uxlfoundation/oneTBB"
+description = "oneTBB, a C++ library of parallel algorithms, concurrent containers and a work-stealing task scheduler, with the scalable allocator tbbmalloc."
+keywords = ["parallel", "threading", "tasks", "concurrency", "allocator"]
+linkage = ["static", "dynamic"]
+
+[source]
+git = "https://github.com/uxlfoundation/oneTBB"
+commit = "41158a44ab3fb7ac5df7f99ef82626c87607447f"
+tag = "v2023.2.0"
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "TBB"
+libraries = ["tbb"]
+link = { libraries = ["dl", "pthread"], runtime = "c++" }
+
+[[product]]
+name = "TBBMalloc"
+libraries = ["tbbmalloc"]
+link = { libraries = ["dl", "pthread"] }
+
+# the CMake names of the libraries (recipe-toml.md 11.4)
+[cmake.TBB]
+targets = { "TBB::tbb" = "TBB", "TBB::tbbmalloc" = "TBBMalloc" }
+
+[cmake.TBB.components]
+tbb = "TBB"
+tbbmalloc = "TBBMalloc"
