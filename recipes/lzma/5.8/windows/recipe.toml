@@ -5,7 +5,7 @@ api = 1
 library = "lzma"
 name = "lzma"
 version = "5.8.4"
-revision = 3
+revision = 4
 license = "0BSD"
 # COPYING tells which license applies to which part; liblzma is 0BSD
 license-files = ["COPYING", "COPYING.0BSD"]
