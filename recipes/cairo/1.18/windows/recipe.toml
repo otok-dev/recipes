@@ -1,13 +1,14 @@
 # The otok recipe of Cairo (https://github.com/otok-dev/otok) for Windows: Cairo 1.18.4 from its release archive, or
 # with d2d the branch d2d of the fork https://github.com/apotocki/cairo, which adds the Direct2D surface on Direct3D
 # 10.1 and 11. With MSVC or with clang-cl across from Linux. Static or dynamic; Pixman, FreeType and libpng static
-# unless the project chooses otherwise, zlib as the project builds it.
+# unless the project chooses otherwise, zlib as the project builds it. cairo_debug_reset_static_data() frees the Win32
+# device (issue #19) and pixman's implementations (with the pixman recipe of this repository), with or without d2d.
 [recipe]
 api = 1
 library = "cairo"
 name = "cairo"
 version = "1.18.4"
-revision = 2
+revision = 3
 license = "LGPL-2.1-only OR MPL-1.1"
 license-files = ["COPYING", "COPYING-LGPL-2.1", "COPYING-MPL-1.1"]
 homepage = "https://www.cairographics.org"
@@ -18,6 +19,9 @@ linkage = ["static", "dynamic"]
 [source]
 url = "https://cairographics.org/releases/cairo-1.18.4.tar.xz"
 sha256 = "445ed8208a6e4823de1226a74ca319d3600e83f6369f99b14265006599c32ccb"
+# the fixes of the branch d2d that are not of Direct2D: the Win32 device freed (issue #19), pixman_reset_static_data()
+# called; the resource d2d has them already
+patches = ["patches/0001-win32-device-reset.patch", "patches/0002-pixman-reset-static-data.patch"]
 
 # the branch d2d of apotocki/cairo: the Direct2D surface (cairo_d2d_* of cairo-win32.h) on Cairo 1.18.4
 [[resource]]

@@ -1,0 +1,36 @@
+cairo_debug_reset_static_data() calls pixman_reset_static_data() when the pixman found has it (the pixman recipe of
+this repository patches it in): the implementations pixman chose for the CPU, which MSVC's builds never free, go with
+the rest of cairo's static data. Of commit e934468c of the branch d2d of https://github.com/apotocki/cairo, which the
+option d2d builds, without its part on DirectWrite (of that branch only).
+
+diff --git a/meson.build b/meson.build
+index cc13180..507e479 100644
+--- a/meson.build
++++ b/meson.build
+@@ -640,6 +640,10 @@ if pixman_dep.found()
+   if pixman_dep.version().version_compare('>= 0.42.3')
+     conf.set('HAS_PIXMAN_r8g8b8_sRGB', 1)
+   endif
++  # a pixman with pixman_reset_static_data() (a patched pixman), which cairo_debug_reset_static_data() calls
++  if pixman_dep.type_name() != 'internal' and cc.has_function('pixman_reset_static_data', prefix: '#include <pixman.h>', dependencies: [pixman_dep])
++    conf.set('HAVE_PIXMAN_RESET_STATIC_DATA', 1)
++  endif
+   if pixman_dep.type_name() == 'internal'
+     internal_deps += [pixman_dep]
+   else
+diff --git a/src/cairo-debug.c b/src/cairo-debug.c
+index a5f6134..84453f0 100644
+--- a/src/cairo-debug.c
++++ b/src/cairo-debug.c
+@@ -94,6 +94,11 @@ cairo_debug_reset_static_data (void)
+ 
+     _cairo_default_context_reset_static_data ();
+ 
++#if HAVE_PIXMAN_RESET_STATIC_DATA
++    /* pixman's implementations, which toolchains without destructors (MSVC) never free */
++    pixman_reset_static_data ();
++#endif
++
+     CAIRO_MUTEX_FINALIZE ();
+ }
+ 

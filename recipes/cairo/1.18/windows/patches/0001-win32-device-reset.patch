@@ -1,0 +1,52 @@
+cairo_debug_reset_static_data() destroys the device the Win32 surfaces share, which was never freed
+(https://gitlab.freedesktop.org/cairo/cairo/-/issues/19): leak checkers reported it. Commit 612bd233 of the branch d2d
+of https://github.com/apotocki/cairo, which the option d2d builds.
+
+diff --git a/src/cairo-debug.c b/src/cairo-debug.c
+index 11777f0..a5f6134 100644
+--- a/src/cairo-debug.c
++++ b/src/cairo-debug.c
+@@ -76,6 +76,10 @@ cairo_debug_reset_static_data (void)
+     _cairo_win32_font_reset_static_data ();
+ #endif
+ 
++#if CAIRO_HAS_WIN32_SURFACE
++	_cairo_win32_device_reset_static_data();
++#endif
++
+     _cairo_intern_string_reset_static_data ();
+ 
+     _cairo_scaled_font_reset_static_data ();
+diff --git a/src/cairoint.h b/src/cairoint.h
+index be1a4ba..e699440 100644
+--- a/src/cairoint.h
++++ b/src/cairoint.h
+@@ -429,6 +429,11 @@ _cairo_ft_font_reset_static_data (void);
+ cairo_private void
+ _cairo_win32_font_reset_static_data (void);
+ 
++#if CAIRO_HAS_WIN32_SURFACE
++cairo_private void
++_cairo_win32_device_reset_static_data(void);
++#endif
++
+ /* the font backend interface */
+ 
+ struct _cairo_unscaled_font_backend {
+diff --git a/src/win32/cairo-win32-device.c b/src/win32/cairo-win32-device.c
+index 91ef745..4db98ad 100644
+--- a/src/win32/cairo-win32-device.c
++++ b/src/win32/cairo-win32-device.c
+@@ -145,3 +145,12 @@ _cairo_win32_flags_for_dc (HDC dc, cairo_format_t format)
+ 
+     return flags;
+ }
++
++void _cairo_win32_device_reset_static_data(void)
++{
++	if (__cairo_win32_device) {
++		cairo_device_t * device = __cairo_win32_device;
++		__cairo_win32_device = NULL;
++		cairo_device_destroy(device);
++	}
++}
