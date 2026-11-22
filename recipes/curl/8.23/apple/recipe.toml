@@ -7,7 +7,7 @@ api = 1
 library = "curl"
 name = "curl"
 version = "8.23.0"
-revision = 2
+revision = 3
 license = "curl"
 license-files = ["COPYING"]
 homepage = "https://curl.se"
@@ -124,7 +124,8 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 name = "CURL"
 libraries = ["curl"]
 link = { libraries = ["z", { library = "icucore", when = { option = "idn" } }, { library = "iconv", when = { option = "idn" } }] }
-apple = { frameworks = ["CoreFoundation", "CoreServices", "SystemConfiguration", "Security"], privacy-manifest = "PrivacyInfo.xcprivacy" }
+# the watchOS SDK has no SystemConfiguration, and curl calls it on macOS only
+apple = { frameworks = ["CoreFoundation", "CoreServices", { framework = "SystemConfiguration", when = { not = { platform = ["watchos", "watchossim"] } } }, "Security"], privacy-manifest = "PrivacyInfo.xcprivacy" }
 
 # the CMake names of the library (recipe-toml.md 11.4)
 [cmake.CURL]

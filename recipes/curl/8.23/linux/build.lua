@@ -14,6 +14,9 @@ function build(slice, options, deps)
         CURL_CA_BUNDLE = "none", CURL_CA_PATH = "none",
         -- FindZLIB takes a static zlib only when told to look for one
         CURL_ZLIB = "ON", ZLIB_USE_STATIC_LIBS = deps.zlib.linkage == "static",
+        -- the library keeps its name in the debug configuration (curl adds "-d" unless the postfix is defined; found by
+        -- otok-dev/examples curl/basic)
+        CMAKE_DEBUG_POSTFIX = "",
     }
     if tls == "openssl" then
         local ssl = deps.openssl

@@ -13,6 +13,9 @@ function build(slice, options, deps)
         CURL_ENABLE_SSL = tls ~= "none", CURL_USE_OPENSSL = tls == "openssl", CURL_USE_MBEDTLS = tls == "mbedtls",
         CURL_CA_BUNDLE = "none", CURL_CA_PATH = "/system/etc/security/cacerts",
         CURL_ZLIB = "ON",
+        -- the library keeps its name in the debug configuration (curl adds "-d" unless the postfix is defined; found by
+        -- otok-dev/examples curl/basic)
+        CMAKE_DEBUG_POSTFIX = "",
     }
     if tls == "openssl" then
         local ssl = deps.openssl
