@@ -1,12 +1,12 @@
 # The otok recipe of libpsl (https://github.com/otok-dev/otok): libpsl, the Public Suffix List library, for Windows, from the
 # release archive, with libpsl's meson build and its built-in copy of the list (the snapshot the release carries, made into
-# a table by Python while building); no IDNA library at run time, so domains are taken as ASCII or punycode; static (the installed libpsl.h defines PSL_STATIC, which libpsl.h asks static libraries of consumers).
+# a table by Python while building); no IDNA library at run time, so domains are taken as ASCII or punycode; static (the product defines PSL_STATIC, without which libpsl.h declares its functions dllimport).
 [recipe]
 api = 1
 library = "libpsl"
 name = "libpsl"
 version = "0.23.3"
-revision = 2
+revision = 3
 license = "MIT"
 license-files = ["COPYING"]
 homepage = "https://rockdaboot.github.io/libpsl/"
@@ -32,3 +32,6 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 name = "PSL"
 libraries = ["psl"]
 link = { libraries = ["ws2_32"] }
+# libpsl.h declares its functions dllimport unless PSL_STATIC is defined, which libpsl's own build adds for static
+# libraries to the pkg-config file only
+defines = ["PSL_STATIC"]

@@ -1,0 +1,14 @@
+diff --git a/library/CMakeLists.txt b/library/CMakeLists.txt
+index 5436a96..dc3dc4b 100644
+--- a/library/CMakeLists.txt
++++ b/library/CMakeLists.txt
+@@ -337,6 +337,9 @@ foreach(target IN LISTS tf_psa_crypto_library_targets)
+                     DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                     RENAME "libmbedcrypto.lib"
+             )
++        elseif(ANDROID)
++            # Android loads shared objects by their unversioned names, and a build on a Windows host may not create
++            # symbolic links: the copy above is all (otok recipe)
+         else()
+             add_custom_command(
+               TARGET ${mbedtls_target} POST_BUILD

@@ -35,11 +35,6 @@ function build(slice, options, deps)
         defines.WebP_INCLUDE_DIR = webp.include
         defines.WebP_LIBRARY = webp.libraries.webp
     end
-    -- the lzma.h of a static liblzma declares its functions without dllimport only with LZMA_API_STATIC
-    if options.lzma and deps.lzma.linkage == "static" then
-        local file = slice.source .. "/CMakeLists.txt"
-        otok.write(file, "add_definitions(-DLZMA_API_STATIC)\n" .. otok.read(file))
-    end
     otok.cmake{ defines = defines }
     local p = slice.prefix
     local d = slice.configuration == "debug" and "d" or ""  -- CMAKE_DEBUG_POSTFIX of libtiff

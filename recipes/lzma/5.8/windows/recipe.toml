@@ -5,7 +5,7 @@ api = 1
 library = "lzma"
 name = "lzma"
 version = "5.8.4"
-revision = 4
+revision = 5
 license = "0BSD"
 # COPYING tells which license applies to which part; liblzma is 0BSD
 license-files = ["COPYING", "COPYING.0BSD"]
@@ -30,6 +30,9 @@ ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
 [[product]]
 name = "LZMA"
 libraries = ["lzma"]
+# lzma.h declares its functions dllimport unless LZMA_API_STATIC is defined, which liblzma's own build adds for a static
+# library to the pkg-config file and the CMake package only (found by otok-dev/examples lzma/basic)
+defines = [{ define = "LZMA_API_STATIC", when = { linkage = "static" } }]
 
 # the CMake names of the library (recipe-toml.md 11.4)
 [cmake.LibLZMA]
