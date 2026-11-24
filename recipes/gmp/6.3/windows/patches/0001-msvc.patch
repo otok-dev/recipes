@@ -1,4 +1,4 @@
-GMP built with MSVC (cl) as a fat binary, static or as a DLL.
+GMP built with MSVC (cl), a fat binary or not, static or as a DLL.
 
 - gmp-impl.h, mpn/x86_64/fat/sqr_basecase.c: the thresholds of a fat binary are variables, and the arrays the generic
   code sizes by them are variable-length arrays, which MSVC has none of: they take the largest threshold of the CPUs,

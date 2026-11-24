@@ -1,13 +1,13 @@
 # The otok recipe of GMP (https://github.com/otok-dev/otok): libgmp and the C++ class interface libgmpxx for Windows on
 # x86_64, from the release archive, with GMP's configure and make under MSYS2 (the tree of the make recipe) and MSVC; its
-# assembly, as GMP builds it with MinGW, by GNU as of that tree; a fat binary, which chooses the code of the CPU it runs
-# on; static or dynamic.
+# assembly, as GMP builds it with MinGW, by GNU as of that tree; by default a fat binary, which chooses the code of the
+# CPU it runs on (option assembly); static or dynamic.
 [recipe]
 api = 1
 library = "gmp"
 name = "gmp"
 version = "6.3.0"
-revision = 2
+revision = 3
 license = "LGPL-3.0-or-later OR GPL-2.0-or-later"
 license-files = ["COPYING.LESSERv3", "COPYINGv3", "COPYINGv2"]
 homepage = "https://gmplib.org"
@@ -29,9 +29,35 @@ supported = ["windows"]
 architectures = { windows = ["x86_64"] }
 build-on = ["windows/msvc"]
 
+# The CPUs are GMP's names (configure.ac), the newest of each line of its assembly with the other names of that line:
+# zen3 and zen4, skylake and kabylake build the same code
+[options.assembly]
+type = "enum"
+values = [
+    "fat", "generic", "none",
+    "k10", "bobcat", "jaguar", "bulldozer", "piledriver", "steamroller", "excavator", "zen", "zen2", "zen3", "zen4",
+    "pentium4", "core2", "nehalem", "westmere", "sandybridge", "ivybridge", "haswell", "broadwell", "skylake",
+    "kabylake", "icelake", "tigerlake", "rocketlake", "alderlake", "raptorlake",
+    "atom", "silvermont", "goldmont", "tremont", "nano",
+]
+default = "fat"
+doc = "GMP's assembly. fat: the assembly of every x86_64 CPU, the library choosing that of the CPU the program runs on when it first calls GMP; runs everywhere, about as fast as the assembly of that CPU alone. generic: the assembly every x86_64 CPU runs (GMP's k8), slower on newer CPUs. A CPU's name (haswell, zen3, …): the assembly of that CPU, which an older one may not run (an illegal instruction: mulx, adx, AVX). none: no assembly, GMP's C only, several times slower on large numbers."
+
+[options.alloca]
+type = "enum"
+values = ["reentrant", "notreentrant", "alloca", "malloc-reentrant", "malloc-notreentrant", "debug"]
+default = "reentrant"
+doc = "Where GMP takes its temporary memory (--enable-alloca). reentrant: the stack (alloca) for small blocks, the heap for large ones. alloca: the stack only, the fastest, which large numbers may overflow, in threads with a small stack above all. malloc-reentrant: the heap only. notreentrant and malloc-notreentrant: as reentrant and malloc-reentrant, with global variables, not for threads. debug: the heap, a block per allocation, to find errors."
+
+[options.cxx]
+type = "bool"
+default = true
+doc = "libgmpxx, the C++ class interface of gmpxx.h (product GMPXX)."
+
 [toolchains]
 make = { version = ">= 4.4.1", default-recipe = "apotocki/make" }
-# GMP's assembly is m4 macros for GNU as: both of the MSYS2 tree of the make recipe
+# GMP's assembly is m4 macros for GNU as: both of the MSYS2 tree of the make recipe, needed for make all the same, also
+# without assembly
 m4 = { default-recipe = "apotocki/make" }
 as = { default-recipe = "apotocki/make" }
 
@@ -45,3 +71,10 @@ libraries = ["gmpxx"]
 headers = false
 depends = ["GMP"]
 link = { runtime = "c++" }
+when = { option = "cxx" }
+
+[[publish.check]]
+options = { assembly = "none", cxx = false }
+
+[[publish.check]]
+options = { assembly = "haswell", alloca = "malloc-reentrant" }
