@@ -1,0 +1,21 @@
+WICImagingFactory::Instance() made a RefPtr from the plain pointer CoCreateInstance returned, which takes a reference
+of its own: the one of CoCreateInstance was never released, a WIC factory lost per glyph surface (Cairo 1.18.6, which
+creates the factory on every call). Commit 8c3a27e7 of the branch legacy of https://github.com/apotocki/cairo (commit
+50f28511 of the branch d2d, which the option d2d builds).
+
+diff --git a/src/win32/cairo-dwrite-font.cpp b/src/win32/cairo-dwrite-font.cpp
+index ae3b01212..c44a241b1 100644
+--- a/src/win32/cairo-dwrite-font.cpp
++++ b/src/win32/cairo-dwrite-font.cpp
+@@ -187,7 +187,10 @@ public:
+          */
+         cairo_win32_ensure_mta ();
+ 
+-        IWICImagingFactory *wic_factory;
++        /* CoCreateInstance gives the reference to the RefPtr: one made from
++         * a plain pointer would take another, never released.
++         */
++        RefPtr<IWICImagingFactory> wic_factory;
+         hr = CoCreateInstance (CLSID_WICImagingFactory,
+                                NULL,
+                                CLSCTX_INPROC_SERVER,

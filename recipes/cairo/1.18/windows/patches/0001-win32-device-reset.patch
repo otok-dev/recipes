@@ -1,9 +1,9 @@
 cairo_debug_reset_static_data() destroys the device the Win32 surfaces share, which was never freed
-(https://gitlab.freedesktop.org/cairo/cairo/-/issues/19): leak checkers reported it. Commit 612bd233 of the branch d2d
-of https://github.com/apotocki/cairo, which the option d2d builds.
+(https://gitlab.freedesktop.org/cairo/cairo/-/issues/19): leak checkers reported it. Commit 70ec895f of the branch
+legacy of https://github.com/apotocki/cairo (commit d7fc8063 of the branch d2d, which the option d2d builds).
 
 diff --git a/src/cairo-debug.c b/src/cairo-debug.c
-index 11777f0..a5f6134 100644
+index 11777f04b..a5f613438 100644
 --- a/src/cairo-debug.c
 +++ b/src/cairo-debug.c
 @@ -76,6 +76,10 @@ cairo_debug_reset_static_data (void)
@@ -18,10 +18,10 @@ index 11777f0..a5f6134 100644
  
      _cairo_scaled_font_reset_static_data ();
 diff --git a/src/cairoint.h b/src/cairoint.h
-index be1a4ba..e699440 100644
+index fa8f5d395..3c42c9712 100644
 --- a/src/cairoint.h
 +++ b/src/cairoint.h
-@@ -429,6 +429,11 @@ _cairo_ft_font_reset_static_data (void);
+@@ -426,6 +426,11 @@ _cairo_ft_font_reset_static_data (void);
  cairo_private void
  _cairo_win32_font_reset_static_data (void);
  
@@ -34,7 +34,7 @@ index be1a4ba..e699440 100644
  
  struct _cairo_unscaled_font_backend {
 diff --git a/src/win32/cairo-win32-device.c b/src/win32/cairo-win32-device.c
-index 91ef745..4db98ad 100644
+index 91ef74588..4db98adff 100644
 --- a/src/win32/cairo-win32-device.c
 +++ b/src/win32/cairo-win32-device.c
 @@ -145,3 +145,12 @@ _cairo_win32_flags_for_dc (HDC dc, cairo_format_t format)

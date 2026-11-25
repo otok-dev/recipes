@@ -10,10 +10,10 @@ local function replace(file, from, to)
     otok.write(file, text:sub(1, at - 1) .. to .. text:sub(last + 1))
 end
 
--- The tree to build. With clang-cl two things MSVC never meets: clang has __uint128_t, whose
--- division needs compiler-rt's __udivti3, which MSVC's runtime lacks, so cairo-wideint must not take it; and the
--- script interpreter's C99 inline functions have no external definition there, which MSVC emits anyway: it is not
--- built (it is not this recipe's library). The resource d2d is read-only in the cache: a copy.
+-- The tree to build. With clang-cl the script interpreter's C99 inline functions have no external definition, which
+-- MSVC emits anyway: it is not built (it is not this recipe's library). (Cairo's meson build leaves clang-cl's
+-- __uint128_t aside itself since 1.18.6: its division needs compiler-rt's __udivti3, which MSVC's runtime lacks.)
+-- The resource d2d is read-only in the cache: a copy.
 local function source_of(slice, options)
     local source = options.d2d and slice.resources.d2d or slice.source
     if not slice.toolchain.cc:find("clang%-cl") then return source end
@@ -21,7 +21,6 @@ local function source_of(slice, options)
         otok.copy(source, slice.build .. "/d2d")
         source = slice.build .. "/d2d"
     end
-    replace(source .. "/meson.build", "  ['uint128_t', {'headers': ['stdint.h']}],\n  ['__uint128_t']\n", "")
     replace(source .. "/util/meson.build", "if conf.get('CAIRO_HAS_INTERPRETER', 0) == 1", "if false")
     return source
 end
