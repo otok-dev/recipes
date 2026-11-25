@@ -6,7 +6,7 @@
 api = 1
 library = "otok"
 name = "otok"
-version = "0.5.21"
+version = "0.6.0"
 revision = 1
 license = "GPL-3.0-only WITH AdditionRef-otok-output-exception"
 license-files = ["LICENSE", "LICENSE-EXCEPTION"]
@@ -20,11 +20,11 @@ cxx-standard = ">= 23"
 programs = ["otok"]
 
 [source]
-url = "https://github.com/otok-dev/otok/releases/download/v0.5.21/otok-0.5.21.tar.gz"
-sha256 = "f63835775eb130c93f00a694b978875adc8c9c09a0dda4889b13880495e220b9"
+url = "https://github.com/otok-dev/otok/releases/download/v0.6.0/otok-0.6.0.tar.gz"
+sha256 = "0940a198c9868f332524d1eb43379e572b4415f74952edb82ec8835df1c8729a"
 
 [vars]
-revision = { default = "v0.5.21" }
+revision = { default = "v0.6.0" }
 
 [platforms]
 supported = ["linux"]
