@@ -1,0 +1,43 @@
+# The otok recipe of CMake (https://github.com/otok-dev/otok): the cmake program for the builds of other recipes, which
+# name it as their toolchain (`cmake = { default-recipe = "apotocki/cmake" }`), on Linux: Kitware's release binaries of
+# the build machine (a resource per architecture, fetched on that machine only), which are for glibc; on a machine of
+# musl (Alpine, `linux-<arch>-musl`) CMake built from the source archive by its bootstrap, with Ninja. The source
+# archive carries the license.
+[recipe]
+api = 1
+library = "cmake"
+name = "cmake"
+version = "4.5.1"
+revision = 1
+license = "BSD-3-Clause"
+license-files = ["LICENSE.rst"]
+homepage = "https://cmake.org"
+description = "CMake, the cross-platform build system generator, as Kitware releases it."
+keywords = ["build", "tool"]
+
+[tool]
+programs = ["cmake", "ctest", "cpack"]
+
+[source]
+url = "https://github.com/Kitware/CMake/releases/download/v4.5.1/cmake-4.5.1.tar.gz"
+sha256 = "a79bf33cbe05686fdf79c2bbbcfe5e8e62ad16d3d540fa737cbedfeed41fb69e"
+
+[[resource]]
+name = "linux_x86_64"
+url = "https://github.com/Kitware/CMake/releases/download/v4.5.1/cmake-4.5.1-linux-x86_64.tar.gz"
+sha256 = "83b71181fb62b4fe8f26067a9321448572e7a43bd04ff6c7f54a24c33698f16d"
+when = { host = ["linux-x86_64"] }
+
+[[resource]]
+name = "linux_arm64"
+url = "https://github.com/Kitware/CMake/releases/download/v4.5.1/cmake-4.5.1-linux-aarch64.tar.gz"
+sha256 = "3bec208f11ed96c173032eeaf97937c54dd246acefee22acd7794a6b4e70d536"
+when = { host = ["linux-arm64"] }
+
+[toolchains]
+# the bootstrap's generator where no release binary runs; the recipes that build with cmake name ninja too
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
