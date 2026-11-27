@@ -1,4 +1,4 @@
--- The release binaries, copied whole into the prefix from CMake.app/Contents: cmake finds its modules (share/cmake-4.4)
+-- The release binaries, copied whole into the prefix from CMake.app/Contents: cmake finds its modules (share/cmake-4.5)
 -- beside its bin/.
 function build(slice, options, deps)
     local release = slice.resources.macos .. "/CMake.app/Contents"
