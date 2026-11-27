@@ -1,0 +1,110 @@
+# The otok recipe of nginx (https://github.com/otok-dev/otok): the nginx server of the mainline branch for Linux, built for
+# the build machine as a tool, from the release archive with nginx's configure and make. The modules of nginx that need no
+# other library than OpenSSL, zlib and PCRE2 are options, and so are two modules of others, ngx_brotli and headers-more,
+# compiled in. The output is the tree `make install` writes, under the paths of the option `prefix` (and `settings`), to
+# be copied to the server as it is. OpenSSL, zlib, PCRE2 (with its JIT) and Brotli are linked statically; crypt() of the
+# system's libcrypt with the option `crypt` only.
+[recipe]
+api = 1
+library = "nginx"
+name = "nginx"
+version = "1.31.10"
+revision = 1
+license = "BSD-2-Clause"
+license-files = ["LICENSE"]
+homepage = "https://nginx.org"
+documentation = "https://nginx.org/en/docs/"
+description = "nginx, an HTTP and reverse proxy server, a mail proxy server and a generic TCP/UDP proxy server."
+keywords = ["http", "server", "proxy", "web", "tool"]
+
+[tool]
+programs = ["nginx"]
+# libxcrypt's libcrypt.so.1, the system's interface to its password hashes (recipe-toml.md 3.1)
+link = { libraries = [{ library = "crypt", when = { option = "crypt" } }] }
+
+[source]
+url = "https://nginx.org/download/nginx-1.31.10.tar.gz"
+sha256 = "a9b690957fca84abdae8a9b52d66b1bb459282d7f01fe4b94b498ed8e977bdb3"
+mirrors = ["https://github.com/nginx/nginx/releases/download/release-1.31.10/nginx-1.31.10.tar.gz"]
+
+# Brotli compression of responses (https://github.com/google/ngx_brotli), with the Brotli of its recipe, not its submodule
+[[resource]]
+name = "ngx_brotli"
+git = "https://github.com/google/ngx_brotli"
+commit = "53e0fb55f250f48fe80c0ddbf6c0f7103cdbaae1"
+dest = "modules/ngx_brotli"
+when = { option = "brotli" }
+
+# more_set_headers and more_clear_headers (https://github.com/openresty/headers-more-nginx-module)
+[[resource]]
+name = "headers_more"
+git = "https://github.com/openresty/headers-more-nginx-module"
+commit = "e30b10e0bb1cfb042d76ba3a865410ff95d65660"
+tag = "v0.42"
+dest = "modules/headers-more"
+when = { option = "headers-more" }
+
+[options.modules]
+type = "list"
+values = [
+    "http_ssl", "http_v2", "http_v3", "http_realip", "http_addition", "http_sub", "http_dav", "http_flv", "http_mp4",
+    "http_gunzip", "http_gzip_static", "http_auth_request", "http_random_index", "http_secure_link", "http_degradation",
+    "http_slice", "http_stub_status", "http_json", "mail", "mail_ssl", "stream", "stream_ssl", "stream_realip",
+    "stream_ssl_preread", "threads", "compat",
+]
+default = ["http_ssl", "http_v2", "threads"]
+additive = true
+doc = "The parts of nginx built besides its default modules: each is configure's --with-<name>_module, and mail, stream, threads and compat are --with-<name>. Those needing other libraries (xslt, image_filter, geoip, perl, google_perftools) are not offered."
+
+[options.brotli]
+type = "bool"
+default = false
+additive = true
+doc = "ngx_brotli's filter module, compiled in: Brotli compression of responses (brotli, brotli_types, …). Its static module (precompressed .br files) is not built."
+
+[options.headers-more]
+type = "bool"
+default = false
+additive = true
+doc = "The headers-more module of OpenResty, compiled in: more_set_headers, more_clear_headers, more_set_input_headers, more_clear_input_headers."
+
+[options.crypt]
+type = "bool"
+default = false
+additive = true
+doc = "crypt() of the system's libcrypt (libxcrypt) for auth_basic, which then checks the hashes of the system too: bcrypt ($2y$), SHA-512 ($6$), SHA-256 ($5$), yescrypt ($y$). The build machine needs its headers (libcrypt-dev), the server libcrypt.so.1. Without it auth_basic checks the hashes nginx computes itself: $apr1$, {SHA}, {SSHA}, {PLAIN}."
+
+[options.prefix]
+type = "string"
+default = "/usr/local/nginx"
+doc = "configure's --prefix: where nginx is installed on the server, and the root of its other paths unless settings give them. The output holds the tree under this path."
+
+[options.settings]
+type = "list"
+default = []
+doc = "Other paths and settings of configure, as '<name>=<value>' for its --<name>=<value>: sbin-path, modules-path, conf-path, error-log-path, pid-path, lock-path, http-log-path, http-client-body-temp-path, http-proxy-temp-path, http-fastcgi-temp-path, http-uwsgi-temp-path, http-scgi-temp-path, user, group. Paths are absolute."
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[deps.openssl]
+version = ">= 3.0"
+default-recipe = "apotocki/openssl"
+
+[deps.zlib]
+version = ">= 1.2.1"
+default-recipe = "apotocki/zlib"
+
+[deps.pcre2]
+version = ">= 10.30"
+default-recipe = "apotocki/pcre2"
+requires-options = { jit = true }
+
+[deps.brotli]
+version = ">= 1.0"
+default-recipe = "apotocki/brotli"
+when = { option = "brotli" }
+
+[toolchains]
+make = { version = ">= 3.81", default-recipe = "apotocki/make" }
