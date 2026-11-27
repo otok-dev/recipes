@@ -65,7 +65,7 @@ function build(slice, options, deps)
     otok.cmake{
         defines = {
             OTOK_BUILD_TESTS = false,
-            OTOK_REVISION = slice.vars.revision,
+            OTOK_REVISION = "v" .. slice.version,
             CMAKE_FIND_PACKAGE_PREFER_CONFIG = true,
             tomlplusplus_DIR = dir, nlohmann_json_DIR = dir, inja_DIR = dir, CURL_DIR = dir, LibArchive_DIR = dir,
             OTOK_DETOURS_INCLUDE_DIR = deps.detours.include,
