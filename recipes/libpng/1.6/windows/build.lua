@@ -3,7 +3,7 @@
 
 -- libpng installs no libpng.pc for Windows: one of the same contents, with the library's file name, so
 -- that pkg-config's consumers (meson) find it; the prefix is the file's (pkgconf's ${pcfiledir})
-local function write_pkg_config(p, lib)
+local function write_pkg_config(p, lib, version)
     local name = lib:match("([^/]+)%.lib$")
     if otok.exists(p .. "/lib/pkgconfig/libpng.pc") then return end
     local text = table.concat({
@@ -14,7 +14,7 @@ local function write_pkg_config(p, lib)
         "",
         "Name: libpng",
         "Description: Loads and saves PNG files",
-        "Version: 1.6.47",
+        "Version: " .. version,
         "Requires.private: zlib",
         "Libs: -L${libdir} -l" .. name,
         "Cflags: -I${includedir}",
@@ -34,10 +34,10 @@ function build(slice, options, deps)
     local dll = otok.glob("bin/libpng16*.dll", p)[1]
     if dll then
         local link = otok.glob("lib/libpng16*.lib", p)[1]
-        write_pkg_config(p, link)
+        write_pkg_config(p, link, slice.version)
         return { libraries = { png16 = { link = link, runtime = dll } }, headers = p .. "/include" }
     end
     local lib = otok.glob("lib/libpng16_static*.lib", p)[1]
-    write_pkg_config(p, lib)
+    write_pkg_config(p, lib, slice.version)
     return { libraries = { png16 = lib }, headers = p .. "/include" }
 end
