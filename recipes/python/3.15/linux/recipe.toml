@@ -1,0 +1,51 @@
+# The otok recipe of Python (https://github.com/otok-dev/otok): the python program for the build scripts of other
+# recipes, which name it as their toolchain (`python = { default-recipe = "apotocki/python" }`), on Linux: the
+# install_only build of python-build-standalone of the build machine (a resource per architecture and C library,
+# fetched on that machine only: glibc's, or musl's on Alpine, `linux-<arch>-musl`). It has no pip packages: the
+# standard library only. The source archive carries the license.
+[recipe]
+api = 1
+library = "python"
+name = "python"
+version = "3.15.2"
+revision = 1
+license = "PSF-2.0"
+license-files = ["LICENSE"]
+homepage = "https://www.python.org"
+description = "Python, the interpreter, prebuilt for the build machine."
+keywords = ["python", "interpreter", "tool"]
+
+[tool]
+programs = ["python"]
+
+[source]
+url = "https://www.python.org/ftp/python/3.15.2/Python-3.15.2.tar.xz"
+sha256 = "8b5536d280142ecf6cdfe15d12a21ba1c65e300bbf7b28a8d0cdb849575797de"
+
+[[resource]]
+name = "linux_x86_64"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.15.2%2B20261026-x86_64-unknown-linux-gnu-install_only.tar.gz"
+sha256 = "08d4ae9024a7cfbd3b70e559241afa2571cd3208d7bd5f96f88e0080dd4092aa"
+when = { host = ["linux-x86_64"] }
+
+[[resource]]
+name = "linux_arm64"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.15.2%2B20261026-aarch64-unknown-linux-gnu-install_only.tar.gz"
+sha256 = "6fc73e8a4c80a65d2a0ed21535c65383f7b9f96bb58a5f40ed035bd7ee318616"
+when = { host = ["linux-arm64"] }
+
+[[resource]]
+name = "linux_x86_64_musl"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.15.2%2B20261026-x86_64-unknown-linux-musl-install_only.tar.gz"
+sha256 = "369c945a2004ababf340014e5febe716852d5d190e89c998b4b047ccb531627a"
+when = { host = ["linux-x86_64-musl"] }
+
+[[resource]]
+name = "linux_arm64_musl"
+url = "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.15.2%2B20261026-aarch64-unknown-linux-musl-install_only.tar.gz"
+sha256 = "2bdc94b8155ee7aff6a4c4d24d23e26cf98adbee71734273865f4d8e2c41b77c"
+when = { host = ["linux-arm64-musl"] }
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
