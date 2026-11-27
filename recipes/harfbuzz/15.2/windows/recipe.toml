@@ -1,0 +1,75 @@
+# The otok recipe of HarfBuzz (https://github.com/otok-dev/otok): harfbuzz and harfbuzz-subset for Windows, from the
+# release tag, with MSVC or with clang-cl across from Linux, with its own Unicode data and OpenType font functions;
+# FreeType's font functions (hb-ft), DirectWrite and GDI with Uniscribe as options; static or dynamic.
+[recipe]
+api = 1
+library = "harfbuzz"
+name = "harfbuzz"
+version = "15.2.0"
+revision = 1
+# HarfBuzz's "Old MIT" license, and the MIT license of Microsoft's USE data compiled into its shaper tables
+license = "MIT-Modern-Variant AND MIT"
+license-files = ["COPYING", "src/ms-use/COPYING"]
+homepage = "https://harfbuzz.github.io"
+description = "HarfBuzz, the text shaping engine: Unicode text and an OpenType font in, positioned glyphs out; and its font subsetter."
+keywords = ["text", "shaping", "font", "opentype", "unicode"]
+linkage = ["static", "dynamic"]
+
+[source]
+git = "https://github.com/harfbuzz/harfbuzz.git"
+commit = "ed51d202cfd0c29372d3ee056eb0dc715688a410"
+tag = "15.2.0"
+patches = ["patches/0001-static-subset-without-shared-sources.patch"]
+
+[options.freetype]
+type = "bool"
+default = false
+additive = true
+doc = "FreeType's font functions and hb-ft.h (hb_ft_font_create), with freetype."
+
+[options.directwrite]
+type = "bool"
+default = false
+additive = true
+doc = "The DirectWrite shaper and font functions, and hb-directwrite.h."
+
+[options.gdi]
+type = "bool"
+default = false
+additive = true
+doc = "The GDI helpers and the Uniscribe shaper, and hb-gdi.h and hb-uniscribe.h."
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc", "linux/clang-cl"]
+
+[deps.freetype]
+version = ">= 2.10"
+default-recipe = "apotocki/freetype"
+when = { option = "freetype" }
+
+[toolchains]
+meson = { version = ">= 1.2", default-recipe = "apotocki/meson" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+pkg-config = { version = ">= 1", default-recipe = "apotocki/pkgconf", when = { option = "freetype" } }  # meson's freetype2
+
+[[product]]
+name = "HarfBuzz"
+libraries = ["harfbuzz"]
+link = { libraries = [
+    { library = "dwrite", when = { option = "directwrite" } },
+    { library = "usp10", when = { option = "gdi" } },
+    { library = "gdi32", when = { option = "gdi" } },
+    { library = "rpcrt4", when = { option = "gdi" } },
+    { library = "user32", when = { option = "gdi" } },
+] }
+
+[[product]]
+name = "HarfBuzzSubset"
+libraries = ["harfbuzz-subset"]
+headers = false
+depends = ["HarfBuzz"]
+
+# the CMake names of the library (recipe-toml.md 11.4): those of its installed harfbuzz-config.cmake
+[cmake.harfbuzz]
+targets = { "harfbuzz::harfbuzz" = "HarfBuzz", "harfbuzz::subset" = "HarfBuzzSubset" }

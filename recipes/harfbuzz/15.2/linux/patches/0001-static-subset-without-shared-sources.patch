@@ -1,0 +1,25 @@
+diff --git a/src/meson.build b/src/meson.build
+index 691f9b9..ee8f05a 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -692,7 +692,19 @@ if not get_option('subset').disabled()
+       output: 'harfbuzz-subset.def')
+   defs_list += [harfbuzz_subset_def]
+ 
+-  libharfbuzz_subset = library('harfbuzz-subset', hb_subset_sources,
++  # A static libharfbuzz-subset takes the sources it shares with libharfbuzz from libharfbuzz.a, which it always needs:
++  # a copy of their symbols in each archive clashes where an app links both.
++  hb_subset_library_sources = hb_subset_sources
++  if get_option('default_library') == 'static'
++    hb_subset_library_sources = []
++    foreach source : hb_subset_sources
++      if fs.name(source) not in ['VARC.cc', 'hb-number.cc', 'hb-ot-cff1-table.cc', 'hb-ot-cff2-table.cc', 'hb-static.cc']
++        hb_subset_library_sources += source
++      endif
++    endforeach
++  endif
++
++  libharfbuzz_subset = library('harfbuzz-subset', hb_subset_library_sources,
+     include_directories: incconfig,
+     dependencies: common_harfbuzz_deps,
+     link_with: [libharfbuzz],

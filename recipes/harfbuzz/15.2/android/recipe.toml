@@ -1,0 +1,44 @@
+# The otok recipe of HarfBuzz (https://github.com/otok-dev/otok): libharfbuzz and libharfbuzz-subset for Android, from the
+# release tag, with its own Unicode data and OpenType font functions; static or dynamic.
+[recipe]
+api = 1
+library = "harfbuzz"
+name = "harfbuzz"
+version = "15.2.0"
+revision = 1
+# HarfBuzz's "Old MIT" license, and the MIT license of Microsoft's USE data compiled into its shaper tables
+license = "MIT-Modern-Variant AND MIT"
+license-files = ["COPYING", "src/ms-use/COPYING"]
+homepage = "https://harfbuzz.github.io"
+description = "HarfBuzz, the text shaping engine: Unicode text and an OpenType font in, positioned glyphs out; and its font subsetter."
+keywords = ["text", "shaping", "font", "opentype", "unicode"]
+linkage = ["static", "dynamic"]
+
+[source]
+git = "https://github.com/harfbuzz/harfbuzz.git"
+commit = "ed51d202cfd0c29372d3ee056eb0dc715688a410"
+tag = "15.2.0"
+patches = ["patches/0001-static-subset-without-shared-sources.patch"]
+
+[platforms]
+supported = ["android"]
+build-on = ["*/ndk"]
+
+[toolchains]
+meson = { version = ">= 1.2", default-recipe = "apotocki/meson" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "HarfBuzz"
+libraries = ["harfbuzz"]
+link = { libraries = ["m"] }
+
+[[product]]
+name = "HarfBuzzSubset"
+libraries = ["harfbuzz-subset"]
+headers = false
+depends = ["HarfBuzz"]
+
+# the CMake names of the library (recipe-toml.md 11.4): those of its installed harfbuzz-config.cmake
+[cmake.harfbuzz]
+targets = { "harfbuzz::harfbuzz" = "HarfBuzz", "harfbuzz::subset" = "HarfBuzzSubset" }
