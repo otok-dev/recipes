@@ -6,7 +6,7 @@
 api = 1
 library = "flex"
 name = "flex"
-version = "2.7.10"
+version = "2.7.11"
 revision = 1
 # the m4 beside the program: GPL-3.0-or-later (COPYING-m4, the COPYING of GNU M4 1.4.21)
 license = "BSD-3-Clause-flex AND GPL-3.0-or-later"
@@ -20,8 +20,8 @@ keywords = ["lexer", "parser", "generator", "tool"]
 programs = ["flex"]
 
 [source]
-url = "https://github.com/westes/flex/releases/download/v2.7.10/flex-2.7.10.tar.gz"
-sha256 = "d303c2956792acd8bf3601effef76cadc85a7876852cb66da411c0d5d2f868f4"
+url = "https://github.com/westes/flex/releases/download/v2.7.11/flex-2.7.11.tar.gz"
+sha256 = "99a3ede5f61b63bef3136c5cae16d0f453e8d887c18ddc9e50bb01a4db561ace"
 
 [platforms]
 supported = ["macosx"]
