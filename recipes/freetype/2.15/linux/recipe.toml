@@ -1,0 +1,35 @@
+# The otok recipe of FreeType (https://github.com/otok-dev/otok): libfreetype for Linux, from the release tag,
+# without its optional dependencies (zlib of its own, no bzip2, libpng, HarfBuzz or Brotli); static or dynamic.
+[recipe]
+api = 1
+library = "freetype"
+name = "freetype"
+version = "2.15.0"
+revision = 1
+license = "FTL OR GPL-2.0-or-later"
+license-files = ["LICENSE.TXT", "docs/FTL.TXT", "docs/GPLv2.TXT"]
+homepage = "https://freetype.org"
+description = "FreeType, the font rasterizer."
+keywords = ["font", "truetype", "rasterizer"]
+linkage = ["static", "dynamic"]
+
+[source]
+git = "https://gitlab.freedesktop.org/freetype/freetype.git"
+commit = "37515cf56ba3349656049edbed89ffc6f6466f2d"
+tag = "VER-2-15-0"
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "FreeType"
+libraries = ["freetype"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.Freetype]
+targets = { "Freetype::Freetype" = "FreeType" }
