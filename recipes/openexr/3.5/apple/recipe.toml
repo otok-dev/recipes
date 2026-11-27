@@ -6,7 +6,7 @@
 api = 1
 library = "openexr"
 name = "openexr"
-version = "3.5.4"
+version = "3.5.5"
 revision = 1
 license = "BSD-3-Clause"
 license-files = ["LICENSE.md", "PATENTS"]
@@ -19,8 +19,8 @@ cxx-standard = ">= 17"
 
 [source]
 git = "https://github.com/AcademySoftwareFoundation/openexr"
-commit = "86687e5f34e3a164820c5e280259550e3ca87c92"
-tag = "v3.5.4"
+commit = "486e238dd28ba6fed22528005b05f9f15bef0cc0"
+tag = "v3.5.5"
 
 [platforms]
 supported = ["ios", "iossim", "macosx", "catalyst", "tvos", "tvossim", "watchos", "watchossim", "xros", "xrossim"]
