@@ -1,0 +1,78 @@
+# The otok recipe of PCRE2 (https://github.com/otok-dev/otok): the PCRE2 libraries for Linux, from the release archive, with
+# PCRE2's CMake; the 8-bit library, and as options the 16-bit and 32-bit ones and the POSIX wrapper, with or without the JIT
+# compiler; static or dynamic. Without pcre2grep, pcre2test and the tests.
+[recipe]
+api = 1
+library = "pcre2"
+name = "pcre2"
+version = "10.49"
+revision = 1
+license = "BSD-3-Clause WITH PCRE2-exception"
+license-files = ["LICENCE.md"]
+homepage = "https://pcre2project.github.io/pcre2/"
+documentation = "https://pcre2project.github.io/pcre2/doc/"
+description = "PCRE2, Perl-compatible regular expressions: pattern matching with the syntax and semantics of Perl 5, and a JIT compiler."
+keywords = ["regex", "regular-expressions", "pcre"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.49/pcre2-10.49.tar.bz2"
+sha256 = "53c156e1ba416a20da8e65395daa132da0d80e76910424caca3fcdae7831d384"
+
+[options.jit]
+type = "bool"
+default = true
+additive = true
+doc = "The JIT compiler (pcre2_jit_compile), much faster matching on the architectures it supports (x86_64, arm64 and others)."
+
+[options.pcre2-16]
+type = "bool"
+default = false
+additive = true
+doc = "The 16-bit library, libpcre2-16, for UTF-16 and 16-bit code units (product PCRE2_16)."
+
+[options.pcre2-32]
+type = "bool"
+default = false
+additive = true
+doc = "The 32-bit library, libpcre2-32, for UTF-32 and 32-bit code units (product PCRE2_32)."
+
+[options.posix]
+type = "bool"
+default = false
+additive = true
+doc = "The POSIX wrapper, libpcre2-posix, regcomp and regexec over the 8-bit library (product PCRE2_POSIX)."
+
+[platforms]
+supported = ["linux"]
+build-on = ["linux/gcc", "linux/clang"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "PCRE2"
+libraries = ["pcre2-8"]
+
+[[product]]
+name = "PCRE2_16"
+libraries = ["pcre2-16"]
+when = { option = "pcre2-16" }
+
+[[product]]
+name = "PCRE2_32"
+libraries = ["pcre2-32"]
+when = { option = "pcre2-32" }
+
+[[product]]
+name = "PCRE2_POSIX"
+libraries = ["pcre2-posix"]
+headers = false
+depends = ["PCRE2"]
+when = { option = "posix" }
+
+# the CMake names of the library (recipe-toml.md 11.4), those of PCRE2's own pcre2-config.cmake
+[cmake.PCRE2]
+targets = { "PCRE2::8BIT" = "PCRE2", "PCRE2::16BIT" = "PCRE2_16", "PCRE2::32BIT" = "PCRE2_32", "PCRE2::POSIX" = "PCRE2_POSIX" }
+components = { 8BIT = "PCRE2", 16BIT = "PCRE2_16", 32BIT = "PCRE2_32", POSIX = "PCRE2_POSIX" }
