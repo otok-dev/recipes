@@ -80,7 +80,7 @@ function build(slice, options, deps)
     otok.write(p .. "/module.modulemap", table.concat(module, "\n"))
     local data = nil
     if options.data == "file" then
-        data = { ["icudt79l.dat"] = p .. "/share/icu/79.1/icudt79l.dat" }
+        data = { ["icudt79l.dat"] = p .. "/share/icu/" .. slice.version .. "/icudt79l.dat" }
     end
     return { libraries = libraries, headers = p .. "/include", module_map = p .. "/module.modulemap", data = data }
 end

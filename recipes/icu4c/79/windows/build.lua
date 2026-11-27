@@ -115,7 +115,7 @@ function build(slice, options, deps)
     local data = nil
     if options.data == "file" then
         -- share/icud/ for ICU's debug build
-        data = { ["icudt79l.dat"] = p .. "/share/icu" .. suffix .. "/79.1/icudt79l.dat" }
+        data = { ["icudt79l.dat"] = p .. "/share/icu" .. suffix .. "/" .. slice.version .. "/icudt79l.dat" }
     end
     return { libraries = libraries, headers = p .. "/include", data = data }
 end
