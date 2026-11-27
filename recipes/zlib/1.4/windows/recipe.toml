@@ -1,0 +1,34 @@
+# The otok recipe of zlib (https://github.com/otok-dev/otok): zlib for Windows, from the release archive, with MSVC
+# or with clang-cl across from Linux; static or dynamic.
+[recipe]
+api = 1
+library = "zlib"
+name = "zlib"
+version = "1.4"
+revision = 1
+license = "Zlib"
+license-files = ["LICENSE"]
+homepage = "https://zlib.net"
+description = "zlib, the general-purpose compression library."
+keywords = ["compression", "deflate", "zlib"]
+linkage = ["static", "dynamic"]
+
+[source]
+url = "https://github.com/madler/zlib/releases/download/v1.4/zlib-1.4.tar.gz"
+sha256 = "02dd159783677a749c04adbdd02b55b8a2bcc7e054f51b76b549199a916ad584"
+
+[platforms]
+supported = ["windows"]
+build-on = ["windows/msvc", "linux/clang-cl"]
+
+[toolchains]
+cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }
+ninja = { version = ">= 1.10", default-recipe = "apotocki/ninja" }
+
+[[product]]
+name = "ZLIB"
+libraries = ["z"]
+
+# the CMake names of the library (recipe-toml.md 11.4)
+[cmake.ZLIB]
+targets = { "ZLIB::{ZLIB,ZLIBSTATIC}" = "ZLIB" }
