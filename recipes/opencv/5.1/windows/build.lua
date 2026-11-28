@@ -1,11 +1,11 @@
 -- OpenCV's CMake project as one library, opencv_world, with core, the modules of the option and the modules they need.
--- Everything OpenCV can find on the machine or download is given or switched off: the codecs of deps as the option asks,
--- zlib of deps, protobuf of deps for dnn (its messages generated anew by that protobuf's protoc), FFmpeg of deps for
--- videoio as the option ffmpeg asks, oneTBB of deps as the option tbb asks, and none of IPP, Eigen, OpenCL, CUDA,
--- GStreamer or the GUI toolkits. Of OpenCV's own copies of libraries only HarfBuzz, the subset
--- it keeps for putText, which needs it since 5.0. What it installs: opencv_world510.lib (static, the static libraries of
--- that copy merged into it, so that the library is one file), or that import library with opencv_world510.dll (with a d
--- before the extension in debug).
+-- Everything OpenCV can find on the machine or download is given or switched off: the codecs of deps as the option
+-- asks, zlib of deps, protobuf of deps for dnn (its messages generated anew by that protobuf's protoc), FFmpeg of deps
+-- for videoio as the option ffmpeg asks, oneTBB of deps as the option tbb asks, and none of IPP, Eigen, OpenCL, CUDA,
+-- GStreamer or the GUI toolkits. Of OpenCV's own copies of libraries only HarfBuzz, the subset it keeps for putText,
+-- which needs it since 5.0 (HarfBuzz of deps as the option harfbuzz asks). What it installs: opencv_world510.lib
+-- (static, the static libraries of that copy merged into it, so that the library is one file), or that import library
+-- with opencv_world510.dll (with a d before the extension in debug).
 
 -- FFmpeg of deps as the backend of videoio, in place of OpenCV's search for it (pkg-config, or on Windows a prebuilt
 -- DLL it downloads): its headers and libraries given to OpenCV's target of it. A dynamic opencv_world links FFmpeg's
@@ -25,6 +25,21 @@ local function use_ffmpeg(slice, chosen, ffmpeg)
         "set(HAVE_FFMPEG TRUE)",
         "set(libs " .. table.concat(libs, " ") .. ")",
         "ocv_add_external_target(ffmpeg \"" .. cmake_path(ffmpeg.include) .. "\" \"${libs}\" \"HAVE_FFMPEG\")", "" }, "\n"))
+end
+
+-- HarfBuzz of deps, with its rasterizer, for putText in place of OpenCV's search for it (pkg-config, then the subset of
+-- HarfBuzz it compiles in when none is found): its headers and libraries given to imgproc.
+local function use_harfbuzz(slice, hb)
+    local function cmake_path(p) return "\"" .. (p:gsub("\\", "/")) .. "\"" end
+    otok.write(slice.source .. "/cmake/OpenCVFindHarfBuzz.cmake", table.concat({
+        "if(WITH_HARFBUZZ)",
+        "  set(HARFBUZZ_INCLUDE_DIR " .. cmake_path(hb.include) .. " CACHE INTERNAL \"\")",
+        "  set(HARFBUZZ_LIBRARIES " .. cmake_path(hb.libraries["harfbuzz-raster"]) .. " "
+            .. cmake_path(hb.libraries.harfbuzz) .. " CACHE INTERNAL \"\")",
+        "  set(HARFBUZZ_VERSION \"" .. hb.version .. "\" CACHE INTERNAL \"\")",
+        "  set(HARFBUZZ_IS_BUNDLED NO)",
+        "  set(HAVE_HARFBUZZ 1)",
+        "endif()", "" }, "\n"))
 end
 
 function build(slice, options, deps)
@@ -49,8 +64,8 @@ function build(slice, options, deps)
         OPENCV_LICENSES_INSTALL_PATH = "share/licenses/opencv5",
         -- OpenCV's own copies of libraries: none
         BUILD_ZLIB = false, BUILD_TIFF = false, BUILD_OPENJPEG = false, BUILD_JASPER = false, BUILD_JPEG = false,
-        BUILD_PNG = false, BUILD_WEBP = false, BUILD_HARFBUZZ = true, BUILD_TBB = false, BUILD_IPP_IW = false,
-        BUILD_ITT = false, BUILD_CLAPACK = false, BUILD_PROTOBUF = false,
+        BUILD_PNG = false, BUILD_WEBP = false, BUILD_HARFBUZZ = deps.harfbuzz == nil, BUILD_TBB = false,
+        BUILD_IPP_IW = false, BUILD_ITT = false, BUILD_CLAPACK = false, BUILD_PROTOBUF = false,
         -- what OpenCV would find on the machine or download
         WITH_IPP = false, WITH_ITT = false, WITH_TBB = deps.onetbb ~= nil, WITH_OPENMP = false, WITH_EIGEN = false,
         WITH_LAPACK = false,
@@ -153,6 +168,7 @@ function build(slice, options, deps)
         -- oneTBB's own CMake package, which OpenCV reads
         defines.TBB_DIR = deps.onetbb.prefix .. "/lib/cmake/TBB"
     end
+    if deps.harfbuzz then use_harfbuzz(slice, deps.harfbuzz) end
     otok.cmake{ defines = defines }
 
     local p = slice.prefix

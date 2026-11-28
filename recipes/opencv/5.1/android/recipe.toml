@@ -6,12 +6,12 @@ api = 1
 library = "opencv"
 name = "opencv"
 version = "5.1.0"
-revision = 6
+revision = 7
 license = "Apache-2.0 AND BSD-3-Clause AND MIT AND MIT-Modern-Variant AND OFL-1.1"
-# OpenCV's and those of the code of others it compiles in: SoftFloat (core), Rubik (the font of putText) and the subset of
-# HarfBuzz (imgproc), MSER's chi table and Annoy (features), FlatBuffers, DLPack and MLAS (dnn); on
-# ARM also carotene (BSD-3-Clause, its license in its sources) and KleidiCV (Apache-2.0, a resource, arm64-v8a), the HAL of
-# imgproc and core
+# OpenCV's and those of the code of others it compiles in: SoftFloat (core), Rubik (the font of putText) and the subset
+# of HarfBuzz (imgproc, unless the option harfbuzz), MSER's chi table and Annoy (features), FlatBuffers, DLPack and MLAS
+# (dnn); on ARM also carotene (BSD-3-Clause, its license in its sources) and KleidiCV (Apache-2.0, a resource,
+# arm64-v8a), the HAL of imgproc and core
 license-files = ["LICENSE", "modules/core/3rdparty/SoftFloat/COPYING.txt", "modules/imgproc/fonts/Rubik_OFL.txt",
                  "3rdparty/harfbuzz/COPYING", "modules/features/3rdparty/mscr/chi_table_LICENSE.txt",
                  "modules/features/3rdparty/annoy/LICENSE", "3rdparty/flatbuffers/LICENSE.txt", "3rdparty/dlpack/LICENSE",
@@ -52,6 +52,11 @@ doc = "FFmpeg (its recipe) as a backend of videoio, which needs videoio in modul
 type = "bool"
 default = false
 doc = "oneTBB (its recipe) as the backend of OpenCV's parallel loops in place of its own threads (pthreads)."
+
+[options.harfbuzz]
+type = "bool"
+default = false
+doc = "HarfBuzz of its recipe, with its rasterizer, for the text of putText in place of the subset of HarfBuzz 14.2 that OpenCV compiles into imgproc, whose hb_* symbols clash with those of a HarfBuzz the app links itself."
 
 [platforms]
 supported = ["android"]
@@ -171,6 +176,13 @@ when = { option = "ffmpeg" }
 version = ">= 2021.0"
 default-recipe = "apotocki/onetbb"
 when = { option = "tbb" }
+
+# the shaping and rasterizing of putText
+[deps.harfbuzz]
+version = ">= 14.2"
+default-recipe = "apotocki/harfbuzz"
+requires-options = { raster = true }
+when = { option = "harfbuzz" }
 
 [toolchains]
 cmake = { version = ">= 3.20", default-recipe = "apotocki/cmake" }

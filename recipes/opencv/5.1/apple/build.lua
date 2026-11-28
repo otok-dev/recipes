@@ -1,11 +1,12 @@
 -- OpenCV's CMake project as one library, opencv_world, with core, the modules of the option and the modules they need.
--- Everything OpenCV can find on the machine or download is given or switched off: the codecs of deps as the option asks,
--- zlib of the SDK, protobuf of deps for dnn (its messages generated anew by that protobuf's protoc), KleidiCV from the
--- recipe's resource on arm64, AVFoundation for videoio where it captures, FFmpeg of deps for videoio as the option
--- ffmpeg asks, and none of IPP, TBB, Eigen, LAPACK, OpenCL, CUDA, GStreamer or the GUI toolkits.
--- Of OpenCV's own copies of libraries only HarfBuzz, the subset it keeps for putText, which needs it since 5.0, and on
--- arm64 macOS carotene. What it installs: libopencv_world.a (static, the static libraries of those copies and of KleidiCV
--- merged into it by libtool, so that the library is one file), or libopencv_world.dylib with its links.
+-- Everything OpenCV can find on the machine or download is given or switched off: the codecs of deps as the option
+-- asks, zlib of the SDK, protobuf of deps for dnn (its messages generated anew by that protobuf's protoc), KleidiCV
+-- from the recipe's resource on arm64, AVFoundation for videoio where it captures, FFmpeg of deps for videoio as the
+-- option ffmpeg asks, and none of IPP, TBB, Eigen, LAPACK, OpenCL, CUDA, GStreamer or the GUI toolkits. Of OpenCV's own
+-- copies of libraries only HarfBuzz, the subset it keeps for putText, which needs it since 5.0 (HarfBuzz of deps as the
+-- option harfbuzz asks), and on arm64 macOS carotene. What it installs: libopencv_world.a (static, the static libraries
+-- of those copies and of KleidiCV merged into it by libtool, so that the library is one file), or libopencv_world.dylib
+-- with its links.
 
 -- static libraries added to another, so that consumers link one file: Xcode's libtool, beside its ar
 local function merge_archives(slice, lib, extra)
@@ -42,6 +43,21 @@ local function use_ffmpeg(slice, chosen, ffmpeg)
         "ocv_add_external_target(ffmpeg \"" .. cmake_path(ffmpeg.include) .. "\" \"${libs}\" \"HAVE_FFMPEG\")", "" }, "\n"))
 end
 
+-- HarfBuzz of deps, with its rasterizer, for putText in place of OpenCV's search for it (pkg-config, then the subset of
+-- HarfBuzz it compiles in when none is found): its headers and libraries given to imgproc.
+local function use_harfbuzz(slice, hb)
+    local function cmake_path(p) return "\"" .. (p:gsub("\\", "/")) .. "\"" end
+    otok.write(slice.source .. "/cmake/OpenCVFindHarfBuzz.cmake", table.concat({
+        "if(WITH_HARFBUZZ)",
+        "  set(HARFBUZZ_INCLUDE_DIR " .. cmake_path(hb.include) .. " CACHE INTERNAL \"\")",
+        "  set(HARFBUZZ_LIBRARIES " .. cmake_path(hb.libraries["harfbuzz-raster"]) .. " "
+            .. cmake_path(hb.libraries.harfbuzz) .. " CACHE INTERNAL \"\")",
+        "  set(HARFBUZZ_VERSION \"" .. hb.version .. "\" CACHE INTERNAL \"\")",
+        "  set(HARFBUZZ_IS_BUNDLED NO)",
+        "  set(HAVE_HARFBUZZ 1)",
+        "endif()", "" }, "\n"))
+end
+
 function build(slice, options, deps)
     local static = slice.linkage == "static"
     local chosen, codec = {}, {}
@@ -72,6 +88,13 @@ function build(slice, options, deps)
     end
     choose("if%(IOS OR XROS%)", "UIKit")
     choose("if%(APPLE AND %(NOT IOS%) AND %(NOT XROS%)%)", "AppKit")
+    -- the frameworks of the conversions of every platform (CGImage, NSData), which OpenCV links only into its own
+    -- framework: a dynamic opencv_world without videoio, whose AVFoundation backend names them, needs them besides UIKit
+    local n
+    codecs_text, n = codecs_text:gsub(
+        "(list%(APPEND imgcodecs_srcs %${CMAKE_CURRENT_LIST_DIR}/src/apple_conversions%.mm%)\n)",
+        "%1  list(APPEND IMGCODECS_LIBRARIES \"-framework CoreGraphics\" \"-framework Foundation\")\n")
+    if n ~= 1 then error("no apple_conversions.mm in " .. codecs_cmake) end
     otok.write(codecs_cmake, codecs_text)
 
     local defines = {
@@ -88,10 +111,10 @@ function build(slice, options, deps)
         OPENCV_BIN_INSTALL_PATH = "bin", OPENCV_INCLUDE_INSTALL_PATH = "include",
         OPENCV_CONFIG_INSTALL_PATH = "lib/cmake/opencv5", OPENCV_OTHER_INSTALL_PATH = "share/opencv5",
         OPENCV_LICENSES_INSTALL_PATH = "share/licenses/opencv5",
-        -- OpenCV's own copies of libraries: HarfBuzz only
+        -- OpenCV's own copies of libraries: HarfBuzz only, unless the option harfbuzz gives that of deps
         BUILD_ZLIB = false, BUILD_TIFF = false, BUILD_OPENJPEG = false, BUILD_JASPER = false, BUILD_JPEG = false,
-        BUILD_PNG = false, BUILD_WEBP = false, BUILD_HARFBUZZ = true, BUILD_TBB = false, BUILD_IPP_IW = false,
-        BUILD_ITT = false, BUILD_CLAPACK = false, BUILD_PROTOBUF = false,
+        BUILD_PNG = false, BUILD_WEBP = false, BUILD_HARFBUZZ = deps.harfbuzz == nil, BUILD_TBB = false,
+        BUILD_IPP_IW = false, BUILD_ITT = false, BUILD_CLAPACK = false, BUILD_PROTOBUF = false,
         -- what OpenCV would find on the machine or download
         WITH_IPP = false, WITH_ITT = false, WITH_TBB = false, WITH_OPENMP = false, WITH_EIGEN = false, WITH_LAPACK = false,
         WITH_CUDA = false, WITH_OPENCL = false, WITH_VULKAN = false, WITH_OPENVINO = false, WITH_ONNXRUNTIME = false,
@@ -182,6 +205,7 @@ function build(slice, options, deps)
         defines.utf8_range_DIR = deps.protobuf.prefix .. "/lib/cmake/utf8_range"
     end
     if deps.ffmpeg then use_ffmpeg(slice, chosen, deps.ffmpeg) end
+    if deps.harfbuzz then use_harfbuzz(slice, deps.harfbuzz) end
     otok.cmake{ defines = defines }
 
     local p = slice.prefix
