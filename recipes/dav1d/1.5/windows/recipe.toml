@@ -4,8 +4,8 @@
 api = 1
 library = "dav1d"
 name = "dav1d"
-version = "1.5.4"
-revision = 3
+version = "1.5.5"
+revision = 1
 license = "BSD-2-Clause"
 license-files = ["COPYING"]
 homepage = "https://code.videolan.org/videolan/dav1d"
@@ -14,10 +14,8 @@ keywords = ["av1", "video", "decoder"]
 linkage = ["static", "dynamic"]
 
 [source]
-url = "https://downloads.videolan.org/pub/videolan/dav1d/1.5.4/dav1d-1.5.4.tar.xz"
-sha256 = "686616b7c69eb88d44459391ab25cac13b6647a3b288835c5784e71c1514a5c5"
-# __has_include_next of stdatomic.h for MSVC apart, which cl 14.52 refuses in #if behind defined(__clang__) &&
-patches = ["patches/0001-msvc-has-include-next.patch"]
+url = "https://downloads.videolan.org/pub/videolan/dav1d/1.5.5/dav1d-1.5.5.tar.xz"
+sha256 = "ca96b1d0ba3f01f55de7231d775892b64994ba061aaeeaaa4f662a390b3abf9e"
 
 # FFmpeg's gas-preprocessor, through which dav1d's meson.build assembles its arm64 assembler with MSVC's armasm64
 [[resource]]
