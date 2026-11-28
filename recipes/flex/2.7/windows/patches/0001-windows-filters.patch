@@ -1,0 +1,476 @@
+flex on Windows (MSVC), which has no fork(): its output filters run one after the other.
+
+flex sends what it writes through a chain of filters: a tee into the scanner and its header, m4 over each, and the fix
+of the #line directives. Elsewhere each filter is a process of fork() reading the one before through a pipe, m4 one
+of execvp(). On Windows:
+
+- src/filter.c: filter_apply_chain() only puts the standard output of flex on a temporary file; filter_run_deferred()
+  runs the chain over it when flex ends without an error, each filter from a temporary file into the next, the tee
+  running the rest of the chain once for the scanner and once for the header, m4 with _spawnvp() and its standard
+  input and output on the files. The temporary files and the outputs are binary, so the output has the line ends of
+  flex elsewhere (LF); what m4 writes, as text (CR LF), is read back as text. The tee and the fix of the #line
+  directives write streams given to them (tee_streams(), fix_linedirs_streams()), which the filters of fork() use too.
+- src/main.c: flex_main() runs the chain where it waited for the children; without M4 in the environment flex runs
+  ..\libexec\flex\m4.exe from the directory of the program, then m4.exe beside it, then the m4 of PATH (the M4 of
+  configure is a path of the build machine); the tables file is written binary.
+- src/flexdef.h: filter_run_deferred().
+
+diff -ruN a/src/filter.c b/src/filter.c
+--- a/src/filter.c	2026-11-27 11:53:08.000000000 +0100
++++ b/src/filter.c	2026-11-28 18:22:44.486140700 +0100
+@@ -24,6 +24,14 @@
+ /*  PURPOSE. */
+ 
+ #include "flexdef.h"
++#ifdef _WIN32
++#include <fcntl.h>
++#include <io.h>
++#include <process.h>
++#endif
++
++static void tee_streams (FILE *in, FILE *to_c, FILE *to_h);
++static void fix_linedirs_streams (FILE *in, FILE *out);
+ static const char * check_4_gnu_m4 =
+     "m4_dnl ifdef(`__gnu__', ,"
+     "`errprint(Flex requires GNU M4. Set the PATH or set the M4 environment variable to its path name.)"
+@@ -124,6 +132,7 @@
+ 	return f;
+ }
+ 
++#ifndef _WIN32
+ /** Fork and exec entire filter chain.
+  *  @param chain The head of the chain.
+  *  @return true on success.
+@@ -200,6 +209,7 @@
+ 
+ 	return true;
+ }
++#endif /* !_WIN32 */
+ 
+ /** Truncate the chain to max_len number of filters.
+  * @param chain the current chain.
+@@ -222,6 +232,7 @@
+ 	return len;
+ }
+ 
++#ifndef _WIN32
+ /** Splits the chain in order to write to a header file.
+  *  Similar in spirit to the 'tee' program.
+  *  The header file name is in extra.
+@@ -260,6 +271,42 @@
+ 	/* Now to_c is a pipe to the C branch, and to_h is a pipe to the H branch.
+ 	 */
+ 
++	tee_streams (stdin, to_c, to_h);
++
++	if (write_header) {
++		if (ferror (to_h))
++			lerr (_("error writing output file %s"),
++				(char *) chain->extra);
++
++		else if (fclose (to_h))
++			lerr (_("error closing output file %s"),
++				(char *) chain->extra);
++	}
++
++	fflush (to_c);
++	if (ferror (to_c))
++		lerr (_("error writing output file %s"),
++			env.outfilename != NULL ? env.outfilename : "<stdout>");
++
++	else if (fclose (to_c))
++		lerr (_("error closing output file %s"),
++			env.outfilename != NULL ? env.outfilename : "<stdout>");
++
++	while (wait (0) > 0) ;
++
++	FLEX_EXIT (0);
++	return 0;
++}
++#endif /* !_WIN32 */
++
++/* What filter_tee_header writes: in to the C file and, unless to_h is NULL, to the header file, each with the m4
++ * definitions of its own before; to_h flushed, not closed.
++ */
++static void tee_streams (FILE *in, FILE *to_c, FILE *to_h)
++{
++	char    buf[512];
++	bool    write_header = (to_h != NULL);
++
+ 	if (write_header) {
+ 		fputs (check_4_gnu_m4, to_h);
+ 		fputs ("m4_changecom`'m4_dnl\n", to_h);
+@@ -280,7 +327,7 @@
+ 	fprintf (to_c, "m4_define( [[M4_YY_OUTFILE_NAME]],[[[[%s]]]])m4_dnl\n",
+ 		 env.outfilename != NULL ? env.outfilename : "<stdout>");
+ 
+-	while (fgets (buf, sizeof buf, stdin)) {
++	while (fgets (buf, sizeof buf, in)) {
+ 		fputs (buf, to_c);
+ 		if (write_header)
+ 			fputs (buf, to_h);
+@@ -299,28 +346,7 @@
+ 		 */
+ 		fputs ("m4_undefine([[M4_YY_IN_HEADER]])m4_dnl\n", to_h);
+ 		fflush (to_h);
+-		if (ferror (to_h))
+-			lerr (_("error writing output file %s"),
+-				(char *) chain->extra);
+-
+-		else if (fclose (to_h))
+-			lerr (_("error closing output file %s"),
+-				(char *) chain->extra);
+ 	}
+-
+-	fflush (to_c);
+-	if (ferror (to_c))
+-		lerr (_("error writing output file %s"),
+-			env.outfilename != NULL ? env.outfilename : "<stdout>");
+-
+-	else if (fclose (to_c))
+-		lerr (_("error closing output file %s"),
+-			env.outfilename != NULL ? env.outfilename : "<stdout>");
+-
+-	while (wait (0) > 0) ;
+-
+-	FLEX_EXIT (0);
+-	return 0;
+ }
+ 
+ static bool is_blank_line (const char *str)
+@@ -338,17 +364,31 @@
+  */
+ int filter_fix_linedirs (struct filter *chain)
+ {
++	if (!chain)
++		return 0;
++
++	fix_linedirs_streams (stdin, stdout);
++	if (ferror (stdout))
++		lerr (_("error writing output file %s"),
++			env.outfilename != NULL ? env.outfilename : "<stdout>");
++
++	else if (fclose (stdout))
++		lerr (_("error closing output file %s"),
++			env.outfilename != NULL ? env.outfilename : "<stdout>");
++
++	return 0;
++}
++
++/* What filter_fix_linedirs writes: in to out, out flushed, not closed. */
++static void fix_linedirs_streams (FILE *in, FILE *out)
++{
+ 	char   buf[4096];
+-	const char *cp;
+ 	const size_t readsz = sizeof buf;
+ 	int     lineno = 1;
+ 	bool    in_gen = true;	/* in generated code */
+ 	bool    last_was_blank = false;
+ 
+-	if (!chain)
+-		return 0;
+-
+-	while (fgets (buf, (int) readsz, stdin)) {
++	while (fgets (buf, (int) readsz, in)) {
+ 
+ 		regmatch_t m[10];
+ 
+@@ -419,19 +459,192 @@
+ 			last_was_blank = false;
+ 		}
+ 
+-		fputs (buf, stdout);
++		fputs (buf, out);
+ 		lineno++;
+ 	}
++	fflush (out);
++}
++
++#ifdef _WIN32
++/* The chain on Windows, which has no fork(): flex writes its output into a temporary file, and filter_run_deferred()
++ * runs the filters one after the other when flex ends, each from a temporary file into the next, m4 with its standard
++ * input and output on them. The temporary files are binary, so the output has the line ends of flex on every system;
++ * what m4 writes is read back as text, since m4 writes its standard output as text, CR LF.
++ */
++
++static struct filter *deferred_chain = NULL;
++static FILE *deferred_in = NULL; /* what flex wrote */
++static int deferred_out = -1;    /* the standard output when flex writes there (-t), else -1 */
++
++int filter_tee_header (struct filter *chain)
++{
++	/* never run: filter_run_deferred() tees itself */
++	(void) chain;
++	return -1;
++}
++
++bool filter_apply_chain (struct filter * chain)
++{
++	if (!chain)
++		return true;
++
+ 	fflush (stdout);
+-	if (ferror (stdout))
+-		lerr (_("error writing output file %s"),
+-			env.outfilename != NULL ? env.outfilename : "<stdout>");
++	if (env.use_stdout) {
++		if ((deferred_out = _dup (_fileno (stdout))) == -1)
++			lerr_fatal (_("%s failed"), "dup(1)");
++		_setmode (deferred_out, _O_BINARY);
++	}
++	if ((deferred_in = tmpfile ()) == NULL)
++		lerr_fatal (_("%s failed"), "tmpfile()");
++	/* the output file is closed here, so that flexend() can delete it after an error */
++	if (_dup2 (_fileno (deferred_in), _fileno (stdout)) == -1)
++		lerr_fatal (_("%s failed"), "dup2(tmpfile,1)");
++	_setmode (_fileno (stdout), _O_BINARY);
++	deferred_chain = chain;
++	return true;
++}
+ 
+-	else if (fclose (stdout))
+-		lerr (_("error closing output file %s"),
+-			env.outfilename != NULL ? env.outfilename : "<stdout>");
++/* A temporary file, binary. */
++static FILE *temporary_file (void)
++{
++	FILE *f = tmpfile ();
+ 
+-	return 0;
++	if (f == NULL)
++		lerr_fatal (_("%s failed"), "tmpfile()");
++	return f;
++}
++
++/* Runs an external filter with its standard input on in and its standard output on out. */
++static bool run_external (struct filter *f, FILE *in, FILE *out)
++{
++	int     saved_in, saved_out;
++	intptr_t status;
++	char   *quoted;
++	const char **argv;
++	int     i;
++
++	/* _spawnvp() joins the arguments with spaces: the program's name quoted, as it may have spaces */
++	quoted = malloc (strlen (f->argv[0]) + 3);
++	argv = malloc (sizeof (char *) * (size_t) (f->argc + 1));
++	if (!quoted || !argv)
++		lerr_fatal (_("memory allocation failed in %s()"), "run_external");
++	sprintf (quoted, "\"%s\"", f->argv[0]);
++	argv[0] = quoted;
++	for (i = 1; i <= f->argc; ++i)
++		argv[i] = f->argv[i];
++
++	fflush (out);
++	fflush (stdout);
++	fflush (stderr);
++	if ((saved_in = _dup (0)) == -1 || (saved_out = _dup (1)) == -1)
++		lerr_fatal (_("%s failed"), "dup");
++	if (_dup2 (_fileno (in), 0) == -1 || _dup2 (_fileno (out), 1) == -1)
++		lerr_fatal (_("%s failed"), "dup2");
++	status = _spawnvp (_P_WAIT, f->argv[0], argv);
++	_dup2 (saved_in, 0);
++	_dup2 (saved_out, 1);
++	_close (saved_in);
++	_close (saved_out);
++	free (quoted);
++	free ((void *) argv);
++
++	if (status == -1)
++		lerr_fatal (_("exec of %s failed"), f->argv[0]);
++	return status == 0;
++}
++
++/* Runs chain from in, rewound here, into out. */
++static bool run_chain (struct filter *chain, FILE *in, FILE *out)
++{
++	FILE   *mid;
++	bool    ok;
++	char    buf[4096];
++	size_t  n;
++
++	rewind (in);
++	if (!chain) {
++		while ((n = fread (buf, 1, sizeof buf, in)) > 0)
++			fwrite (buf, 1, n, out);
++		return true;
++	}
++
++	if (chain->filter_func == filter_tee_header) {
++		FILE   *to_c = temporary_file ();
++		FILE   *to_h = chain->extra != NULL ? temporary_file () : NULL;
++		FILE   *header;
++
++		tee_streams (in, to_c, to_h);
++		ok = run_chain (chain->next, to_c, out);
++		fclose (to_c);
++		if (to_h != NULL) {
++			if ((header = fopen ((char *) chain->extra, "wb")) == NULL)
++				lerr_fatal (_("%s failed"), "fopen(headerfilename)");
++			ok = run_chain (chain->next, to_h, header) && ok;
++			if (ferror (header))
++				lerr (_("error writing output file %s"), (char *) chain->extra);
++			else if (fclose (header))
++				lerr (_("error closing output file %s"), (char *) chain->extra);
++			fclose (to_h);
++		}
++		return ok;
++	}
++
++	mid = chain->next != NULL ? temporary_file () : out;
++	if (chain->filter_func == filter_fix_linedirs) {
++		fix_linedirs_streams (in, mid);
++		ok = true;
++	}
++	else if (chain->filter_func == NULL) {
++		ok = run_external (chain, in, mid);
++		/* m4 writes its output as text */
++		if (mid != out)
++			_setmode (_fileno (mid), _O_TEXT);
++	}
++	else
++		lerr_fatal (_("%s failed"), "filter_func");
++
++	if (mid != out) {
++		ok = run_chain (chain->next, mid, out) && ok;
++		fclose (mid);
++	}
++	return ok;
++}
++
++bool filter_run_deferred (bool run)
++{
++	struct filter *chain = deferred_chain;
++	FILE   *out;
++	bool    ok = true;
++
++	/* once, also when a filter fails fatally and flex ends again */
++	if (chain == NULL)
++		return true;
++	deferred_chain = NULL;
++
++	if (run) {
++		if (deferred_out != -1)
++			out = _fdopen (deferred_out, "wb");
++		else
++			/* after what flex wrote to it before the chain began */
++			out = fopen (env.outfilename, "ab");
++		if (out == NULL)
++			lerr_fatal (_("could not create %s"),
++				env.outfilename != NULL ? env.outfilename : "<stdout>");
++		deferred_out = -1;
++		ok = run_chain (chain, deferred_in, out);
++		if (ferror (out))
++			lerr (_("error writing output file %s"),
++				env.outfilename != NULL ? env.outfilename : "<stdout>");
++		else if (fclose (out))
++			lerr (_("error closing output file %s"),
++				env.outfilename != NULL ? env.outfilename : "<stdout>");
++	}
++	if (deferred_out != -1)
++		_close (deferred_out);
++	fclose (deferred_in);
++	deferred_in = NULL;
++	return ok;
+ }
++#endif /* _WIN32 */
+ 
+ /* vim:set expandtab cindent tabstop=4 softtabstop=4 shiftwidth=4 textwidth=0: */
+diff -ruN a/src/flexdef.h b/src/flexdef.h
+--- a/src/flexdef.h	2026-11-27 11:53:08.000000000 +0100
++++ b/src/flexdef.h	2026-11-28 18:21:20.513585600 +0100
+@@ -1171,6 +1171,12 @@
+ extern int filter_truncate(struct filter * chain, int max_len);
+ extern int filter_tee_header(struct filter *chain);
+ extern int filter_fix_linedirs(struct filter *chain);
++#ifdef _WIN32
++/* Windows has no fork(): filter_apply_chain() only sends the output to a temporary file, and this runs the chain over it
++ * when flex ends, if run, or drops it. Returns false when a filter failed.
++ */
++extern bool filter_run_deferred(bool run);
++#endif
+ 
+ 
+ /*
+diff -ruN a/src/main.c b/src/main.c
+--- a/src/main.c	2026-11-27 11:53:08.000000000 +0100
++++ b/src/main.c	2026-11-28 18:23:14.418339000 +0100
+@@ -151,6 +151,13 @@
+ 			fflush(stdout);
+ 			fclose(stdout);
+ 		}
++#ifdef _WIN32
++		/* the filters run now, after a success (exit status 0, here 1); a fatal error of theirs comes back here */
++		(void) child_status;
++		_stdout_closed = 1;
++		if (!filter_run_deferred (exit_status == 1) && exit_status <= 1)
++			exit_status = 2;
++#else
+ 		while (wait(&child_status) > 0){
+ 			if (!WIFEXITED (child_status)
+ 			    || WEXITSTATUS (child_status) != 0){
+@@ -161,6 +168,7 @@
+ 
+ 			}
+ 		}
++#endif
+ 		return exit_status - 1;
+ 	}
+ 
+@@ -298,6 +306,35 @@
+ 	return flex_main (argc, argv);
+ }
+ 
++#ifdef _WIN32
++/* The m4 that flex runs on Windows without M4 in the environment: ..\libexec\flex\m4.exe from the directory of the
++ * program, then m4.exe beside it, else the m4 of PATH; the M4 configure found names a file of the machine flex was
++ * built on.
++ */
++static const char *default_m4 (void)
++{
++	static char path[3 * _MAX_PATH];
++	char   *program = NULL;
++	char   *dir_end;
++
++	if (_get_pgmptr (&program) != 0 || program == NULL || strlen (program) >= _MAX_PATH)
++		return "m4";
++	strcpy (path, program);
++	dir_end = strrchr (path, '\\');
++	if (dir_end == NULL || (strrchr (path, '/') != NULL && strrchr (path, '/') > dir_end))
++		dir_end = strrchr (path, '/');
++	if (dir_end == NULL)
++		return "m4";
++	strcpy (dir_end + 1, "..\\libexec\\flex\\m4.exe");
++	if (_access (path, 0) == 0)
++		return path;
++	strcpy (dir_end + 1, "m4.exe");
++	if (_access (path, 0) == 0)
++		return path;
++	return "m4";
++}
++#endif
++
+ /* Set up the output filter chain. */
+ 
+ void initialize_output_filters(void)
+@@ -318,7 +355,11 @@
+ 
+ 	output_chain = filter_create_int(NULL, filter_tee_header, env.headerfilename);
+ 	if ( !(m4 = getenv("M4"))) {
++#ifdef _WIN32
++		m4 = default_m4 ();
++#else
+ 		m4 = M4;
++#endif
+ 	}
+ 	filter_create_ext(output_chain, m4, "-P", (char *) 0);
+ 	filter_create_int(output_chain, filter_fix_linedirs, NULL);
+@@ -1272,7 +1313,7 @@
+ 			snprintf (tablesfilename, nbytes, tablesfile_template, ctrl.prefix);
+ 		}
+ 
+-		if ((tablesout = fopen (tablesfilename, "w")) == NULL)
++		if ((tablesout = fopen (tablesfilename, "wb")) == NULL)
+ 			lerr (_("could not create %s"), tablesfilename);
+ 		free(tablesfilename);
+ 		tablesfilename = 0;

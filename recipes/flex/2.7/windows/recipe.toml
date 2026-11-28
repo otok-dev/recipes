@@ -1,0 +1,49 @@
+# The otok recipe of flex (https://github.com/otok-dev/otok): the flex program for the builds of other recipes and for
+# projects that deliver it ([tool-deps.flex] with `deliver`), on Windows: built from the release archive with its configure
+# and make under MSYS2 (the tree of the make recipe) and MSVC, patched to run its output filters one after the other
+# instead of in processes of fork(); POSIX regex of PCRE2. flex runs m4, which it carries in libexec/flex/ beside the
+# program, a program of Windows like flex: neither needs MSYS2 or Cygwin.
+[recipe]
+api = 1
+library = "flex"
+name = "flex"
+version = "2.7.11"
+revision = 1
+# the m4 beside the program: GPL-3.0-or-later (COPYING-m4, the COPYING of GNU M4 1.4.21); PCRE2 linked into the program
+# (LICENCE-pcre2.md, the LICENCE.md of PCRE2 10.49)
+license = "BSD-3-Clause-flex AND GPL-3.0-or-later AND BSD-3-Clause WITH PCRE2-exception"
+license-files = ["COPYING", { recipe = "COPYING-m4" }, { recipe = "LICENCE-pcre2.md" }]
+homepage = "https://github.com/westes/flex"
+documentation = "https://westes.github.io/flex/manual/"
+description = "flex, the fast lexical analyzer generator, built from source."
+keywords = ["lexer", "parser", "generator", "tool"]
+
+[tool]
+programs = ["flex"]
+
+[source]
+url = "https://github.com/westes/flex/releases/download/v2.7.11/flex-2.7.11.tar.gz"
+sha256 = "99a3ede5f61b63bef3136c5cae16d0f453e8d887c18ddc9e50bb01a4db561ace"
+patches = ["patches/0001-windows-filters.patch"]
+
+[platforms]
+supported = ["windows"]
+# the MSYS2 of the make recipe and the m4 recipe are of x86_64; flex on arm64 has not been tried
+architectures = { windows = ["x86_64"] }
+build-on = ["windows/msvc"]
+
+[toolchains]
+# its sh runs configure and the scripts making the skeletons, its make the build
+make = { version = ">= 4.4.1", default-recipe = "apotocki/make" }
+
+# m4, which configure checks and the program runs: a tool dependency rather than a toolchain, so that build.lua may copy
+# it beside the program (deps.tools.m4)
+[tool-deps.m4]
+version = ">= 1.4.6"
+default-recipe = "apotocki/m4"
+
+# regcomp and regexec, which MSVC's C library has none of (compat/regex.h)
+[tool-deps.pcre2]
+version = "~> 10.49"
+default-recipe = "apotocki/pcre2"
+requires-options = { posix = true }
