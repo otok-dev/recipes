@@ -1,0 +1,14 @@
+diff --git a/src/hb-ot-layout-common.hh b/src/hb-ot-layout-common.hh
+index cddb63b..02cbf47 100644
+--- a/src/hb-ot-layout-common.hh
++++ b/src/hb-ot-layout-common.hh
+@@ -2697,7 +2697,8 @@ struct hb_scalar_cache_t
+ {
+   private:
+   static constexpr unsigned STATIC_LENGTH = 128;
+-  static constexpr float INVALID = NAN;
++  // the NAN of the Windows SDK of xwin, INFINITY * 0.0F, is not a constant expression for clang-cl
++  static constexpr float INVALID = __builtin_nanf ("");
+ 
+   public:
+   hb_scalar_cache_t () {}

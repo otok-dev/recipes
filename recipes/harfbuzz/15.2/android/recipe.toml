@@ -1,11 +1,12 @@
-# The otok recipe of HarfBuzz (https://github.com/otok-dev/otok): libharfbuzz and libharfbuzz-subset for Android, from the
-# release tag, with its own Unicode data and OpenType font functions; static or dynamic.
+# The otok recipe of HarfBuzz (https://github.com/otok-dev/otok): libharfbuzz, libharfbuzz-subset and, as an option,
+# libharfbuzz-raster for Android, from the release tag, with its own Unicode data and OpenType font functions; static or
+# dynamic.
 [recipe]
 api = 1
 library = "harfbuzz"
 name = "harfbuzz"
 version = "15.2.0"
-revision = 1
+revision = 2
 # HarfBuzz's "Old MIT" license, and the MIT license of Microsoft's USE data compiled into its shaper tables
 license = "MIT-Modern-Variant AND MIT"
 license-files = ["COPYING", "src/ms-use/COPYING"]
@@ -18,7 +19,13 @@ linkage = ["static", "dynamic"]
 git = "https://github.com/harfbuzz/harfbuzz.git"
 commit = "ed51d202cfd0c29372d3ee056eb0dc715688a410"
 tag = "15.2.0"
-patches = ["patches/0001-static-subset-without-shared-sources.patch"]
+patches = ["patches/0001-static-libraries-without-shared-sources.patch"]
+
+[options.raster]
+type = "bool"
+default = false
+additive = true
+doc = "libharfbuzz-raster and hb-raster.h, HarfBuzz's rasterizer of glyphs into 8-bit masks (hb_raster_draw_*), which OpenCV's putText draws with."
 
 [platforms]
 supported = ["android"]
@@ -39,6 +46,14 @@ libraries = ["harfbuzz-subset"]
 headers = false
 depends = ["HarfBuzz"]
 
-# the CMake names of the library (recipe-toml.md 11.4): those of its installed harfbuzz-config.cmake
+[[product]]
+name = "HarfBuzzRaster"
+libraries = ["harfbuzz-raster"]
+headers = false
+depends = ["HarfBuzz"]
+when = { option = "raster" }
+
+# the CMake names of the library (recipe-toml.md 11.4): those of its installed harfbuzz-config.cmake, which has none of
+# harfbuzz-raster
 [cmake.harfbuzz]
 targets = { "harfbuzz::harfbuzz" = "HarfBuzz", "harfbuzz::subset" = "HarfBuzzSubset" }

@@ -1,5 +1,5 @@
 diff --git a/src/meson.build b/src/meson.build
-index 691f9b9..ee8f05a 100644
+index 691f9b9..19f8560 100644
 --- a/src/meson.build
 +++ b/src/meson.build
 @@ -692,7 +692,19 @@ if not get_option('subset').disabled()
@@ -22,4 +22,24 @@ index 691f9b9..ee8f05a 100644
 +  libharfbuzz_subset = library('harfbuzz-subset', hb_subset_library_sources,
      include_directories: incconfig,
      dependencies: common_harfbuzz_deps,
+     link_with: [libharfbuzz],
+@@ -759,7 +771,18 @@ if not get_option('raster').disabled()
+     raster_deps += [png_dep]
+   endif
+ 
+-  libharfbuzz_raster = library('harfbuzz-raster', hb_raster_sources,
++  # A static libharfbuzz-raster takes hb-static.cc from libharfbuzz.a, which it always needs, as libharfbuzz-subset does.
++  hb_raster_library_sources = hb_raster_sources
++  if get_option('default_library') == 'static'
++    hb_raster_library_sources = []
++    foreach source : hb_raster_sources
++      if fs.name(source) != 'hb-static.cc'
++        hb_raster_library_sources += source
++      endif
++    endforeach
++  endif
++
++  libharfbuzz_raster = library('harfbuzz-raster', hb_raster_library_sources,
+     include_directories: incconfig,
+     dependencies: raster_deps,
      link_with: [libharfbuzz],
