@@ -1,7 +1,7 @@
 # libtomlplusplus of the otok recipe: src/toml.cpp compiled as the library, as toml++'s meson.build does with
 # build_lib (its CMake project is header-only), static or shared as BUILD_SHARED_LIBS says.
 cmake_minimum_required(VERSION 3.20...4.0)
-project(tomlplusplus VERSION 3.5.1 LANGUAGES CXX)
+project(tomlplusplus VERSION ${TOMLPP_VERSION} LANGUAGES CXX)
 
 add_library(tomlplusplus src/toml.cpp)
 target_include_directories(tomlplusplus PRIVATE include)
