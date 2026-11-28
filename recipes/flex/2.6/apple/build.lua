@@ -3,7 +3,7 @@
 function build(slice, options, deps)
     local p = slice.prefix
     local m4 = deps.tools.m4.bin .. "/m4"
-    -- _GNU_SOURCE: flex 2.6.4 calls reallocarray without declaring it otherwise, and a pointer returned as an int breaks
+    -- _GNU_SOURCE: flex calls reallocarray without declaring it otherwise, and a pointer returned as an int breaks
     -- it on 64-bit glibc
     local cflags = table.concat(slice.toolchain.cflags, " ") .. " -D_GNU_SOURCE"
     local env = { CC = slice.toolchain.cc, CFLAGS = cflags, M4 = m4 }
