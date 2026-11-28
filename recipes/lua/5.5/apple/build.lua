@@ -5,7 +5,7 @@ function build(slice, options, deps)
     otok.copy(slice.recipe .. "/CMakeLists.txt", slice.source .. "/CMakeLists.txt")
     -- the system's definition for luaconf.h, as the Makefile's targets set it; the other Apple platforms have no
     -- system(): LUA_USE_IOS replaces it with a stub
-    otok.cmake{ defines = { LUA_SYSTEM = slice.platform == "macosx" and "LUA_USE_MACOSX" or "LUA_USE_IOS" } }
+    otok.cmake{ defines = { OTOK_RECIPE_VERSION = slice.version, LUA_SYSTEM = slice.platform == "macosx" and "LUA_USE_MACOSX" or "LUA_USE_IOS" } }
 
     -- lua.hpp is for C++ only (extern "C"), so it stays out of the module
     local p = slice.prefix

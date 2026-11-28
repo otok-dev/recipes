@@ -2,7 +2,7 @@
 # the other architectures (disol*.cpp) are compiled as the Makefile compiles them, for DetourCopyInstruction's offline
 # use. DETOUR_DEBUG is not defined: a debug build of the Makefile traces to the standard output of the process.
 cmake_minimum_required(VERSION 3.20)
-project(detours VERSION 4.0.1 LANGUAGES CXX)
+project(detours VERSION ${OTOK_RECIPE_VERSION} LANGUAGES CXX)
 
 add_library(detours STATIC
     src/detours.cpp src/modules.cpp src/disasm.cpp src/image.cpp src/creatwth.cpp

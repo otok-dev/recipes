@@ -1,7 +1,7 @@
 # The GIF library of the otok recipe: libgif of the release's Makefile (SOURCES), without the programs and without libutil,
 # static or shared as BUILD_SHARED_LIBS says. The release has no CMake and no MSVC build.
 cmake_minimum_required(VERSION 3.20)
-project(giflib VERSION 5.2.2 LANGUAGES C)
+project(giflib VERSION ${OTOK_RECIPE_VERSION} LANGUAGES C)
 
 add_library(gif dgif_lib.c egif_lib.c gifalloc.c gif_err.c gif_font.c gif_hash.c openbsd-reallocarray.c)
 if(WIN32)

@@ -2,7 +2,7 @@
 
 function build(slice, options, deps)
     otok.copy(slice.recipe .. "/CMakeLists.txt", slice.source .. "/CMakeLists.txt")
-    otok.cmake{}
+    otok.cmake{ defines = { OTOK_RECIPE_VERSION = slice.version } }
     local p = slice.prefix
     return { libraries = { detours = p .. "/lib/detours.lib" }, headers = p .. "/include" }
 end

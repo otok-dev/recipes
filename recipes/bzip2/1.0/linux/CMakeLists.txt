@@ -1,7 +1,7 @@
 # libbz2 of the otok recipe: the objects of the release's Makefile (OBJS), without the bzip2 and bzip2recover
 # programs, static or shared as BUILD_SHARED_LIBS says.
 cmake_minimum_required(VERSION 3.20...4.0)
-project(bzip2 VERSION 1.0.8 LANGUAGES C)
+project(bzip2 VERSION ${OTOK_RECIPE_VERSION} LANGUAGES C)
 
 add_library(bz2 blocksort.c huffman.c crctable.c randtable.c compress.c decompress.c bzlib.c)
 # the soname of Makefile-libbz2_so: libbz2.so.1.0

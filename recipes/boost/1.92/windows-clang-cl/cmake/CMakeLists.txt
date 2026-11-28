@@ -5,7 +5,7 @@
 # The superproject's CMakeLists.txt, which the release archive leaves out (tools/cmake/README.md). The recipe builds
 # Boost with CMake for the windows target, from the release's own tools/cmake and the CMakeLists.txt of each library.
 cmake_minimum_required(VERSION 3.16...3.31)
-project(Boost VERSION 1.92.0 LANGUAGES CXX)
+project(Boost VERSION ${OTOK_RECIPE_VERSION} LANGUAGES CXX)
 set(BOOST_SUPERPROJECT_VERSION ${PROJECT_VERSION})
 set(BOOST_SUPERPROJECT_SOURCE_DIR ${PROJECT_SOURCE_DIR})
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/tools/cmake/include)

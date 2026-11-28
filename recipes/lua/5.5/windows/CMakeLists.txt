@@ -1,7 +1,7 @@
 # The Lua library of the otok recipe: the core and the standard libraries of the release's src/Makefile
 # (CORE_O and LIB_O), without the lua and luac programs, static or shared as BUILD_SHARED_LIBS says.
 cmake_minimum_required(VERSION 3.20)
-project(lua VERSION 5.5.1 LANGUAGES C)
+project(lua VERSION ${OTOK_RECIPE_VERSION} LANGUAGES C)
 
 # LUA_USE_LINUX, LUA_USE_MACOSX, LUA_USE_IOS, as the Makefile's targets set them; empty on Windows, where
 # luaconf.h sees _WIN32

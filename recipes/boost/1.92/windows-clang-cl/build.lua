@@ -15,6 +15,7 @@ function build(slice, options, deps)
         if deps.icu4c then error("ICU for Boost is not built with clang-cl yet") end
         otok.copy(slice.recipe .. "/cmake/CMakeLists.txt", slice.source .. "/CMakeLists.txt")
         otok.cmake{ defines = {
+            OTOK_RECIPE_VERSION = slice.version,
             BOOST_INCLUDE_LIBRARIES = table.concat(selected, ";"),
             BOOST_STAGEDIR = slice.prefix,
             BOOST_SKIP_INSTALL_RULES = true,

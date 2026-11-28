@@ -2,7 +2,7 @@
 -- with gif.dll.
 function build(slice, options, deps)
     otok.copy(slice.recipe .. "/CMakeLists.txt", slice.source .. "/CMakeLists.txt")
-    otok.cmake{}
+    otok.cmake{ defines = { OTOK_RECIPE_VERSION = slice.version } }
     local p = slice.prefix
     local lib = otok.glob("lib/gif.lib", p)[1]
     local dll = otok.glob("bin/gif.dll", p)[1]

@@ -9,7 +9,7 @@ function build(slice, options, deps)
     add("SQLITE_ENABLE_MATH_FUNCTIONS", options.math)
     add("SQLITE_ENABLE_COLUMN_METADATA", options["column-metadata"])
     add("SQLITE_OMIT_LOAD_EXTENSION", not options.extensions)
-    otok.cmake{ defines = { SQLITE_DEFINES = table.concat(defines, ";") } }
+    otok.cmake{ defines = { OTOK_RECIPE_VERSION = slice.version, SQLITE_DEFINES = table.concat(defines, ";") } }
     local p = slice.prefix
     local lib = otok.glob("lib/sqlite3.lib", p)[1]
     local dll = otok.glob("bin/sqlite3.dll", p)[1]

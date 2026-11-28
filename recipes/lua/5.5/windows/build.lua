@@ -3,7 +3,7 @@
 
 function build(slice, options, deps)
     otok.copy(slice.recipe .. "/CMakeLists.txt", slice.source .. "/CMakeLists.txt")
-    otok.cmake{ defines = { LUA_SYSTEM = "" } }
+    otok.cmake{ defines = { OTOK_RECIPE_VERSION = slice.version, LUA_SYSTEM = "" } }
     local p = slice.prefix
     local dll = otok.glob("bin/lua.dll", p)[1]
     if dll then return { libraries = { lua = { link = p .. "/lib/lua.lib", runtime = dll } }, headers = p .. "/include" } end

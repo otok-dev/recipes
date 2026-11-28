@@ -2,7 +2,7 @@
 -- shared one, MSVC's makefile.msc), no CMake project.
 function build(slice, options, deps)
     otok.copy(slice.recipe .. "/CMakeLists.txt", slice.source .. "/CMakeLists.txt")
-    otok.cmake{}
+    otok.cmake{ defines = { OTOK_RECIPE_VERSION = slice.version } }
     local p = slice.prefix
     return { libraries = { bz2 = p .. "/lib/libbz2.a" }, headers = p .. "/include" }
 end
