@@ -1,0 +1,34 @@
+# The otok recipe of GNU M4 (https://github.com/otok-dev/otok): the m4 macro processor for the builds of other recipes,
+# which name it as their toolchain (`m4 = { default-recipe = "apotocki/m4" }`), flex and Bison among them, which run it
+# and carry it beside their programs; on Windows: built from the release archive with its configure and make under
+# MSYS2 (the tree of the make recipe) and MSVC, a program of Windows needing no runtime of MSYS2 or Cygwin.
+[recipe]
+api = 1
+library = "m4"
+name = "m4"
+version = "1.4.21"
+revision = 1
+license = "GPL-3.0-or-later"
+license-files = ["COPYING"]
+homepage = "https://www.gnu.org/software/m4/"
+documentation = "https://www.gnu.org/software/m4/manual/"
+description = "GNU M4, the macro processor, built from source."
+keywords = ["macro", "m4", "tool"]
+
+[tool]
+programs = ["m4"]
+
+[source]
+url = "https://ftp.gnu.org/gnu/m4/m4-1.4.21.tar.xz"
+sha256 = "f25c6ab51548a73a75558742fb031e0625d6485fe5f9155949d6486a2408ab66"
+mirrors = ["https://ftpmirror.gnu.org/gnu/m4/m4-1.4.21.tar.xz"]
+
+[platforms]
+supported = ["windows"]
+# the MSYS2 of the make recipe is a tree of x86_64; m4 on arm64 has not been tried
+architectures = { windows = ["x86_64"] }
+build-on = ["windows/msvc"]
+
+[toolchains]
+# its sh runs configure, its make the build, its ar makes the archive of gnulib
+make = { version = ">= 4.4.1", default-recipe = "apotocki/make" }
